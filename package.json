@@ -1,0 +1,21 @@
+{
+  "name": "com.mitfart.leoecslite.unity-integration",
+  "author": "Mitfart",
+  "displayName": "LeoECS Lite Unity Integration",
+  "description": "LeoECS Lite - Интеграция в редактор Unity, содержит шаблоны кода, а так же предоставляет мониторинг состояния мира.",
+  "unity": "2020.3",
+  "version": "2022.12.07",
+  "keywords": [
+    "leoecslite",
+    "leoecs",
+    "ecs",
+    "performance",
+    "unity",
+    "integration"
+  ],
+  "dependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Mitfart/LeoECSLite.UnityIntegration.git"
+  }
+}
