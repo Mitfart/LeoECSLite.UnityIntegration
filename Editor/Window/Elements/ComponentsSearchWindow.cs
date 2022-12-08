@@ -7,9 +7,11 @@ using UnityEngine;
 
 namespace Mitfart.LeoECSLite.UnityIntegration{
    public class ComponentsSearchWindow : ScriptableObject, ISearchWindowProvider{
-      private const string Title              = "Components";
-      private const string TypeSeparator      = ".";
-      private const string HierarchySeparator = "/";
+      private const string Title                = "Components";
+      private const string TypeSeparator        = ".";
+      private const string HierarchySeparator   = "/";
+      private const string NotDefindedGroup     = "Not Definded";
+      private const string GlobalNamespaceGroup = "_";
 
       private static readonly StringBuilder  Groups_Builder = new();
       private                 MonoEntityView _entityView;
@@ -30,15 +32,20 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
       public List<SearchTreeEntry> CreateSearchTree(SearchWindowContext context){
          var list   = new List<SearchTreeEntry>();
          var groups = new List<string>();
+         
+         var notDefindedGroupExist     = false;
+         var globalNamespaceGroupExist = false;
+         var globalNamespaceGroupIndex = 1;
 
          list.Add(new SearchTreeGroupEntry(new GUIContent(Title)));
 
-         foreach (var (component, _) in ECV_Database.Registered_Ecv){
-            var splitedName = component.ToString().Split(TypeSeparator);
+         foreach (var componentType in ECV_Database.Registered_Ecv.Keys){
+            var splitedName = componentType.ToString().Split(TypeSeparator);
+            var depth       = splitedName.Length;
 
             Groups_Builder.Clear();
 
-            for (var i = 0; i < splitedName.Length - 1; i++){
+            for (var i = 0; i < depth - 1; i++){
                Groups_Builder.Append(splitedName[i]);
                var group = Groups_Builder.ToString();
 
@@ -50,11 +57,37 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
                Groups_Builder.Append(HierarchySeparator);
             }
 
-            list.Add(
-               new SearchTreeEntry(new GUIContent(splitedName.Last())){
-                  level = splitedName.Length, userData = component
+            if (!string.IsNullOrWhiteSpace(Groups_Builder.ToString())){
+               list.Add(
+                  new SearchTreeEntry(new GUIContent(splitedName.Last())){
+                     level = depth, userData = componentType
+                  });
+               continue;
+            }
+
+            if (!globalNamespaceGroupExist){
+               list.Insert(globalNamespaceGroupIndex, new SearchTreeGroupEntry(new GUIContent(GlobalNamespaceGroup), 1));
+               globalNamespaceGroupExist = true;
+            }
+            globalNamespaceGroupIndex++;
+            depth++;
+            
+            list.Insert(globalNamespaceGroupIndex, new SearchTreeEntry(new GUIContent(splitedName.Last())){
+                  level = depth, userData = componentType
                });
          }
+
+         _entityView.DebugSystem.ForeachPool( pool => {
+               var componentType = pool.GetComponentType();
+               if (ECV_Database.Registered_Ecv.ContainsKey(componentType)) return;
+               if (!notDefindedGroupExist){
+                  list.Add(new SearchTreeGroupEntry(new GUIContent(NotDefindedGroup), 1));
+                  notDefindedGroupExist = true;
+               }
+               list.Add(new SearchTreeEntry(new GUIContent(componentType.Name)){ 
+                  level = 2, userData = componentType 
+               });
+            });
 
          return list;
       }
