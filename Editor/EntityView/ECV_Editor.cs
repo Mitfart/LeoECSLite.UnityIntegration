@@ -5,7 +5,7 @@ using UnityEngine.UIElements;
 namespace Mitfart.LeoECSLite.UnityIntegration{
    [CanEditMultipleObjects]
    [CustomEditor(typeof(BaseECV), true)]
-   public class ECV_Editor : Editor{
+   public class EcvEditor : Editor{
       private void OnEnable(){
          EditorApplication.update -= UpdateValue;
          EditorApplication.update += UpdateValue;

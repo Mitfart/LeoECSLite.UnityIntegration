@@ -7,12 +7,12 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
    public sealed class GeneratorEditor : Editor{
       private static GeneratorSettings GeneratorSettings => GeneratorSettings.instance;
 
-      [MenuItem(MenuPath.GENERATOR, priority = 11)]
+      [MenuItem(MenuPath.Generator, priority = 11)]
       public static void Generate__Editor(){
          Generate();
       }
 
-      [MenuItem(MenuPath.GENERATOR, true)]
+      [MenuItem(MenuPath.Generator, true)]
       public static bool Generate__Editor_Validate(){
          return !Application.isPlaying;
       }

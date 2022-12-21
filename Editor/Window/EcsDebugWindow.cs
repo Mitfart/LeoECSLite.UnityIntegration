@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Leopotam.EcsLite;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -10,16 +11,16 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
    public class EcsDebugWindow : EditorWindow{
       private readonly Dictionary<int, EntityView> _activeEntitiesViews = new();
       
-      private Toolbar         _toolbar;
-      private StringsDropdown _worldsEnum;
-      
       private SplitView  _content;
       private ScrollView _entitiesContainer;
       private ListView   _entitiesList;
       private bool       _isEntitiesListDirty;
 
-      private EcsWorldDebugSystem _activeSystem;
+      private TagsContainerView _tagsContainer;
+      private StringsDropdown   _worldsEnum;
       
+      private EcsWorldDebugSystem _activeSystem;
+
 
 
       private void CreateGUI(){
@@ -29,36 +30,51 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
          if (!Application.isPlaying) return;
          if (EcsWorldDebugSystem.ActiveSystems.Count <= 0) return;
 
-         SetActiveWorldDebugSystem(EcsWorldDebugSystem.ActiveSystems.Values.First());
          InitElements();
       }
       
       private void CreateElements(){
-         _toolbar    = new Toolbar();
-         _worldsEnum = new StringsDropdown();
+         _tagsContainer = new TagsContainerView();
+         _worldsEnum    = new StringsDropdown();
 
          _content           = new SplitView();
          _entitiesList      = new ListView();
          _entitiesContainer = new ScrollView();
       }
       private void AddElements(){
-         _content.Left.Add(_entitiesList);
-         _content.Right.Add(_entitiesContainer);
-
          rootVisualElement
-           .AddChild(_toolbar
-                       .AddChild(_worldsEnum))
+           .AddChild(_tagsContainer)
            .AddChild(_content);
+         
+         _content
+           .Left
+           .AddChild(_worldsEnum)
+           .AddChild(_entitiesList);
+         _content
+           .Right
+           .AddChild(_entitiesContainer);
       }
       private void InitElements(){
-         InitEntitiesList();
          InitWorldsEnum();
+         InitEntitiesList();
       }
       
+      
+      
+      private void InitWorldsEnum(){
+         foreach (var debugWorldName in EcsWorldDebugSystem.ActiveSystems.Keys)
+            _worldsEnum.Add(debugWorldName);
 
+         _worldsEnum.OnChangeValue += ChangeWorld;
+         _worldsEnum.index         =  0;
+      }
+      private void ChangeWorld(string newValue, string oldValue){
+         if (EcsWorldDebugSystem.ActiveSystems.TryGetValue(newValue, out var debugSystem))
+            SetActiveWorldDebugSystem(debugSystem);
+      }
 
       private void InitEntitiesList(){
-         _entitiesList.itemsSource = _activeSystem.AliveEntities;
+         _entitiesList.itemsSource = _activeSystem.SortedAliveEntities;
          
          _entitiesList.bindItem          =  BindItem;
          _entitiesList.makeItem          =  MakeItem;
@@ -70,7 +86,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
 
 
          void BindItem(VisualElement element, int e){
-            if (!_activeSystem.TryGetEntityView(_activeSystem.AliveEntities[e], out var entityView)) return;
+            if (!_activeSystem.TryGetEntityView(_activeSystem.SortedAliveEntities[e], out var entityView)) return;
 
             ((Label)element).text = entityView.name;
          }
@@ -103,20 +119,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
       }
 
       
-      private void InitWorldsEnum(){
-         foreach (var debugWorldName in EcsWorldDebugSystem.ActiveSystems.Keys)
-            _worldsEnum.Add(debugWorldName);
-         _worldsEnum.index = 0;
-
-         _worldsEnum.OnChangeValue += ChangeWorld;
-      }
-      private void ChangeWorld(string newValue, string oldValue){
-         if (EcsWorldDebugSystem.ActiveSystems.TryGetValue(newValue, out var debugSystem))
-            SetActiveWorldDebugSystem(debugSystem);
-      }
-
-
-      // =========================================================
+      
       private void UpdateView(EcsWorldDebugSystem system){
          foreach (var view in _activeEntitiesViews.Values){
             if (view.IsExpanded){
@@ -133,8 +136,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
          _entitiesList.RefreshItems();
          _isEntitiesListDirty = false;
       }
-      // =========================================================
-
+      
 
 
       private void SetActiveWorldDebugSystem(EcsWorldDebugSystem newActiveDebugSystem){
@@ -146,10 +148,14 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
             _activeSystem.OnEntityDespose -= SetEntitiesListDirty;
             _activeSystem.OnEntityDespose -= DisposeEntityView;
             _activeSystem.OnDestroy       -= DisposeWorldView;
+            
+            _tagsContainer.OnAddTag    -= _activeSystem.OnAddTag;
+            _tagsContainer.OnRemoveTag -= _activeSystem.OnRemoveTag;
             ResetInspector();
          }
 
-         _activeSystem = newActiveDebugSystem;
+         _activeSystem                      = newActiveDebugSystem;
+         _tagsContainer.EcsWorldDebugSystem = _activeSystem;
          if (_activeSystem == null) return;
 
          _activeSystem.OnUpdate        += UpdateView;
@@ -157,6 +163,9 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
          _activeSystem.OnEntityDespose += SetEntitiesListDirty;
          _activeSystem.OnEntityDespose += DisposeEntityView;
          _activeSystem.OnDestroy       += DisposeWorldView;
+         
+         _tagsContainer.OnAddTag    += _activeSystem.OnAddTag;
+         _tagsContainer.OnRemoveTag += _activeSystem.OnRemoveTag;
 
          InitEntitiesList();
       }
@@ -184,11 +193,11 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
 
       private void Reset(){
          ResetInspector();
-         ResetToolbar();
+         ResetWorldEnum();
       }
-      private void ResetToolbar(){
+      private void ResetWorldEnum(){
          if (_worldsEnum == null) return;
-
+         
          _worldsEnum.Clear();
          _worldsEnum.OnChangeValue -= ChangeWorld;
       }
@@ -233,7 +242,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
 
       private static EcsDebugWindow _window;
 
-      [MenuItem(MenuPath.DEBUG_WINDOW)]
+      [MenuItem(MenuPath.Debug_Window)]
       public static void Open(){
          _window = GetWindow<EcsDebugWindow>(nameof(EcsDebugWindow));
          _window.Show();

@@ -4,11 +4,11 @@ using UnityEngine.UIElements;
 
 namespace Mitfart.LeoECSLite.UnityIntegration{
    public sealed class FoldoutWithButtons : Foldout{
-      private const    string           EmptyString = "_";
+      private const    string           EMPTY_STRING = "_";
       private readonly ButtonsContainer _buttonsContainer;
 
       public FoldoutWithButtons(){
-         text = EmptyString;
+         text = EMPTY_STRING;
 
          var toggle        = hierarchy[0];
          var toggleContent = toggle.hierarchy[0];

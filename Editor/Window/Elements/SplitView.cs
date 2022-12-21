@@ -9,8 +9,8 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
          Left  = this.AddAndGet(new VisualElement{ name = "left" });
          Right = this.AddAndGet(new VisualElement{ name = "right" });
 
-         Left.style.minHeight  = Left.style.minWidth  = Styles.METRICS_PERCENTS_SSS;
-         Right.style.minHeight = Right.style.minWidth = Styles.METRICS_PERCENTS_SSS;
+         Left.style.minHeight  = Left.style.minWidth  = Styles.Metrics_Percents_Sss;
+         Right.style.minHeight = Right.style.minWidth = Styles.Metrics_Percents_Sss;
       }
    }
 }

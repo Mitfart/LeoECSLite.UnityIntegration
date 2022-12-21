@@ -2,7 +2,7 @@ using UnityEditor;
 using UnityEngine;
 
 namespace Mitfart.LeoECSLite.UnityIntegration{
-   public static class ECV_ContextMenuExtensions{
+   public static class EcvContextMenuExtensions{
       [MenuItem("CONTEXT/BaseECV/UpdateValue")]
       public static void UpdateValue(MenuCommand menuCommand){
          ((BaseECV)menuCommand.context).UpdateValue();
