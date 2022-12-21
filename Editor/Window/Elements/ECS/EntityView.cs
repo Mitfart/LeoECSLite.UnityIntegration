@@ -48,7 +48,19 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
 
          void AddComponentToEntity(){
             if (MonoView == null) return;
-            ComponentsSearchWindow.CreateAndInit(MonoView);
+            var searchWindow = ComponentsSearchWindow.CreateAndInit(MonoView.DebugSystem);
+            
+            searchWindow.OnSelect = componentType => {
+               var pool = MonoView.World.GetPool(componentType);
+               if (pool.Has(MonoView.Entity)){
+                  Debug.Log($"Can't add another instance of <{componentType}>!");
+                  return false;
+               }
+
+               pool.AddRaw(MonoView.Entity, Activator.CreateInstance(componentType));
+               MonoView.GetOrAdd(componentType);
+               return true;
+            };
          }
 
          #endregion

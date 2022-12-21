@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Leopotam.EcsLite;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -15,11 +16,15 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
       private GameObject       _rootGo;
       private HashSet<int>     _dirtyEntities;
       private MonoEntityView[] _monoEntityViews;
+      
+      private readonly List<Type> _sortComponentTypes = new();
+      private          EcsFilter  _sortFilter;
 
-      public string                              WorldName    { get; }
-      public MonoEntityView.NameBuilder.Settings NameSettings { get; }
-      public EcsWorld                            World        { get; private set; }
-      public List<int>                           AliveEntities{ get; private set; }
+      public string                              WorldName          { get; }
+      public MonoEntityView.NameBuilder.Settings NameSettings       { get; }
+      public EcsWorld                            World              { get; private set; }
+      public List<int>                           AliveEntities      { get; private set; }
+      public List<int>                           SortedAliveEntities{ get; private set; }
 
       
       
@@ -50,14 +55,21 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
 
          void InitEntities(){
             var size = World.GetWorldSize();
-            _monoEntityViews = new MonoEntityView[size];
-            _dirtyEntities   = new HashSet<int>(size);
-            AliveEntities    = new List<int>(size);
+            _monoEntityViews    = new MonoEntityView[size];
+            _dirtyEntities      = new HashSet<int>(size);
+            AliveEntities       = new List<int>(size);
+            SortedAliveEntities = new List<int>(size);
             ForeachEntity(OnEntityCreated);
          }
       }
       
       public void Run(IEcsSystems systems){
+         UpdateDirtyEntities();
+         UpdateSortedEntities();
+
+         OnUpdate?.Invoke(this);
+      }
+      private void UpdateDirtyEntities(){
          foreach (var entity in _dirtyEntities){
             if (!TryGetEntityView(entity, out var view)) continue;
             
@@ -66,10 +78,17 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
 
             OnEntityChange?.Invoke(entity);
          }
-
          _dirtyEntities.Clear();
+      }
+      private void UpdateSortedEntities(){
+         SortedAliveEntities.Clear();
 
-         OnUpdate?.Invoke(this);
+         if (_sortFilter == null || _sortFilter.GetEntitiesCount() <= 0){
+            foreach (var e in AliveEntities)
+               SortedAliveEntities.Add(e);
+         }
+         else foreach (var e in _sortFilter)
+            SortedAliveEntities.Add(e);
       }
 
 
@@ -110,6 +129,28 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
          return count;
       }
 
+      
+      
+      public void OnAddTag(Type type){
+         _sortComponentTypes.Add(type);
+         UpdateSortFilter();
+      }
+      public void OnRemoveTag(Type type){
+         _sortComponentTypes.Remove(type);
+         UpdateSortFilter();
+      }
+      private void UpdateSortFilter(){
+         if (_sortComponentTypes.Count <= 0){
+            _sortFilter = null;
+            return;
+         }
+         
+         var sortMask = World.Filter(_sortComponentTypes.First());
+         for (var i = 1; i < _sortComponentTypes.Count; i++)
+            sortMask.Inc(_sortComponentTypes[i]);
+         
+         _sortFilter = sortMask.End();
+      }
       
 
       public string GetDebugName(){

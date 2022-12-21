@@ -2,32 +2,37 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Leopotam.EcsLite;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 namespace Mitfart.LeoECSLite.UnityIntegration{
    public class ComponentsSearchWindow : ScriptableObject, ISearchWindowProvider{
-      private const string Title                = "Components";
-      private const string TypeSeparator        = ".";
-      private const string HierarchySeparator   = "/";
-      private const string NotDefindedGroup     = "Not Definded";
-      private const string GlobalNamespaceGroup = "_";
+      private const string TITLE                  = "Components";
+      private const string TYPE_SEPARATOR         = ".";
+      private const string HIERARCHY_SEPARATOR    = "/";
+      private const string NOT_DEFINED_GROUP      = "Not Defined";
+      private const string GLOBAL_NAMESPACE_GROUP = "_";
 
       private static readonly StringBuilder  Groups_Builder = new();
-      private                 MonoEntityView _entityView;
+      private                 EcsWorldDebugSystem _ecsWorldDebugSystem;
 
+      public Func<Type, bool> OnSelect;
 
-      public void Init(MonoEntityView entityView){
-         _entityView = entityView;
-      }
-
-      public static void CreateAndInit(MonoEntityView entityView){
-         var searchWindow = CreateInstance<ComponentsSearchWindow>();
-         searchWindow.Init(entityView);
+      
+      
+      public static ComponentsSearchWindow CreateAndInit(EcsWorldDebugSystem ecsWorldDebugSystem){
+         var searchWindow = CreateInstance<ComponentsSearchWindow>().Init(ecsWorldDebugSystem);
          SearchWindow.Open(new SearchWindowContext(GUIUtility.GUIToScreenPoint(Event.current.mousePosition)), searchWindow);
+         return searchWindow;
       }
+      
+      
 
-
+      public ComponentsSearchWindow Init(EcsWorldDebugSystem ecsWorldDebugSystem){
+         _ecsWorldDebugSystem = ecsWorldDebugSystem;
+         return this;
+      }
 
       public List<SearchTreeEntry> CreateSearchTree(SearchWindowContext context){
          var list   = new List<SearchTreeEntry>();
@@ -37,10 +42,10 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
          var globalNamespaceGroupExist = false;
          var globalNamespaceGroupIndex = 1;
 
-         list.Add(new SearchTreeGroupEntry(new GUIContent(Title)));
+         list.Add(new SearchTreeGroupEntry(new GUIContent(TITLE)));
 
          foreach (var componentType in ECV_Database.Registered_Ecv.Keys){
-            var splitedName = componentType.ToString().Split(TypeSeparator);
+            var splitedName = componentType.ToString().Split(TYPE_SEPARATOR);
             var depth       = splitedName.Length;
 
             Groups_Builder.Clear();
@@ -54,7 +59,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
                   groups.Add(group);
                }
 
-               Groups_Builder.Append(HierarchySeparator);
+               Groups_Builder.Append(HIERARCHY_SEPARATOR);
             }
 
             if (!string.IsNullOrWhiteSpace(Groups_Builder.ToString())){
@@ -66,7 +71,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
             }
 
             if (!globalNamespaceGroupExist){
-               list.Insert(globalNamespaceGroupIndex, new SearchTreeGroupEntry(new GUIContent(GlobalNamespaceGroup), 1));
+               list.Insert(globalNamespaceGroupIndex, new SearchTreeGroupEntry(new GUIContent(GLOBAL_NAMESPACE_GROUP), 1));
                globalNamespaceGroupExist = true;
             }
             globalNamespaceGroupIndex++;
@@ -77,11 +82,11 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
                });
          }
 
-         _entityView.DebugSystem.ForeachPool( pool => {
+         _ecsWorldDebugSystem.ForeachPool(pool => {
                var componentType = pool.GetComponentType();
                if (ECV_Database.Registered_Ecv.ContainsKey(componentType)) return;
                if (!notDefindedGroupExist){
-                  list.Add(new SearchTreeGroupEntry(new GUIContent(NotDefindedGroup), 1));
+                  list.Add(new SearchTreeGroupEntry(new GUIContent(NOT_DEFINED_GROUP), 1));
                   notDefindedGroupExist = true;
                }
                list.Add(new SearchTreeEntry(new GUIContent(componentType.Name)){ 
@@ -91,20 +96,10 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
 
          return list;
       }
-
-
+      
       public bool OnSelectEntry(SearchTreeEntry searchTreeEntry, SearchWindowContext context){
          var componentType = (Type)searchTreeEntry.userData;
-         var pool          = _entityView.World.GetPool(componentType);
-
-         if (pool.Has(_entityView.Entity)){
-            Debug.Log($"Can't add another instance of <{componentType}>!");
-            return false;
-         }
-
-         pool.AddRaw(_entityView.Entity, Activator.CreateInstance(componentType));
-         _entityView.GetOrAdd(componentType);
-         return true;
+         return OnSelect?.Invoke(componentType) ?? false;
       }
    }
 }

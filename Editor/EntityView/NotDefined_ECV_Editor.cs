@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 
 namespace Mitfart.LeoECSLite.UnityIntegration{
    [CustomEditor(typeof(NotDefinedECV))]
-   public class NotDefined_ECV_Editor : Editor{
+   public class NotDefinedEcvEditor : Editor{
       private BaseECV     _typedTarget;
       private FieldInfo[] _fields;
       private Label[]     _fieldsValues;
