@@ -23,7 +23,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
       public string                              WorldName          { get; }
       public MonoEntityView.NameBuilder.Settings NameSettings       { get; }
       public EcsWorld                            World              { get; private set; }
-      public List<int>                           AliveEntities      { get; private set; }
+      public HashSet<int>                        AliveEntities      { get; private set; }
       public List<int>                           SortedAliveEntities{ get; private set; }
 
       
@@ -57,7 +57,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
             var size = World.GetWorldSize();
             _monoEntityViews    = new MonoEntityView[size];
             _dirtyEntities      = new HashSet<int>(size);
-            AliveEntities       = new List<int>(size);
+            AliveEntities       = new HashSet<int>(size);
             SortedAliveEntities = new List<int>(size);
             ForeachEntity(OnEntityCreated);
          }
@@ -83,11 +83,13 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
       private void UpdateSortedEntities(){
          SortedAliveEntities.Clear();
 
-         if (_sortFilter == null || _sortFilter.GetEntitiesCount() <= 0){
+         if (_sortFilter == null){
             foreach (var e in AliveEntities)
                SortedAliveEntities.Add(e);
+            return;
          }
-         else foreach (var e in _sortFilter)
+         
+         foreach (var e in _sortFilter)
             SortedAliveEntities.Add(e);
       }
 
@@ -142,14 +144,16 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
       private void UpdateSortFilter(){
          if (_sortComponentTypes.Count <= 0){
             _sortFilter = null;
+            OnSortFilterChange?.Invoke();
             return;
          }
          
          var sortMask = World.Filter(_sortComponentTypes.First());
          for (var i = 1; i < _sortComponentTypes.Count; i++)
             sortMask.Inc(_sortComponentTypes[i]);
-         
          _sortFilter = sortMask.End();
+         
+         OnSortFilterChange?.Invoke();
       }
       
 
@@ -166,6 +170,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
       public event Action<int> OnEntityDespose;
 
       public event Action<int> OnWorldResize;
+      public event Action      OnSortFilterChange;
 
       public event Action<EcsWorldDebugSystem> OnInit;
       public event Action<EcsWorldDebugSystem> OnUpdate;
@@ -209,6 +214,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
       public void OnWorldDestroyed(EcsWorld world){
          OnDestroy?.Invoke(this);
 
+         SortedAliveEntities.Clear();
          ActiveSystems.Remove(GetDebugName());
          World.RemoveEventListener(this);
 
