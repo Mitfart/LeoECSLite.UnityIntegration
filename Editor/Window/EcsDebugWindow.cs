@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Leopotam.EcsLite;
 using UnityEditor;
-using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -62,15 +60,19 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
       
       
       private void InitWorldsEnum(){
-         foreach (var debugWorldName in EcsWorldDebugSystem.ActiveSystems.Keys)
-            _worldsEnum.Add(debugWorldName);
+         foreach (var systemKey in EcsWorldDebugSystem.ActiveSystems.Keys)
+            _worldsEnum.Add(systemKey);
 
-         _worldsEnum.OnChangeValue += ChangeWorld;
          _worldsEnum.index         =  0;
+         _worldsEnum.OnChangeValue += ChangeWorld;
+
+         ChangeWorld(_worldsEnum.value, null);
       }
       private void ChangeWorld(string newValue, string oldValue){
          if (EcsWorldDebugSystem.ActiveSystems.TryGetValue(newValue, out var debugSystem))
             SetActiveWorldDebugSystem(debugSystem);
+         else
+            throw new Exception($"Can't find System relative to `{newValue}` world!");
       }
 
       private void InitEntitiesList(){
@@ -114,7 +116,8 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
                _activeEntitiesViews.First().Value.IsExpanded = true;
          }
       }
-      private void SetEntitiesListDirty(int e){
+      private void SetEntitiesListDirty(int e) => SetEntitiesListDirty();
+      private void SetEntitiesListDirty(){
          _isEntitiesListDirty = true;
       }
 
@@ -143,11 +146,12 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
          if (_activeSystem == newActiveDebugSystem) return;
 
          if (_activeSystem != null){
-            _activeSystem.OnUpdate        -= UpdateView;
-            _activeSystem.OnEntityCreate  -= SetEntitiesListDirty;
-            _activeSystem.OnEntityDespose -= SetEntitiesListDirty;
-            _activeSystem.OnEntityDespose -= DisposeEntityView;
-            _activeSystem.OnDestroy       -= DisposeWorldView;
+            _activeSystem.OnUpdate           -= UpdateView;
+            _activeSystem.OnSortFilterChange -= SetEntitiesListDirty;
+            _activeSystem.OnEntityCreate     -= SetEntitiesListDirty;
+            _activeSystem.OnEntityDespose    -= SetEntitiesListDirty;
+            _activeSystem.OnEntityDespose    -= DisposeEntityView;
+            _activeSystem.OnDestroy          -= DisposeWorldView;
             
             _tagsContainer.OnAddTag    -= _activeSystem.OnAddTag;
             _tagsContainer.OnRemoveTag -= _activeSystem.OnRemoveTag;
@@ -158,11 +162,12 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
          _tagsContainer.EcsWorldDebugSystem = _activeSystem;
          if (_activeSystem == null) return;
 
-         _activeSystem.OnUpdate        += UpdateView;
-         _activeSystem.OnEntityCreate  += SetEntitiesListDirty;
-         _activeSystem.OnEntityDespose += SetEntitiesListDirty;
-         _activeSystem.OnEntityDespose += DisposeEntityView;
-         _activeSystem.OnDestroy       += DisposeWorldView;
+         _activeSystem.OnUpdate           += UpdateView;
+         _activeSystem.OnSortFilterChange += SetEntitiesListDirty;
+         _activeSystem.OnEntityCreate     += SetEntitiesListDirty;
+         _activeSystem.OnEntityDespose    += SetEntitiesListDirty;
+         _activeSystem.OnEntityDespose    += DisposeEntityView;
+         _activeSystem.OnDestroy          += DisposeWorldView;
          
          _tagsContainer.OnAddTag    += _activeSystem.OnAddTag;
          _tagsContainer.OnRemoveTag += _activeSystem.OnRemoveTag;
