@@ -67,12 +67,12 @@ void Update() {
 ### Объявление компенента
 ```c#
 // IEcsViewedComponent - интерфейс для кодогенерации 
-// EcsComponentView<C2> для компонента
-// (также возможно написание собственного EcsComponentView<C2>)
-public struct C2 : IEcsViewedComponent {
+// ECV<Comp> для компонента (ECV - ECS Component View)
+public struct Comp : IEcsViewedComponent {
     public string value;
 }
 ```
+> также возможно написание собственного ECV<Comp>, в таком случае интерфейс не обязаятелен
 
 > **ВАЖНО!** По умолчанию названия компонентов **НЕ** записываются в имя `GameObject`
 > (как в системе от `Leopotam`)
@@ -117,6 +117,8 @@ public struct C2 : IEcsViewedComponent {
 + Возможность Удаления `Entity` и/или её `Компонентов`
 + Возможность расширения логики `View-компонентов ` (`EcsComponentView`)
 + Задание **Тега** для `Entity` (при помощи компонента `DebugTag`)
++ Возможность фильтрации сущностей по:
+  + `компонентам / пулам`
 
 ### Минусы
 + Необходимость **оформления** компонентов с помощью `IEcsViewedComponent` \
@@ -125,7 +127,6 @@ public struct C2 : IEcsViewedComponent {
 ### Планируется
 + Возможность фильтрации сущностей по:
   + `тэгу`
-  + `компонентам / пулам`
 
 
 
