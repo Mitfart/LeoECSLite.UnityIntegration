@@ -65,14 +65,22 @@ void Update() {
 ```
 
 ### Объявление компенента
+> Для отображения компонента в редакторе, необходимо создать ECV<Comp>  `(ECV - ECS Component View)`
+ 
 ```c#
-// IEcsViewedComponent - интерфейс для кодогенерации 
-// ECV<Comp> для компонента (ECV - ECS Component View)
+// IEcsViewedComponent - интерфейс для кодогенерации стандартного ECV<Comp> для компонента 
 public struct Comp : IEcsViewedComponent {
     public string value;
 }
+ 
+// WILL GENERATE:
+#if UNITY_EDITOR 
+    using Mitfart.LeoECSLite.UnityIntegration; 
+
+    public partial class ECV_Comp : ECV<Comp>{ }
+#endif
 ```
-> также возможно написание собственного ECV<Comp>, в таком случае интерфейс не обязаятелен
+ 
 
 > **ВАЖНО!** По умолчанию названия компонентов **НЕ** записываются в имя `GameObject`
 > (как в системе от `Leopotam`)
@@ -192,30 +200,32 @@ void OnDestroy () {
 ### Я хочу добавить свою логику для компонента в окне инспектора. Как я могу это сделать?
 ###### Это можно сделать через:
 
-- реализацию кастомного `EcsComponentView`:
+- реализацию своего **ECV**:
 ```c#
-public struct C2 {
+public struct Comp {
     public string value;
 }
   
 // Файл должен лежать где-то в проекте - будет обнаружен и подключен автоматически
 #if UNITY_EDITOR
-public sealed class ECV_C2 : EcsComponentView<C2>{
+public sealed class ECV_Comp : ECV<Comp>{
     // Реальзовать необходимые методы
+    // Или расширить имеющиеся
 }
 #endif
 ```
 
-- расширение сгенерированного `EcsComponentView`:
+- расширение сгенерированного **ECV**:
 ```c#
 #if UNITY_EDITOR
-public partial class ECV_C2 : EcsComponentView<C2>{
-    // Реальзовать необходимые методы
+public partial class ECV_Comp : ECV<Comp>{
+    // Реализовать необходимые методы
+    // Или расширить имеющиеся
 }
 #endif
 ```
 
-- написание своего `Editor`- скрипта для `EcsComponentView`:
+- написание своего `Editor`- скрипта для **ECV**:
   ( [подробности тут](https://docs.unity3d.com/Manual/UIE-HowTo-CreateCustomInspector) )
 ###### использование стандартного GUILayout-а, возможно, но не рекомендуется
 ```c#
@@ -225,8 +235,8 @@ using UnityEditor.UIElements;
 using UnityEngine.UIElements;
 using Mitfart.LeoECSLite.UnityIntegration;
 
-[CustomEditor(typeof(ECV_C2))]
-public class ECV_C2_Inspector : Editor {
+[CustomEditor(typeof(ECV_Comp))]
+public class ECV_Comp_Inspector : Editor {
   public override VisualElement CreateInspectorGUI() {
     // Создание главного/родительского элемента
     var container = new VisualElement();
@@ -234,7 +244,6 @@ public class ECV_C2_Inspector : Editor {
     // Создание редактора
     // ...
 
-    // Возвращение элкмкнета
     return container;
   }
 }
