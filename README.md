@@ -75,9 +75,9 @@ public struct Comp : IEcsViewedComponent {
  
 // WILL GENERATE:
 #if UNITY_EDITOR 
-    using Mitfart.LeoECSLite.UnityIntegration; 
-
-    public partial class ECV_Comp : ECV<Comp>{ }
+using Mitfart.LeoECSLite.UnityIntegration; 
+// using Comp.Namespace
+public partial class ECV_Comp : ECV<Comp>{ }
 #endif
 ```
  
@@ -98,11 +98,12 @@ public struct Comp : IEcsViewedComponent {
 
 ## В редакторе
 
-Для просмотра / `Debug`-а, желательно, использовать спецаальное окно.
-Открыть которое можно в **верхнем** меню: `LeoEcs Lite > Debug Window`
+Для просмотра / `Debug`-а, желательно, использовать специальное окно.
+Открыть которое можно **в верхнем меню**: \
+`LeoEcs Lite > Debug Window`
 
 > **ВАЖНО!** По умолчанию в проекте включена **кодогенеоация**!
-> Для настойки или отключения откройте **верхнем** меню:
+> Для настойки или отключения откройте **в верхнем меню**:
 > `LeoEcs Lite > Settings`
 
 
