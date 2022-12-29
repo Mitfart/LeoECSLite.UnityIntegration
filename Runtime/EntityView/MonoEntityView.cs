@@ -1,4 +1,4 @@
-#region UNITY_EDITOR
+#if UNITY_EDITOR
 
 using System;
 using System.Collections.Generic;
@@ -110,4 +110,4 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
    }
 }
 
-#endregion
+#endif
