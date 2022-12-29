@@ -16,9 +16,9 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
       }
 
       private static bool CreateScriptFile(Type type, GeneratorSettings settings){
-         var directory  = settings.GetFileDirectoryPath(type);
-         var name       = settings.GetName(type);
-         var fileByPath = GeneratorSettings.GetFilePath(directory, name);
+         string directory  = settings.GetFileDirectoryPath(type);
+         string name       = settings.GetName(type);
+         string fileByPath = GeneratorSettings.GetFilePath(directory, name);
 
 
          if (File.Exists(fileByPath)){
@@ -30,20 +30,20 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
          if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
 
 
-         using var fileStream    = File.Create(fileByPath);
-         var       script        = GenerateScript(type, name);
-         var       encodedScript = Script_Encoding.GetBytes(script);
+         using FileStream fileStream    = File.Create(fileByPath);
+         string           script        = GenerateScript(type, name);
+         byte[]           encodedScript = Script_Encoding.GetBytes(script);
          fileStream.Write(encodedScript, 0, encodedScript.Length);
 
          return true;
       }
 
       private static string GenerateScript(Type type, string name){
-         var typeNamespace   = type.Namespace;
-         var systemNamespace = typeof(EcsWorldDebugSystem).Namespace;
-         var ecvClassName    = typeof(ECV<>).GetCleanName();
+         string typeNamespace   = type.Namespace;
+         string systemNamespace = typeof(EcsWorldDebugSystem).Namespace;
+         string ecvClassName    = typeof(ECV<>).GetCleanName();
 
-         var needNamespace = !string.IsNullOrWhiteSpace(typeNamespace) && typeNamespace != systemNamespace;
+         bool needNamespace = !string.IsNullOrWhiteSpace(typeNamespace) && typeNamespace != systemNamespace;
          return
             $"{StartIf} \n" +
             $"{Using} {systemNamespace}; \n" +

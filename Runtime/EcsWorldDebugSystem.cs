@@ -54,7 +54,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
          }
 
          void InitEntities(){
-            var size = World.GetWorldSize();
+            int size = World.GetWorldSize();
             _monoEntityViews    = new MonoEntityView[size];
             _dirtyEntities      = new HashSet<int>(size);
             AliveEntities       = new HashSet<int>(size);
@@ -70,8 +70,8 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
          OnUpdate?.Invoke(this);
       }
       private void UpdateDirtyEntities(){
-         foreach (var entity in _dirtyEntities){
-            if (!TryGetEntityView(entity, out var view)) continue;
+         foreach (int entity in _dirtyEntities){
+            if (!TryGetEntityView(entity, out MonoEntityView view)) continue;
             
             view.UpdateComponents();
             view.UpdateName();
@@ -84,12 +84,12 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
          SortedAliveEntities.Clear();
 
          if (_sortFilter == null){
-            foreach (var e in AliveEntities)
+            foreach (int e in AliveEntities)
                SortedAliveEntities.Add(e);
             return;
          }
          
-         foreach (var e in _sortFilter)
+         foreach (int e in _sortFilter)
             SortedAliveEntities.Add(e);
       }
 
@@ -104,10 +104,10 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
          return view != null;
       }
       private MonoEntityView CreateEntityView(int entity){
-         var viewObject = new GameObject();
+         GameObject viewObject = new GameObject();
          viewObject.transform.SetParent(_rootGo.transform, false);
 
-         var view = viewObject.AddComponent<MonoEntityView>();
+         MonoEntityView view = viewObject.AddComponent<MonoEntityView>();
          view.Init(this, entity);
 
          return _monoEntityViews[entity] = view;
@@ -116,18 +116,18 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
       
 
       public int ForeachEntity(Action<int> action){
-         var count = World.GetAllEntities(ref _entitiesCache);
-         for (var i = 0; i < count; i++) action.Invoke(_entitiesCache[i]);
+         int count = World.GetAllEntities(ref _entitiesCache);
+         for (int i = 0; i < count; i++) action.Invoke(_entitiesCache[i]);
          return count;
       }
       public int ForeachComponent(int entity, Action<object> action){
-         var count = World.GetComponents(entity, ref _componentsCache);
-         for (var i = 0; i < count; i++) action.Invoke(_componentsCache[i]);
+         int count = World.GetComponents(entity, ref _componentsCache);
+         for (int i = 0; i < count; i++) action.Invoke(_componentsCache[i]);
          return count;
       }
       public int ForeachPool(Action<IEcsPool> action){
-         var count = World.GetAllPools(ref _poolsCache);
-         for (var i = 0; i < count; i++) action.Invoke(_poolsCache[i]);
+         int count = World.GetAllPools(ref _poolsCache);
+         for (int i = 0; i < count; i++) action.Invoke(_poolsCache[i]);
          return count;
       }
 
@@ -148,8 +148,8 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
             return;
          }
          
-         var sortMask = World.Filter(_sortComponentTypes.First());
-         for (var i = 1; i < _sortComponentTypes.Count; i++)
+         EcsWorld.Mask sortMask = World.Filter(_sortComponentTypes.First());
+         for (int i = 1; i < _sortComponentTypes.Count; i++)
             sortMask.Inc(_sortComponentTypes[i]);
          _sortFilter = sortMask.End();
          
@@ -183,7 +183,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
       #region EcsWorldEvents
 
       public void OnEntityCreated(int entity){
-         if (!TryGetEntityView(entity, out var view)) 
+         if (!TryGetEntityView(entity, out MonoEntityView view)) 
             view = CreateEntityView(entity);
          view.Activate();
 
@@ -195,7 +195,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
          _dirtyEntities.Add(entity);
       }
       public void OnEntityDestroyed(int entity){
-         if (TryGetEntityView(entity, out var view)) 
+         if (TryGetEntityView(entity, out MonoEntityView view)) 
             view.Deactivate();
 
          _dirtyEntities.Remove(entity);

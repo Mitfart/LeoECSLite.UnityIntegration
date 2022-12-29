@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Mitfart.LeoECSLite.UnityIntegration{
    public sealed partial class MonoEntityView : MonoBehaviour{
-      private NameBuilder _nameBuilder;
+      [NonSerialized] private NameBuilder _nameBuilder;
       
       public EcsWorldDebugSystem DebugSystem{ get; private set; }
       public EcsWorld            World      { get; private set; }
@@ -64,7 +64,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
          
          DebugSystem.ForeachComponent(
             Entity, component => {
-               var view = GetOrAdd(component.GetType());
+               BaseECV view = GetOrAdd(component.GetType());
 
                if (updateValues) 
                   view.UpdateValue();
@@ -72,19 +72,19 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
          _nameBuilder.BakeComponents(Components.Keys);
       }
       public void UpdateComponentsValues(){
-         foreach (var view in Components.Values) 
+         foreach (BaseECV view in Components.Values) 
             view.UpdateValue();
       }
 
       private void RemoveComponents(){
-         foreach (var componentType in ComponentsToRemove.Keys)
+         foreach (Type componentType in ComponentsToRemove.Keys)
             Components.Remove(componentType);
          ComponentsToRemove.Clear();
       }
       
       
       public BaseECV GetOrAdd(Type compType){
-         if (Components.TryGetValue(compType, out var view)) return view;
+         if (Components.TryGetValue(compType, out BaseECV view)) return view;
 
          view = gameObject.AddEcsComponentView(compType);
          view.Init(this);
@@ -95,7 +95,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
          return view;
       }
       public void Remove(BaseECV compView){
-         var componentType = compView.GetComponentType();
+         Type componentType = compView.GetComponentType();
          
          OnRemoveComponent?.Invoke(compView);
          ComponentsToRemove[componentType] = compView;
@@ -104,7 +104,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
 
       public void Delete(){
          if (!IsActive) return;
-         foreach (var componentView in Components.Values)
+         foreach (BaseECV componentView in Components.Values)
             componentView.Delete();
       }
    }

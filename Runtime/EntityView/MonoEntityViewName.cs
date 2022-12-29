@@ -78,7 +78,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
          public void BakeComponents(IEnumerable<Type> bakedComps){
             _bakedCompsBuilder.Clear();
 
-            foreach (var bakedComp in bakedComps)
+            foreach (Type bakedComp in bakedComps)
                _bakedCompsBuilder
                  .Append(bakedComp.Name)
                  .Append(COMPONENTS_SEPARATOR);
@@ -101,7 +101,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
             public string format;
 
             public Settings(string format = "X8", bool bakeComponents = false, bool bakeIndexAtRuntime = true){
-               this.format                  = format;
+               this.format             = format;
                this.bakeComponents     = bakeComponents;
                this.bakeIndexAtRuntime = bakeIndexAtRuntime;
             }
