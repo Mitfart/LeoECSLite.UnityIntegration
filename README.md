@@ -68,8 +68,8 @@ void Update() {
 > Для отображения компонента в редакторе, необходимо создать ECV<Comp>  `(ECV - ECS Component View)`
  
 ```c#
-// IEcsViewedComponent - интерфейс для кодогенерации стандартного ECV<Comp> для компонента 
-public struct Comp : IEcsViewedComponent {
+// IEcsSerializedComponent - интерфейс для кодогенерации стандартного ECV<Comp> для компонента 
+public struct Comp : IEcsSerializedComponent {
     public string value;
 }
  
