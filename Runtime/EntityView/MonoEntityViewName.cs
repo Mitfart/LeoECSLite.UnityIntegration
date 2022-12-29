@@ -5,10 +5,10 @@ using System.Text;
 namespace Mitfart.LeoECSLite.UnityIntegration{
    public sealed partial class MonoEntityView{
       public sealed class NameBuilder {
-         private const string ComponentsSeparator = ", ";
-         private const string StartDescription    = ": ";
-         private const string Bracket_Open        = "[ ";
-         private const string Bracket_Close       = " ]";
+         private const string COMPONENTS_SEPARATOR = ", ";
+         private const string START_DESCRIPTION    = ": ";
+         private const string BRACKET_OPEN        = "[ ";
+         private const string BRACKET_CLOSE       = " ]";
          
          private readonly MonoEntityView _monoEntityView;
          private readonly StringBuilder  _nameBuilder;
@@ -24,9 +24,9 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
             _nameBuilder    = new StringBuilder();
             _settings       = settings;
 
-            _bakedIndex = _monoEntityView.Entity.ToString(_settings.Format);
+            _bakedIndex = _monoEntityView.Entity.ToString(_settings.format);
             
-            if (_settings.BakeComponents) 
+            if (_settings.bakeComponents) 
                _bakedCompsBuilder = new StringBuilder();
          }
          
@@ -35,8 +35,8 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
          public void Update(){
             Clear();
             AddTag();
-            if (_settings.BakeIndexAtRuntime) AddEntityIndex();
-            if (_settings.BakeComponents) AddBakedComponents();
+            if (_settings.bakeIndexAtRuntime) AddEntityIndex();
+            if (_settings.bakeComponents) AddBakedComponents();
             Set();
          }
          
@@ -53,10 +53,10 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
          private void AddTag(){
             if (!string.IsNullOrWhiteSpace(_monoEntityView.Tag))
                _nameBuilder
-                 .Append(Bracket_Open)
+                 .Append(BRACKET_OPEN)
                  .Append(_monoEntityView.Tag)
-                 .Append(Bracket_Close)
-                 .Append(StartDescription);
+                 .Append(BRACKET_CLOSE)
+                 .Append(START_DESCRIPTION);
          }
          private void AddBakedComponents(){
             _nameBuilder
@@ -65,7 +65,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
          private void AddEntityIndex(){
             _nameBuilder
               .Append(_bakedIndex)
-              .Append(StartDescription);
+              .Append(START_DESCRIPTION);
          }
          private void Set(){
             _monoEntityView.name = _nameBuilder.ToString();
@@ -79,7 +79,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
             foreach (var bakedComp in bakedComps)
                _bakedCompsBuilder
                  .Append(bakedComp.Name)
-                 .Append(ComponentsSeparator);
+                 .Append(COMPONENTS_SEPARATOR);
          }
          
          public void ChangeTag(string newTag){
@@ -94,14 +94,14 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
          
 
          public struct Settings{
-            public bool   BakeComponents;
-            public bool   BakeIndexAtRuntime;
-            public string Format;
+            public bool   bakeComponents;
+            public bool   bakeIndexAtRuntime;
+            public string format;
 
             public Settings(string format = "X8", bool bakeComponents = false, bool bakeIndexAtRuntime = true){
-               Format             = format;
-               BakeComponents     = bakeComponents;
-               BakeIndexAtRuntime = bakeIndexAtRuntime;
+               this.format                  = format;
+               this.bakeComponents     = bakeComponents;
+               this.bakeIndexAtRuntime = bakeIndexAtRuntime;
             }
          }
       }

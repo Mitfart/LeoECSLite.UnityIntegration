@@ -66,7 +66,7 @@ void Update() {
 
 ### Объявление компенента
 > Для отображения компонента в редакторе, необходимо создать ECV<Comp>  `(ECV - ECS Component View)`
- 
+
 ```c#
 // IEcsSerializedComponent - интерфейс для кодогенерации стандартного ECV<Comp> для компонента 
 public struct Comp : IEcsSerializedComponent {
@@ -80,7 +80,7 @@ using Mitfart.LeoECSLite.UnityIntegration;
 public partial class ECV_Comp : ECV<Comp>{ }
 #endif
 ```
- 
+
 
 > **ВАЖНО!** По умолчанию названия компонентов **НЕ** записываются в имя `GameObject`
 > (как в системе от `Leopotam`)
