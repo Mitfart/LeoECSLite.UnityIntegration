@@ -1,5 +1,3 @@
-#if UNITY_EDITOR
-
 using System;
 using System.Collections.Generic;
 using Leopotam.EcsLite;
@@ -22,7 +20,6 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
       public event Action<BaseECV> OnRemoveComponent;
 
       
-
       public void Init(EcsWorldDebugSystem debugSystem, int entity){
          DebugSystem = debugSystem;
          Entity      = entity;
@@ -109,5 +106,3 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
       }
    }
 }
-
-#endif
