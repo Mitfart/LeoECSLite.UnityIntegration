@@ -1,4 +1,4 @@
-#region Editor
+#region UNITY_EDITOR
 
 using System;
 using System.Collections.Generic;
