@@ -4,9 +4,7 @@
     "references": [
         "Leopotam.EcsLite"
     ],
-    "includePlatforms": [
-        "Editor"
-    ],
+    "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,
