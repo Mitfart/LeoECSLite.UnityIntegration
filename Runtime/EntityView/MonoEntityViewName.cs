@@ -1,3 +1,5 @@
+#region Editor
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -107,3 +109,5 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
       }
    }
 }
+
+#endregion
