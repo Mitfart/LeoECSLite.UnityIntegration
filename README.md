@@ -88,7 +88,7 @@ public partial class ECV_Comp : ECV<Comp>{ }
 > можно добавить создав пресет настроек для системы `MonoEntityView.NameBuilder.Settings`
 > ```cs
 > var nameSettings = new MonoEntityView.NameBuilder.Settings();
-> nameSettings.BakeComponents = true;
+> nameSettings.bakeComponents = true;
 > ...
 > .Add(new Mitfart.LeoECSLite.UnityIntegration.EcsWorldDebugSystem(null, nameSettings))
 > ...
