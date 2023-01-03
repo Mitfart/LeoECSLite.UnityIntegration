@@ -69,6 +69,8 @@ void Update() {
 
 ```c#
 // IEcsSerializedComponent - интерфейс для кодогенерации стандартного ECV<Comp> для компонента 
+// Компонент обязательно должен быть с атрибутом: [Serializable]
+[Serializable]
 public struct Comp : IEcsSerializedComponent {
     public string value;
 }
