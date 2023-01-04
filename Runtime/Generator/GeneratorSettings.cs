@@ -12,12 +12,12 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
       private const bool   DEFAULT_REWRITE_EXISTING    = false;
       private const bool   DEFAULT_GROUP_BY_NAMESPACES = true;
       
-      public string prefix;
-      public string postfix;
-      public string relativeSaveFolderPath;
-      public bool   autoGenerate;
-      public bool   rewriteExisting;
-      public bool   groupByNamespaces;
+      public string prefix                 = DEFAULT_PREFIX;
+      public string postfix                = DEFAULT_POSTFIX;
+      public string relativeSaveFolderPath = DEFAULT_SAVE_FOLDER_PATH;
+      public bool   autoGenerate           = DEFAULT_AUTO_GENERATE;
+      public bool   rewriteExisting        = DEFAULT_REWRITE_EXISTING;
+      public bool   groupByNamespaces      = DEFAULT_GROUP_BY_NAMESPACES;
       
 
       private void OnValidate(){
