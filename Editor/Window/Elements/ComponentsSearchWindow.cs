@@ -14,26 +14,32 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
       private const string NOT_DEFINED_GROUP      = "Not Defined";
       private const string GLOBAL_NAMESPACE_GROUP = "_";
 
-      private static readonly StringBuilder  Groups_Builder = new();
+      private static readonly StringBuilder       Groups_Builder  = new();
+      private static readonly Texture2D           IndentationIcon = new(1, 1);
       private                 EcsWorldDebugSystem _ecsWorldDebugSystem;
 
       public Func<Type, bool> OnSelect;
 
       
       
+      
+      
+      
       public static ComponentsSearchWindow CreateAndInit(EcsWorldDebugSystem ecsWorldDebugSystem){
          var searchWindow = CreateInstance<ComponentsSearchWindow>().Init(ecsWorldDebugSystem);
          SearchWindow.Open(new SearchWindowContext(GUIUtility.GUIToScreenPoint(Event.current.mousePosition)), searchWindow);
+         
+         IndentationIcon.SetPixel(0, 0, Color.clear);
+         IndentationIcon.Apply();
          return searchWindow;
       }
       
-      
-
       public ComponentsSearchWindow Init(EcsWorldDebugSystem ecsWorldDebugSystem){
          _ecsWorldDebugSystem = ecsWorldDebugSystem;
          return this;
       }
 
+      
       public List<SearchTreeEntry> CreateSearchTree(SearchWindowContext context){
          var list   = new List<SearchTreeEntry>();
          var groups = new List<string>();
@@ -64,7 +70,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
 
             if (!string.IsNullOrWhiteSpace(Groups_Builder.ToString())){
                list.Add(
-                  new SearchTreeEntry(new GUIContent(splitedName.Last())){
+                  new SearchTreeEntry(new GUIContent(splitedName.Last(), IndentationIcon)){
                      level = depth, userData = componentType
                   });
                continue;
@@ -96,6 +102,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
 
          return list;
       }
+      
       
       public bool OnSelectEntry(SearchTreeEntry searchTreeEntry, SearchWindowContext context){
          var componentType = (Type)searchTreeEntry.userData;

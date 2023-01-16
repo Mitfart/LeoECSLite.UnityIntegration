@@ -13,8 +13,8 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
       public static string GetCleanName(this Type type){
          if (!type.IsGenericType) return type.Name;
 
-         int genericIndex = type.Name.LastIndexOf("`", StringComparison.Ordinal);
-         string typeName = genericIndex == -1
+         var genericIndex = type.Name.LastIndexOf("`", StringComparison.Ordinal);
+         var typeName = genericIndex == -1
                               ? type.Name
                               : type.Name[..genericIndex];
          return $"{typeName}";
@@ -36,10 +36,10 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
 
 
       public static IEcsPool GetPool(this EcsWorld world, Type type){
-         IEcsPool pool = world.GetPoolByType(type);
+         var pool = world.GetPoolByType(type);
          if (pool != null) return pool;
 
-         MethodInfo getPool = Get_Pool_Method_Info.MakeGenericMethod(type);
+         var getPool = Get_Pool_Method_Info.MakeGenericMethod(type);
          pool = (IEcsPool)getPool.Invoke(world, null);
 
          return pool;
@@ -47,19 +47,19 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
 
 
       public static EcsWorld.Mask Filter(this EcsWorld world, Type type){
-         MethodInfo getFilter = Filter_Method_Info.MakeGenericMethod(type);
+         var getFilter = Filter_Method_Info.MakeGenericMethod(type);
          return (EcsWorld.Mask)getFilter.Invoke(world, null);
       }
 
 
       public static EcsWorld.Mask Inc(this EcsWorld.Mask mask, Type type){
-         MethodInfo method = Inc_Method_Info.MakeGenericMethod(type);
+         var method = Inc_Method_Info.MakeGenericMethod(type);
          return (EcsWorld.Mask)method.Invoke(mask, null);
       }
 
 
       public static EcsWorld.Mask Exc(this EcsWorld.Mask mask, Type type){
-         MethodInfo method = Exc_Method_Info.MakeGenericMethod(type);
+         var method = Exc_Method_Info.MakeGenericMethod(type);
          return (EcsWorld.Mask)method.Invoke(mask, null);
       }
 
