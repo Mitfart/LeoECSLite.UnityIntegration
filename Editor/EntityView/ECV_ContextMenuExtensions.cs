@@ -5,7 +5,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
    public static class EcvContextMenuExtensions{
       [MenuItem("CONTEXT/BaseECV/UpdateValue")]
       public static void UpdateValue(MenuCommand menuCommand){
-         ((BaseECV)menuCommand.context).UpdateValue();
+         ((BaseEcv)menuCommand.context).UpdateValue();
       }
       [MenuItem("CONTEXT/BaseECV/UpdateValue", true)]
       public static bool UpdateValueValidate(MenuCommand menuCommand){
@@ -15,7 +15,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
 
       [MenuItem("CONTEXT/BaseECV/Remove")]
       public static void Remove(MenuCommand menuCommand){
-         ((BaseECV)menuCommand.context).Delete();
+         ((BaseEcv)menuCommand.context).Delete();
       }
       [MenuItem("CONTEXT/BaseECV/Remove", true)]
       public static bool RemoveValidate(MenuCommand menuCommand){

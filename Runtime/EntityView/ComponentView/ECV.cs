@@ -3,9 +3,7 @@ using Leopotam.EcsLite;
 using UnityEditor;
 
 namespace Mitfart.LeoECSLite.UnityIntegration{
-   public interface IEcsSerializedComponent{} // Tag-Interface for Generator
-
-   public abstract class ECV<T> : BaseECV where T : struct{
+   public abstract class Ecv<T> : BaseEcv where T : struct{
       public T value;
 
       private EcsPool<T> _typedEcsPool;

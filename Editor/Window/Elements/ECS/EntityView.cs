@@ -87,12 +87,12 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
       }
       
       
-      private void AddComponentView(BaseECV monoCompView){
+      private void AddComponentView(BaseEcv monoCompView){
          var compType = monoCompView.GetComponentType();
          var comp     = _contentFoldout.AddAndGet(new ComponentView().Init(monoCompView));
          _uiComponentViews.Add(compType, comp);
       }
-      private void DelComponentView(BaseECV monoCompView){
+      private void DelComponentView(BaseEcv monoCompView){
          var compType = monoCompView.GetComponentType();
          if (!_uiComponentViews.TryGetValue(compType, out var uiComp)) return;
          

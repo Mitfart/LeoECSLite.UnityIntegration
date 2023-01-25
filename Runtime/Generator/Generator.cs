@@ -4,10 +4,10 @@ using System.Text;
 
 namespace Mitfart.LeoECSLite.UnityIntegration{
    public static class Generator{
-      private const           string       StartIf         = "#if UNITY_EDITOR";
-      private const           string       EndIf           = "#endif";
-      private const           string       Using           = "using";
-      private const           string       PartialClass    = "public partial class";
+      private const           string       START_IF        = "#if UNITY_EDITOR";
+      private const           string       END_IF          = "#endif";
+      private const           string       USING           = "using";
+      private const           string       PARTIAL_CLASS   = "public partial class";
       private static readonly UTF8Encoding Script_Encoding = new(true);
 
 
@@ -16,9 +16,9 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
       }
 
       private static bool CreateScriptFile(Type type, GeneratorSettings settings){
-         string directory  = settings.GetFileDirectoryPath(type);
-         string name       = settings.GetName(type);
-         string fileByPath = GeneratorSettings.GetFilePath(directory, name);
+         var directory  = settings.GetFileDirectoryPath(type);
+         var name       = settings.GetName(type);
+         var fileByPath = GeneratorSettings.GetFilePath(directory, name);
 
 
          if (File.Exists(fileByPath)){
@@ -30,26 +30,26 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
          if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
 
 
-         using FileStream fileStream    = File.Create(fileByPath);
-         string           script        = GenerateScript(type, name);
-         byte[]           encodedScript = Script_Encoding.GetBytes(script);
+         using var fileStream    = File.Create(fileByPath);
+         var           script        = GenerateScript(type, name);
+         var           encodedScript = Script_Encoding.GetBytes(script);
          fileStream.Write(encodedScript, 0, encodedScript.Length);
 
          return true;
       }
 
       private static string GenerateScript(Type type, string name){
-         string typeNamespace   = type.Namespace;
-         string systemNamespace = typeof(EcsWorldDebugSystem).Namespace;
-         string ecvClassName    = typeof(ECV<>).GetCleanName();
+         var typeNamespace   = type.Namespace;
+         var systemNamespace = typeof(EcsWorldDebugSystem).Namespace;
+         var ecvClassName    = typeof(Ecv<>).GetCleanName();
 
-         bool needNamespace = !string.IsNullOrWhiteSpace(typeNamespace) && typeNamespace != systemNamespace;
+         var needNamespace = !string.IsNullOrWhiteSpace(typeNamespace) && typeNamespace != systemNamespace;
          return
-            $"{StartIf} \n" +
-            $"{Using} {systemNamespace}; \n" +
-            (needNamespace ? $"{Using} {type.Namespace}; \n" : null) +
-            $"{PartialClass} {name} : {ecvClassName}<{type.Name}>{{ }} \n" +
-            $"{EndIf}";
+            $"{START_IF} \n" +
+            $"{USING} {systemNamespace}; \n" +
+            (needNamespace ? $"{USING} {type.Namespace}; \n" : null) +
+            $"{PARTIAL_CLASS} {name} : {ecvClassName}<{type.Name}>{{ }} \n" +
+            $"{END_IF}";
       }
    }
 }

@@ -65,13 +65,13 @@ void Update() {
 ```
 
 ### Объявление компенента
-> Для отображения компонента в редакторе, необходимо создать ECV<Comp>  `(ECV - ECS Component View)`
+> Для отображения компонента в редакторе, необходимо создать **ECV< TComp >**  
+> `(ECV - ECS Component View)` \
 
 ```c#
-// IEcsSerializedComponent - интерфейс для кодогенерации стандартного ECV<Comp> для компонента 
-// Компонент обязательно должен быть с атрибутом: [Serializable]
-[Serializable]
-public struct Comp : IEcsSerializedComponent {
+[Serializable] 
+[GenerateView]
+public struct Comp {
     public string value;
 }
  
@@ -82,6 +82,8 @@ using Mitfart.LeoECSLite.UnityIntegration;
 public partial class ECV_Comp : ECV<Comp>{ }
 #endif
 ```
+> **[GenerateView]** - атрибут для генерации стандартного **ECV< TComp >** для компонента \
+> ( Компонент обязан иметь **[Serializable]** атрибут )
 
 
 > **ВАЖНО!** По умолчанию названия компонентов **НЕ** записываются в имя `GameObject`
@@ -132,12 +134,12 @@ public partial class ECV_Comp : ECV<Comp>{ }
   + `компонентам / пулам`
 
 ### Минусы
-+ Необходимость **оформления** компонентов с помощью `IEcsSerializedComponent` \
-  `(для возмодности редактировать их)`
++ Необходимость создания `View-компонентов ` (`ECV<>`) \
+  `(Частично решается кодогенерацией)`
 
 ### Планируется
-+ Возможность фильтрации сущностей по:
-  + `DebugTag`
++ `Возможность фильтрации сущностей по DebugTag`
++ `Возможность дэбага систем`
 
 
 
@@ -229,9 +231,9 @@ public partial class ECV_Comp : ECV<Comp>{
 #endif
 ```
 
-- написание своего `Editor`- скрипта для **ECV**:
+- написание своего **Editor**- скрипта для **ECV**:
   ( [подробности тут](https://docs.unity3d.com/Manual/UIE-HowTo-CreateCustomInspector) )
-###### использование стандартного GUILayout-а, возможно, но не рекомендуется
+###### использование стандартного GUILayout, возможно, но не рекомендуется
 ```c#
 #if UNITY_EDITOR
 using UnityEditor;
@@ -245,7 +247,6 @@ public class ECV_Comp_Inspector : Editor {
     // Создание главного/родительского элемента
     var container = new VisualElement();
 
-    // Создание редактора
     // ...
 
     return container;

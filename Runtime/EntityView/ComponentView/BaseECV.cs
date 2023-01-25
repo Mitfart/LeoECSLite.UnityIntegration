@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Serialization;
 
 namespace Mitfart.LeoECSLite.UnityIntegration{
-   public abstract class BaseECV : MonoBehaviour{
+   public abstract class BaseEcv : MonoBehaviour{
       public MonoEntityView MonoEntityView{ get; private set; }
       public IEcsPool       EcsPool       { get; private set; }
       public EcsWorld       EcsWorld      { get; private set; }

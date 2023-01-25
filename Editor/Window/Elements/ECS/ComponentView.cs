@@ -9,7 +9,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
       private readonly FoldoutWithButtons _contentFoldout;
 
       public Type             ComponentType     { get; private set; }
-      public BaseECV          MonoView          { get; private set; }
+      public BaseEcv          MonoView          { get; private set; }
       public InspectorElement ComponentInspector{ get; private set; }
 
       public string Label{ get => _contentFoldout.text; set => _contentFoldout.text = value; }
@@ -29,7 +29,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
 
       
 
-      public ComponentView Init(BaseECV monoCompView){
+      public ComponentView Init(BaseEcv monoCompView){
          MonoView      = monoCompView;
          ComponentType = MonoView.GetComponentType();
          Label         = ComponentType.Name;

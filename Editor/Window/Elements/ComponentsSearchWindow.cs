@@ -50,7 +50,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
 
          list.Add(new SearchTreeGroupEntry(new GUIContent(TITLE)));
 
-         foreach (var componentType in ECV_Database.Registered_Ecv.Keys){
+         foreach (var componentType in EcvDatabase.Registered_Ecv.Keys){
             var splitedName = componentType.ToString().Split(TYPE_SEPARATOR);
             var depth       = splitedName.Length;
 
@@ -90,7 +90,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
 
          _ecsWorldDebugSystem.ForeachPool(pool => {
                var componentType = pool.GetComponentType();
-               if (ECV_Database.Registered_Ecv.ContainsKey(componentType)) return;
+               if (EcvDatabase.Registered_Ecv.ContainsKey(componentType)) return;
                if (!notDefindedGroupExist){
                   list.Add(new SearchTreeGroupEntry(new GUIContent(NOT_DEFINED_GROUP), 1));
                   notDefindedGroupExist = true;

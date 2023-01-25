@@ -2,7 +2,7 @@ using System;
 using UnityEditor;
 
 namespace Mitfart.LeoECSLite.UnityIntegration{
-   public sealed class NotDefinedECV : BaseECV{
+   public sealed class NotDefinedEcv : BaseEcv{
       private Type _componentType;
 
       public void SetComponentType(Type type){

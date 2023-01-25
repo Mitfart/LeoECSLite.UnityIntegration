@@ -76,7 +76,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
          public void BakeComponents(IEnumerable<Type> bakedComps){
             _bakedCompsBuilder.Clear();
 
-            foreach (Type bakedComp in bakedComps)
+            foreach (var bakedComp in bakedComps)
                _bakedCompsBuilder
                  .Append(bakedComp.Name)
                  .Append(COMPONENTS_SEPARATOR);

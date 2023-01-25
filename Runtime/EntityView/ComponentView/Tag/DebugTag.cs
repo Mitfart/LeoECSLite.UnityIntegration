@@ -2,7 +2,7 @@
 using System;
 
 namespace Mitfart.LeoECSLite.UnityIntegration  {
-   public sealed class DebugTagEcv : ECV<DebugTag>{
+   public sealed class DebugTagEcv : Ecv<DebugTag>{
       public override int GetPriority() => 1;
 
       
@@ -18,7 +18,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration  {
    }
 
    [Serializable]
-   public struct DebugTag : IEcsSerializedComponent{
+   public struct DebugTag {
       public string tag;
    }
 }

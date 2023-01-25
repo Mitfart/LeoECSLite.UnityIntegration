@@ -1,4 +1,5 @@
 using System;
+using Mitfart.LeoECSLite.UnityIntegration.Attributes;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEngine;
@@ -28,10 +29,8 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
 
          foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
          foreach (var type in assembly.GetTypes()){
-            if (!(type.IsValueType && !type.IsPrimitive && !type.IsEnum) ||
-                !typeof(IEcsSerializedComponent).IsAssignableFrom(type) ||
-                type.IsGenericType ||
-                type.IsInterface)
+            if (type.GetCustomAttributes(typeof(GenerateView), false).Length <= 0 ||
+                type.IsGenericType)
                continue;
 
             var create = Generator.Create(type, GeneratorSettings);

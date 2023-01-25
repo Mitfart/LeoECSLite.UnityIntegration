@@ -5,9 +5,9 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Mitfart.LeoECSLite.UnityIntegration{
-   [CustomEditor(typeof(NotDefinedECV))]
+   [CustomEditor(typeof(NotDefinedEcv))]
    public class NotDefinedEcvEditor : Editor{
-      private BaseECV     _typedTarget;
+      private BaseEcv     _typedTarget;
       private FieldInfo[] _fields;
       private Label[]     _fieldsValues;
       private object      _prevComponent;
@@ -25,7 +25,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
 
 
       public override VisualElement CreateInspectorGUI(){
-         _typedTarget = (BaseECV) target;
+         _typedTarget = (BaseEcv) target;
          
          var root = new VisualElement();
          

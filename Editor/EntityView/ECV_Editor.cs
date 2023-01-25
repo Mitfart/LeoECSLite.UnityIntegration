@@ -4,7 +4,7 @@ using UnityEngine.UIElements;
 
 namespace Mitfart.LeoECSLite.UnityIntegration{
    [CanEditMultipleObjects]
-   [CustomEditor(typeof(BaseECV), true)]
+   [CustomEditor(typeof(BaseEcv), true)]
    public class EcvEditor : Editor{
       private void OnEnable(){
          EditorApplication.update -= UpdateValue;
@@ -20,13 +20,13 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
             return;
          }
 
-         if (target is not BaseECV script) return;
+         if (target is not BaseEcv script) return;
          script.UpdateValue();
       }
 
       public override VisualElement CreateInspectorGUI(){
          var root = new VisualElement();
-         if (target is not BaseECV script) 
+         if (target is not BaseEcv script) 
             return root;
          
          var property = script.GetValueProperty(serializedObject);
