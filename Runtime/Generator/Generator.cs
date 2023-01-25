@@ -39,16 +39,13 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
       }
 
       private static string GenerateScript(Type type, string name){
-         var typeNamespace   = type.Namespace;
          var systemNamespace = typeof(EcsWorldDebugSystem).Namespace;
          var ecvClassName    = typeof(Ecv<>).GetCleanName();
 
-         var needNamespace = !string.IsNullOrWhiteSpace(typeNamespace) && typeNamespace != systemNamespace;
          return
             $"{START_IF} \n" +
             $"{USING} {systemNamespace}; \n" +
-            (needNamespace ? $"{USING} {type.Namespace}; \n" : null) +
-            $"{PARTIAL_CLASS} {name} : {ecvClassName}<{type.Name}>{{ }} \n" +
+            $"{PARTIAL_CLASS} {name} : {ecvClassName}<{type}>{{ }} \n" +
             $"{END_IF}";
       }
    }
