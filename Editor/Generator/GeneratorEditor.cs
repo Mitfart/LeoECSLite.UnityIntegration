@@ -10,7 +10,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
 
       [MenuItem(MenuPath.Generator, priority = 11)]
       public static void Generate__Editor(){
-         Generate();
+         Generate(true);
       }
 
       [MenuItem(MenuPath.Generator, true)]
@@ -20,11 +20,11 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
 
       [DidReloadScripts]
       public static void Generate__Auto(){
-         if (GeneratorSettings.autoGenerate) Generate();
+         if (GeneratorSettings.autoGenerate) Generate(false);
       }
 
 
-      private static void Generate(){
+      private static void Generate(bool withRefresh){
          var isModified = false;
 
          foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
@@ -37,7 +37,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
             isModified = isModified || create;
          }
 
-         if (isModified && !GeneratorSettings.autoGenerate) AssetDatabase.Refresh();
+         if (isModified && withRefresh) AssetDatabase.Refresh();
       }
    }
 }
