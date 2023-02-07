@@ -1,12 +1,14 @@
 using System;
 using System.Reflection;
+using Mitfart.LeoECSLite.UnityIntegration.ComponentView;
+using Mitfart.LeoECSLite.UnityIntegration.Editor.Window;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Mitfart.LeoECSLite.UnityIntegration{
+namespace Mitfart.LeoECSLite.UnityIntegration.Editor.EntityView{
    [CustomEditor(typeof(NotDefinedEcv))]
-   public class NotDefinedEcvEditor : Editor{
+   public class NotDefinedEcvEditor : UnityEditor.Editor{
       private BaseEcv     _typedTarget;
       private FieldInfo[] _fields;
       private Label[]     _fieldsValues;

@@ -1,7 +1,8 @@
+using Mitfart.LeoECSLite.UnityIntegration.ComponentView;
 using UnityEditor;
 using UnityEngine;
 
-namespace Mitfart.LeoECSLite.UnityIntegration{
+namespace Mitfart.LeoECSLite.UnityIntegration.Editor.EntityView{
    public static class EcvContextMenuExtensions{
       [MenuItem("CONTEXT/BaseECV/UpdateValue")]
       public static void UpdateValue(MenuCommand menuCommand){

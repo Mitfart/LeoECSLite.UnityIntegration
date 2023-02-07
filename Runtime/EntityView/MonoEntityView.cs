@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
 using Leopotam.EcsLite;
+using Mitfart.LeoECSLite.UnityIntegration.ComponentView;
 using UnityEngine;
 
-namespace Mitfart.LeoECSLite.UnityIntegration{
+namespace Mitfart.LeoECSLite.UnityIntegration.EntityView{
    public sealed partial class MonoEntityView : MonoBehaviour{
       [NonSerialized] private NameBuilder _nameBuilder;
       
@@ -19,6 +20,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
       public event Action<BaseEcv> OnAddComponent;
       public event Action<BaseEcv> OnRemoveComponent;
 
+      
       
       public void Init(EcsWorldDebugSystem debugSystem, int entity){
          DebugSystem = debugSystem;
@@ -37,6 +39,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
          gameObject.SetActive(IsActive = true);
          UpdateName();
       }
+      
       public void Deactivate(){
          gameObject.SetActive(IsActive = false);
          _nameBuilder.Reset();
@@ -48,12 +51,9 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
          UpdateComponents(true);
          UpdateName();
       }
-
+      
       public void UpdateName(){
          _nameBuilder.Update();
-      }
-      public void ChangeTag(string newTag){
-         _nameBuilder.ChangeTag(newTag);
       }
 
       public void UpdateComponents(bool updateValues = false){
@@ -68,16 +68,22 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
             });
          _nameBuilder.BakeComponents(Components.Keys);
       }
+      
       public void UpdateComponentsValues(){
          foreach (var view in Components.Values) 
             view.UpdateValue();
       }
-
+      
+      public void ChangeTag(string newTag) {
+         _nameBuilder.ChangeTag(newTag);
+      }
+      
       private void RemoveComponents(){
          foreach (var componentType in ComponentsToRemove.Keys)
             Components.Remove(componentType);
          ComponentsToRemove.Clear();
       }
+      
       
       
       public BaseEcv GetOrAdd(Type compType){
@@ -91,6 +97,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
          
          return view;
       }
+      
       public void Remove(BaseEcv compView){
          var componentType = compView.GetComponentType();
          
@@ -98,6 +105,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
          ComponentsToRemove[componentType] = compView;
       }
 
+      
 
       public void Delete(){
          if (!IsActive) return;

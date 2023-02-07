@@ -1,4 +1,4 @@
-namespace Mitfart.LeoECSLite.UnityIntegration{
+namespace Mitfart.LeoECSLite.UnityIntegration.Editor{
    public static class MenuPath{
       public const string Root               = "LeoECS Lite";
       public const string Debug_Window       = "LeoECS Lite/Debug Window";

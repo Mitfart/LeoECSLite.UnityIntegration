@@ -1,8 +1,9 @@
 using System;
 using System.IO;
 using System.Text;
+using Mitfart.LeoECSLite.UnityIntegration.ComponentView;
 
-namespace Mitfart.LeoECSLite.UnityIntegration{
+namespace Mitfart.LeoECSLite.UnityIntegration.Generator{
    public static class Generator{
       private const           string       START_IF        = "#if UNITY_EDITOR";
       private const           string       END_IF          = "#endif";

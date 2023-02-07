@@ -1,7 +1,7 @@
 using System;
 using UnityEngine.UIElements;
 
-namespace Mitfart.LeoECSLite.UnityIntegration{
+namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.Buttons{
    public sealed class ButtonsContainer : VisualElement{
       public ButtonsContainer(){
          style.flexDirection = FlexDirection.Row;

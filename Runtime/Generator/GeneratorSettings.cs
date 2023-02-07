@@ -3,7 +3,7 @@ using System;
 using UnityEditor;
 using UnityEngine;
 
-namespace Mitfart.LeoECSLite.UnityIntegration{
+namespace Mitfart.LeoECSLite.UnityIntegration.Generator{
    public sealed class GeneratorSettings : ScriptableSingleton<GeneratorSettings>{
       private const string DEFAULT_PREFIX              = "ECV_";
       private const string DEFAULT_POSTFIX             = "";

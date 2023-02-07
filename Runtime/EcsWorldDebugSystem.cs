@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Leopotam.EcsLite;
+using Mitfart.LeoECSLite.UnityIntegration.EntityView;
 using UnityEngine;
 using Object = UnityEngine.Object;
 

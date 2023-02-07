@@ -1,11 +1,12 @@
 using System;
 using Mitfart.LeoECSLite.UnityIntegration.Attributes;
+using Mitfart.LeoECSLite.UnityIntegration.Generator;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEngine;
 
-namespace Mitfart.LeoECSLite.UnityIntegration{
-   public sealed class GeneratorEditor : Editor{
+namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Generator{
+   public sealed class GeneratorEditor : UnityEditor.Editor{
       private static GeneratorSettings GeneratorSettings => GeneratorSettings.instance;
 
       [MenuItem(MenuPath.Generator, priority = 11)]
@@ -33,7 +34,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
                 type.IsGenericType)
                continue;
 
-            var create = Generator.Create(type, GeneratorSettings);
+            var create = UnityIntegration.Generator.Generator.Create(type, GeneratorSettings);
             isModified = isModified || create;
          }
 

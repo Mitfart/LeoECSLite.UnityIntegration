@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Mitfart.LeoECSLite.UnityIntegration{
+namespace Mitfart.LeoECSLite.UnityIntegration.ComponentView{
    public static class EcvDatabase{
       public static readonly Dictionary<Type, BaseEcv> Registered_Ecv = new();
 
 
+      
       static EcvDatabase(){
          var registerDummy = new GameObject();
 

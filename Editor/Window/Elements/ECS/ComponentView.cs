@@ -1,8 +1,10 @@
 using System;
+using Mitfart.LeoECSLite.UnityIntegration.ComponentView;
+using Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.Buttons;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
 
-namespace Mitfart.LeoECSLite.UnityIntegration{
+namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.ECS{
    public sealed class ComponentView : VisualElement{
       public override  VisualElement      contentContainer{ get; }
       

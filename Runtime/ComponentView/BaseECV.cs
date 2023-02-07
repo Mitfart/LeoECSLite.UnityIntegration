@@ -1,10 +1,10 @@
 using System;
 using Leopotam.EcsLite;
+using Mitfart.LeoECSLite.UnityIntegration.EntityView;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-namespace Mitfart.LeoECSLite.UnityIntegration{
+namespace Mitfart.LeoECSLite.UnityIntegration.ComponentView{
    public abstract class BaseEcv : MonoBehaviour{
       public MonoEntityView MonoEntityView{ get; private set; }
       public IEcsPool       EcsPool       { get; private set; }
@@ -13,11 +13,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
       public bool           IsActive      { get; private set; }
 
 
-      private void OnValidate(){
-         if (!IsActive) return;
-
-         OnSetValue();
-      }
+      
 
       public virtual  int                GetPriority() => -1;
       public abstract Type               GetComponentType();
@@ -66,6 +62,14 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
 
          MonoEntityView.Remove(this);
          DestroyImmediate(this);
+      }
+      
+      
+      
+      private void OnValidate() {
+         if (!IsActive) return;
+
+         OnSetValue();
       }
    }
 }
