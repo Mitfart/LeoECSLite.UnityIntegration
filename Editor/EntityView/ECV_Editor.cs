@@ -32,8 +32,9 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.EntityView{
          
          var property = script.GetValueProperty(serializedObject);
 
-         root.AddScriptProperty(serializedObject);
-         if (property != null) root.AddPropertyVisualElement(property, 1);
+         root
+           .AddScriptProperty(serializedObject)
+           .AddPropertyVisualElement(property, 1);
 
          return root;
       }
