@@ -1,7 +1,7 @@
 using System;
 using UnityEditor;
 
-namespace Mitfart.LeoECSLite.UnityIntegration{
+namespace Mitfart.LeoECSLite.UnityIntegration.ComponentView{
    public sealed class NotDefinedEcv : BaseEcv{
       private Type _componentType;
 

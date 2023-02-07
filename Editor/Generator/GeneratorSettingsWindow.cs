@@ -1,7 +1,8 @@
+using Mitfart.LeoECSLite.UnityIntegration.Generator;
 using UnityEditor;
 using UnityEngine;
 
-namespace Mitfart.LeoECSLite.UnityIntegration{
+namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Generator{
    public class GeneratorSettingsWindow : EditorWindow{
       private static GeneratorSettingsWindow _window;
       private static GeneratorSettings       _settings;
@@ -18,7 +19,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
       }
 
       private void OnGUI(){
-         Editor.CreateEditor(_settings).DrawDefaultInspector();
+         UnityEditor.Editor.CreateEditor(_settings).DrawDefaultInspector();
       }
    }
 }

@@ -1,5 +1,6 @@
 #if UNITY_EDITOR
 using System;
+using Mitfart.LeoECSLite.UnityIntegration.ComponentView;
 
 namespace Mitfart.LeoECSLite.UnityIntegration  {
    public sealed class DebugTagEcv : Ecv<DebugTag>{

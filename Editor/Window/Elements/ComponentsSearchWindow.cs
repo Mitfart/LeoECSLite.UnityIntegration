@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Leopotam.EcsLite;
+using Mitfart.LeoECSLite.UnityIntegration.ComponentView;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
-namespace Mitfart.LeoECSLite.UnityIntegration{
+namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements{
    public class ComponentsSearchWindow : ScriptableObject, ISearchWindowProvider{
       private const string TITLE                  = "Components";
       private const string TYPE_SEPARATOR         = ".";

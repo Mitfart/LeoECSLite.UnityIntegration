@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
-using Leopotam.EcsLite;
-using UnityEditor.Experimental.GraphView;
+using Mitfart.LeoECSLite.UnityIntegration.ComponentView;
+using Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.Buttons;
+using Mitfart.LeoECSLite.UnityIntegration.EntityView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Mitfart.LeoECSLite.UnityIntegration{
+namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.ECS{
    public sealed class EntityView : VisualElement{
       public override  VisualElement      contentContainer{ get; }
       

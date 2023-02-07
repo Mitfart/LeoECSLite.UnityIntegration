@@ -1,6 +1,6 @@
 {
   "name": "Mitfart.LeoECSLite.UnityIntegration.Editor",
-  "rootNamespace": "Mitfart.LeoECSLite.UnityIntegration",
+  "rootNamespace": "Mitfart",
   "references": [
     "Leopotam.EcsLite",
     "Mitfart.LeoECSLite.UnityIntegration"

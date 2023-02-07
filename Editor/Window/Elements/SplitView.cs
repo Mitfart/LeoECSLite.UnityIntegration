@@ -1,6 +1,6 @@
 using UnityEngine.UIElements;
 
-namespace Mitfart.LeoECSLite.UnityIntegration{
+namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements{
    public sealed class SplitView : TwoPaneSplitView{
       public readonly VisualElement Left;
       public readonly VisualElement Right;

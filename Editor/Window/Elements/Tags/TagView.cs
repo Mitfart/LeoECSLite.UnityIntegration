@@ -1,7 +1,7 @@
 using System;
 using UnityEngine.UIElements;
 
-namespace Mitfart.LeoECSLite.UnityIntegration{
+namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.Tags{
    public class TagView : Button{
       private readonly TagsContainerView _container;
       private readonly Type              _tagType;

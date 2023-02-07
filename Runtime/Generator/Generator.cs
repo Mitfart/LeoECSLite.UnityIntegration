@@ -1,8 +1,9 @@
 using System;
 using System.IO;
 using System.Text;
+using Mitfart.LeoECSLite.UnityIntegration.ComponentView;
 
-namespace Mitfart.LeoECSLite.UnityIntegration{
+namespace Mitfart.LeoECSLite.UnityIntegration.Generator{
    public static class Generator{
       private const           string       START_IF        = "#if UNITY_EDITOR";
       private const           string       END_IF          = "#endif";
@@ -39,16 +40,13 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
       }
 
       private static string GenerateScript(Type type, string name){
-         var typeNamespace   = type.Namespace;
          var systemNamespace = typeof(EcsWorldDebugSystem).Namespace;
          var ecvClassName    = typeof(Ecv<>).GetCleanName();
 
-         var needNamespace = !string.IsNullOrWhiteSpace(typeNamespace) && typeNamespace != systemNamespace;
          return
             $"{START_IF} \n" +
             $"{USING} {systemNamespace}; \n" +
-            (needNamespace ? $"{USING} {type.Namespace}; \n" : null) +
-            $"{PARTIAL_CLASS} {name} : {ecvClassName}<{type.Name}>{{ }} \n" +
+            $"{PARTIAL_CLASS} {name} : {ecvClassName}<{type}>{{ }} \n" +
             $"{END_IF}";
       }
    }

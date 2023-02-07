@@ -1,10 +1,6 @@
 using System;
 using System.Reflection;
 using Leopotam.EcsLite;
-using UnityEditor;
-using UnityEditor.UIElements;
-using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace Mitfart.LeoECSLite.UnityIntegration{
    public static class Extensions{

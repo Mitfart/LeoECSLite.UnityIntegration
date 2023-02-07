@@ -1,11 +1,12 @@
+using Mitfart.LeoECSLite.UnityIntegration.ComponentView;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Mitfart.LeoECSLite.UnityIntegration{
+namespace Mitfart.LeoECSLite.UnityIntegration.Editor.EntityView{
    [CanEditMultipleObjects]
    [CustomEditor(typeof(BaseEcv), true)]
-   public class EcvEditor : Editor{
+   public class EcvEditor : UnityEditor.Editor{
       private void OnEnable(){
          EditorApplication.update -= UpdateValue;
          EditorApplication.update += UpdateValue;

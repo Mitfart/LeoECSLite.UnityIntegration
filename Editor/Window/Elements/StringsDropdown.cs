@@ -1,7 +1,7 @@
 using System;
 using UnityEngine.UIElements;
 
-namespace Mitfart.LeoECSLite.UnityIntegration{
+namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements{
    public class StringsDropdown : DropdownField{
       public event Action<string, string> OnChangeValue;
 

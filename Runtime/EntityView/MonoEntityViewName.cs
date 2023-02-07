@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Mitfart.LeoECSLite.UnityIntegration{
+namespace Mitfart.LeoECSLite.UnityIntegration.EntityView{
    public sealed partial class MonoEntityView{
       public sealed class NameBuilder {
          private const string COMPONENTS_SEPARATOR = ", ";

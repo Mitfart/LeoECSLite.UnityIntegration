@@ -1,13 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements;
+using Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.Tags;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Mitfart.LeoECSLite.UnityIntegration{
+namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window{
    public class EcsDebugWindow : EditorWindow{
-      private readonly Dictionary<int, EntityView> _activeEntitiesViews = new();
+      private readonly Dictionary<int, Elements.ECS.EntityView> _activeEntitiesViews = new();
       
       private SplitView  _content;
       private ScrollView _entitiesContainer;
@@ -184,10 +186,10 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
       }
       
 
-      private EntityView CreateEntityView(int entity){
+      private Elements.ECS.EntityView CreateEntityView(int entity) {
          return !_activeSystem.TryGetEntityView(entity, out var view) 
                    ? null 
-                   : new EntityView().Init(view);
+                   : new Elements.ECS.EntityView().Init(view);
       }
       private void DisposeEntityView(int entity){
          if (!_activeEntitiesViews.TryGetValue(entity, out var view)) return;

@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Mitfart.LeoECSLite.UnityIntegration{
+namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.Buttons{
    public sealed class FoldoutWithButtons : Foldout{
       private const    string           EMPTY_STRING = "_";
       private readonly ButtonsContainer _buttonsContainer;

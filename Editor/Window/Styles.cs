@@ -1,7 +1,8 @@
+using Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.Buttons;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Mitfart.LeoECSLite.UnityIntegration{
+namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window{
    public static class Styles{
       public const int Metrics_Lll = 35;
       public const int Metrics_Ll  = 30;

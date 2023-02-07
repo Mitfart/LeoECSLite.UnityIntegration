@@ -1,16 +1,17 @@
 using System;
 using Mitfart.LeoECSLite.UnityIntegration.Attributes;
+using Mitfart.LeoECSLite.UnityIntegration.Generator;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEngine;
 
-namespace Mitfart.LeoECSLite.UnityIntegration{
-   public sealed class GeneratorEditor : Editor{
+namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Generator{
+   public sealed class GeneratorEditor : UnityEditor.Editor{
       private static GeneratorSettings GeneratorSettings => GeneratorSettings.instance;
 
       [MenuItem(MenuPath.Generator, priority = 11)]
       public static void Generate__Editor(){
-         Generate();
+         Generate(true);
       }
 
       [MenuItem(MenuPath.Generator, true)]
@@ -20,11 +21,11 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
 
       [DidReloadScripts]
       public static void Generate__Auto(){
-         if (GeneratorSettings.autoGenerate) Generate();
+         if (GeneratorSettings.autoGenerate) Generate(false);
       }
 
 
-      private static void Generate(){
+      private static void Generate(bool withRefresh){
          var isModified = false;
 
          foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
@@ -33,11 +34,11 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
                 type.IsGenericType)
                continue;
 
-            var create = Generator.Create(type, GeneratorSettings);
+            var create = UnityIntegration.Generator.Generator.Create(type, GeneratorSettings);
             isModified = isModified || create;
          }
 
-         if (isModified && !GeneratorSettings.autoGenerate) AssetDatabase.Refresh();
+         if (isModified && withRefresh) AssetDatabase.Refresh();
       }
    }
 }

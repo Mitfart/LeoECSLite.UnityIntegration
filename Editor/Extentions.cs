@@ -5,7 +5,7 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Mitfart.LeoECSLite.UnityIntegration{
+namespace Mitfart.LeoECSLite.UnityIntegration.Editor{
    public static class Extentions{
       public static T AddAndGet<T>(this VisualElement root, T visualElement) where T : VisualElement{
          root.Add(visualElement);
@@ -22,7 +22,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
       
 
       public static Type GetPropertyDrawer(this Type classType){
-         var assembly               = Assembly.GetAssembly(typeof(Editor));
+         var assembly               = Assembly.GetAssembly(typeof(UnityEditor.Editor));
          var scriptAttributeUtility = assembly.CreateInstance("UnityEditor.ScriptAttributeUtility");
          if (scriptAttributeUtility == null) return null;
 

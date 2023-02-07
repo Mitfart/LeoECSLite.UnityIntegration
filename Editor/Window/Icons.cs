@@ -1,4 +1,4 @@
-namespace Mitfart.LeoECSLite.UnityIntegration{
+namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window{
    public static class Icons{
       public static string Plus       => "✚";
       public static string Reload     => "↻";

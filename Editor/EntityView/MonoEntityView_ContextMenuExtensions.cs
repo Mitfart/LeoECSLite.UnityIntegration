@@ -1,8 +1,10 @@
 using System;
+using Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements;
+using Mitfart.LeoECSLite.UnityIntegration.EntityView;
 using UnityEditor;
 using UnityEngine;
 
-namespace Mitfart.LeoECSLite.UnityIntegration{
+namespace Mitfart.LeoECSLite.UnityIntegration.Editor.EntityView{
    public static class MonoEntityViewContextMenuExtensions{
       [MenuItem("CONTEXT/MonoEntityView/UpdateView")]
       public static void UpdateView(MenuCommand menuCommand){
