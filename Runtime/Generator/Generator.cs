@@ -28,19 +28,20 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Generator{
             File.Delete(fileByPath);
          }
 
-         if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
+         if (!Directory.Exists(directory))
+            Directory.CreateDirectory(directory);
 
 
          using var fileStream    = File.Create(fileByPath);
-         var           script        = GenerateScript(type, name);
-         var           encodedScript = Script_Encoding.GetBytes(script);
+         var       script        = GenerateScript(type, name);
+         var       encodedScript = Script_Encoding.GetBytes(script);
          fileStream.Write(encodedScript, 0, encodedScript.Length);
 
          return true;
       }
 
       private static string GenerateScript(Type type, string name){
-         var systemNamespace = typeof(EcsWorldDebugSystem).Namespace;
+         var systemNamespace = typeof(Ecv<>).Namespace;
          var ecvClassName    = typeof(Ecv<>).GetCleanName();
 
          return
