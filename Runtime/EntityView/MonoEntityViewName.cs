@@ -74,6 +74,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.EntityView{
 
 
          public void BakeComponents(IEnumerable<Type> bakedComps){
+            if (!_settings.bakeComponents) return;
             _bakedCompsBuilder.Clear();
 
             foreach (var bakedComp in bakedComps)
