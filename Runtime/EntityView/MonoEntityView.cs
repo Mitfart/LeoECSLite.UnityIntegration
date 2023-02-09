@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Leopotam.EcsLite;
 using Mitfart.LeoECSLite.UnityIntegration.ComponentView;
+using Mitfart.LeoECSLite.UnityIntegration.System;
 using UnityEngine;
 
 namespace Mitfart.LeoECSLite.UnityIntegration.EntityView{
@@ -22,7 +23,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.EntityView{
 
       
       
-      public void Init(EcsWorldDebugSystem debugSystem, int entity){
+      public MonoEntityView Init(EcsWorldDebugSystem debugSystem, int entity) {
          DebugSystem = debugSystem;
          Entity      = entity;
          World       = DebugSystem.World;
@@ -31,6 +32,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.EntityView{
 
          ComponentsToRemove.Clear();
          Components.Clear();
+         return this;
       }
 
 
@@ -113,7 +115,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.EntityView{
       public void Delete(){
          if (!IsActive) return;
          foreach (var componentView in Components.Values)
-            componentView.Delete();
+            componentView.Remove();
       }
    }
 }

@@ -1,8 +1,9 @@
 using System;
-using Leopotam.EcsLite;
-using Mitfart.LeoECSLite.UnityIntegration.EntityView;
 using UnityEditor;
 using UnityEngine;
+using Leopotam.EcsLite;
+using Mitfart.LeoECSLite.UnityIntegration.EntityView;
+using Mitfart.LeoECSLite.UnityIntegration.Extentions;
 
 namespace Mitfart.LeoECSLite.UnityIntegration.ComponentView{
    public abstract class BaseEcv : MonoBehaviour{
@@ -20,7 +21,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.ComponentView{
       
       protected virtual void OnInit()     {}
       protected virtual void OnSetValue() {}
-      protected virtual void OnDelete()   {}
+      protected virtual void OnRemove()   {}
 
       
 
@@ -41,16 +42,16 @@ namespace Mitfart.LeoECSLite.UnityIntegration.ComponentView{
          if (!IsActive || !MonoEntityView.IsActive) return;
 
          if (!EcsPool.Has(Entity)){
-            Delete();
+            Remove();
             return;
          }
          
          OnUpdateValue();
       }
       
-      public void Delete(){
+      public void Remove(){
          if (IsActive) {
-            OnDelete();
+            OnRemove();
             if (EcsPool.Has(Entity)) 
                EcsPool.Del(Entity);
          }

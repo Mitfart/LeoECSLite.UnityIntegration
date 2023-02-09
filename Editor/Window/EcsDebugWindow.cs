@@ -1,25 +1,29 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions;
 using Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements;
-using Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.Tags;
+using Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.Nav;
+using Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.Sort;
+using Mitfart.LeoECSLite.UnityIntegration.Extentions;
+using Mitfart.LeoECSLite.UnityIntegration.System;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window{
    public class EcsDebugWindow : EditorWindow{
-      private readonly Dictionary<int, Elements.ECS.EntityView> _activeEntitiesViews = new();
+      private readonly Dictionary<int, Elements.Entity.EntityView> _activeEntitiesViews = new();
       
       private SplitView  _content;
       private ScrollView _entitiesContainer;
       private ListView   _entitiesList;
       private bool       _isEntitiesListDirty;
 
-      private TagsContainerView _tagsContainer;
-      private StringsDropdown   _worldsEnum;
+      private SortTagsContainerView _sortTagsContainer;
+      private StringsDropdown       _worldsEnum;
       
-      private EcsWorldDebugSystem _activeSystem;
+      public EcsWorldDebugSystem ActiveSystem { get; private set; }
 
 
 
@@ -34,8 +38,8 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window{
       }
       
       private void CreateElements(){
-         _tagsContainer = new TagsContainerView();
-         _worldsEnum    = new StringsDropdown();
+         _sortTagsContainer = new SortTagsContainerView(this);
+         _worldsEnum        = new StringsDropdown();
 
          _content           = new SplitView();
          _entitiesList      = new ListView();
@@ -43,15 +47,15 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window{
       }
       private void AddElements(){
          rootVisualElement
-           .AddChild(_tagsContainer)
+           .AddChild(_sortTagsContainer)
            .AddChild(_content);
          
          _content
-           .Left
+           .left
            .AddChild(_worldsEnum)
            .AddChild(_entitiesList);
          _content
-           .Right
+           .right
            .AddChild(_entitiesContainer);
       }
       private void InitElements(){
@@ -78,7 +82,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window{
       }
 
       private void InitEntitiesList(){
-         _entitiesList.itemsSource = _activeSystem.SortedAliveEntities;
+         _entitiesList.itemsSource = ActiveSystem.Sort.SortedAliveEntities;
          
          _entitiesList.bindItem          =  BindItem;
          _entitiesList.makeItem          =  MakeItem;
@@ -90,7 +94,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window{
 
 
          void BindItem(VisualElement element, int e){
-            if (!_activeSystem.TryGetEntityView(_activeSystem.SortedAliveEntities[e], out var entityView)) return;
+            if (!ActiveSystem.View.TryGetEntityView(ActiveSystem.Sort.SortedAliveEntities[e], out var entityView)) return;
 
             ((Label)element).text = entityView.name;
          }
@@ -118,7 +122,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window{
                _activeEntitiesViews.First().Value.IsExpanded = true;
          }
       }
-      private void SetEntitiesListDirty(int e) => SetEntitiesListDirty();
+      private void SetCreateDestroyEntitiesListDirty(int e) => SetEntitiesListDirty();
       private void SetEntitiesListDirty(){
          _isEntitiesListDirty = true;
       }
@@ -145,34 +149,33 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window{
 
 
       private void SetActiveWorldDebugSystem(EcsWorldDebugSystem newActiveDebugSystem){
-         if (_activeSystem == newActiveDebugSystem) return;
+         if (ActiveSystem == newActiveDebugSystem) return;
 
-         if (_activeSystem != null){
-            _activeSystem.OnUpdate           -= UpdateView;
-            _activeSystem.OnSortFilterChange -= SetEntitiesListDirty;
-            _activeSystem.OnEntityCreate     -= SetEntitiesListDirty;
-            _activeSystem.OnEntityDespose    -= SetEntitiesListDirty;
-            _activeSystem.OnEntityDespose    -= DisposeEntityView;
-            _activeSystem.OnDestroy          -= DisposeWorldView;
+         if (ActiveSystem != null){
+            ActiveSystem.OnUpdate                -= UpdateView;
+            ActiveSystem.Sort.OnSortFilterChange -= SetEntitiesListDirty;
+            ActiveSystem.Entities.OnCreate       -= SetCreateDestroyEntitiesListDirty;
+            ActiveSystem.Entities.OnDestroy      -= SetCreateDestroyEntitiesListDirty;
+            ActiveSystem.Entities.OnDestroy      -= DisposeDestroyEntityView;
+            ActiveSystem.OnDestroy               -= DisposeWorldView;
             
-            _tagsContainer.OnAddTag    -= _activeSystem.OnAddTag;
-            _tagsContainer.OnRemoveTag -= _activeSystem.OnRemoveTag;
+            _sortTagsContainer.OnAddSortTag    -= ActiveSystem.Sort.AddSortSortComponent;
+            _sortTagsContainer.OnRemoveSortTag -= ActiveSystem.Sort.RemoveSortSortComponent;
             ResetInspector();
          }
 
-         _activeSystem                      = newActiveDebugSystem;
-         _tagsContainer.EcsWorldDebugSystem = _activeSystem;
-         if (_activeSystem == null) return;
+         ActiveSystem = newActiveDebugSystem;
+         if (ActiveSystem == null) return;
 
-         _activeSystem.OnUpdate           += UpdateView;
-         _activeSystem.OnSortFilterChange += SetEntitiesListDirty;
-         _activeSystem.OnEntityCreate     += SetEntitiesListDirty;
-         _activeSystem.OnEntityDespose    += SetEntitiesListDirty;
-         _activeSystem.OnEntityDespose    += DisposeEntityView;
-         _activeSystem.OnDestroy          += DisposeWorldView;
+         ActiveSystem.OnUpdate                += UpdateView;
+         ActiveSystem.Sort.OnSortFilterChange += SetEntitiesListDirty;
+         ActiveSystem.Entities.OnCreate       += SetCreateDestroyEntitiesListDirty;
+         ActiveSystem.Entities.OnDestroy      += SetCreateDestroyEntitiesListDirty;
+         ActiveSystem.Entities.OnDestroy      += DisposeDestroyEntityView;
+         ActiveSystem.OnDestroy               += DisposeWorldView;
          
-         _tagsContainer.OnAddTag    += _activeSystem.OnAddTag;
-         _tagsContainer.OnRemoveTag += _activeSystem.OnRemoveTag;
+         _sortTagsContainer.OnAddSortTag    += ActiveSystem.Sort.AddSortSortComponent;
+         _sortTagsContainer.OnRemoveSortTag += ActiveSystem.Sort.RemoveSortSortComponent;
 
          InitEntitiesList();
       }
@@ -186,12 +189,12 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window{
       }
       
 
-      private Elements.ECS.EntityView CreateEntityView(int entity) {
-         return !_activeSystem.TryGetEntityView(entity, out var view) 
+      private Elements.Entity.EntityView CreateEntityView(int entity) {
+         return !ActiveSystem.View.TryGetEntityView(entity, out var view) 
                    ? null 
-                   : new Elements.ECS.EntityView().Init(view);
+                   : new Elements.Entity.EntityView().Init(view);
       }
-      private void DisposeEntityView(int entity){
+      private void DisposeDestroyEntityView(int entity){
          if (!_activeEntitiesViews.TryGetValue(entity, out var view)) return;
          view.Dispose();
       }
@@ -246,14 +249,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window{
 
 
       #region Open
-
-      private static EcsDebugWindow _window;
-
-      [MenuItem(MenuPath.Debug_Window)]
-      public static void Open(){
-         _window = GetWindow<EcsDebugWindow>(nameof(EcsDebugWindow));
-         _window.Show();
-      }
+      
 
       #endregion
    }
