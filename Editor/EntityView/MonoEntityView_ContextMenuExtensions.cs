@@ -29,7 +29,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.EntityView{
             }
 
             pool.AddRaw(monoView.Entity, Activator.CreateInstance(componentType));
-            monoView.GetOrAdd(componentType);
+            monoView.GetOrAddComponentView(componentType);
             return true;
          };
       }

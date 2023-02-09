@@ -21,15 +21,15 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
       private readonly List<Type> _sortComponentTypes = new();
       private          EcsFilter  _sortFilter;
 
-      public string                              WorldName          { get; }
-      public MonoEntityView.NameBuilder.Settings NameSettings       { get; }
-      public EcsWorld                            World              { get; private set; }
-      public HashSet<int>                        AliveEntities      { get; private set; }
-      public List<int>                           SortedAliveEntities{ get; private set; }
+      public string             WorldName           { get; }
+      public EntityNameSettings NameSettings        { get; }
+      public EcsWorld           World               { get; private set; }
+      public HashSet<int>       AliveEntities       { get; private set; }
+      public List<int>          SortedAliveEntities { get; private set; }
 
       
       
-      public EcsWorldDebugSystem(string worldName = null, MonoEntityView.NameBuilder.Settings nameSettings = default){
+      public EcsWorldDebugSystem(string worldName = null, EntityNameSettings nameSettings = default){
          WorldName    = worldName;
          NameSettings = nameSettings;
       }

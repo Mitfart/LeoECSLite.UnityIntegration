@@ -9,11 +9,11 @@ namespace Mitfart.LeoECSLite.UnityIntegration  {
       
       protected override void OnInit(){
          base.OnInit();
-         MonoEntityView.ChangeTag(value.tag);
+         MonoEntityView.SetTag(value.tag);
       }
 
       protected override ref DebugTag GetValidatedComponent(ref DebugTag component){
-         MonoEntityView.ChangeTag(component.tag);
+         MonoEntityView.SetTag(component.tag);
          return ref component;
       }
    }

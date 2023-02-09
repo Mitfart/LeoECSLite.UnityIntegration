@@ -59,7 +59,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.ECS{
                }
 
                pool.AddRaw(MonoView.Entity, Activator.CreateInstance(componentType));
-               MonoView.GetOrAdd(componentType);
+               MonoView.GetOrAddComponentView(componentType);
                return true;
             };
          }

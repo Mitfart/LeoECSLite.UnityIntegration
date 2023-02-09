@@ -5,17 +5,13 @@ namespace Mitfart.LeoECSLite.UnityIntegration.ComponentView{
    public sealed class NotDefinedEcv : BaseEcv{
       private Type _componentType;
 
-      public void SetComponentType(Type type){
-         _componentType = type ?? _componentType;
-      }
+      
+      public void SetComponentType(Type type) { _componentType = type ?? _componentType; }
 
-      public override SerializedProperty GetValueProperty(SerializedObject serializedObject = null){
-         return null;
-      }
-      public override Type GetComponentType(){
-         return _componentType;
-      }
+      public override SerializedProperty GetValueProperty(SerializedObject serializedObject = null) => null;
+      public override Type               GetComponentType()                                         => _componentType;
+      
 
-      public override void OnUpdateValue(){}
+      public override void OnUpdateValue() { }
    }
 }

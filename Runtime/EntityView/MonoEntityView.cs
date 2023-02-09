@@ -5,20 +5,20 @@ using Mitfart.LeoECSLite.UnityIntegration.ComponentView;
 using UnityEngine;
 
 namespace Mitfart.LeoECSLite.UnityIntegration.EntityView{
-   public sealed partial class MonoEntityView : MonoBehaviour{
-      [NonSerialized] private NameBuilder _nameBuilder;
-      
-      public EcsWorldDebugSystem DebugSystem{ get; private set; }
-      public EcsWorld            World      { get; private set; }
-      public int                 Entity     { get; private set; }
-      public string              Tag        { get; private set; }
-      public bool                IsActive   { get; private set; }
+   public sealed class MonoEntityView : MonoBehaviour{
+      public EcsWorldDebugSystem DebugSystem { get; private set; }
+      public EcsWorld            World       { get; private set; }
+      public int                 Entity      { get; private set; }
+      public bool                IsActive    { get; private set; }
+      public string              Tag         { get; private set; }
 
-      public  Dictionary<Type, BaseEcv> Components        { get; } = new();
-      private Dictionary<Type, BaseEcv> ComponentsToRemove{ get; } = new();
+      public Dictionary<Type, BaseEcv> Components         { get; } = new();
+      public Dictionary<Type, BaseEcv> ComponentsToRemove { get; } = new();
       
       public event Action<BaseEcv> OnAddComponent;
       public event Action<BaseEcv> OnRemoveComponent;
+      
+      private EntityNameBuilder _entityNameBuilder;
 
       
       
@@ -27,7 +27,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.EntityView{
          Entity      = entity;
          World       = DebugSystem.World;
          
-         _nameBuilder ??= new NameBuilder(this, debugSystem.NameSettings);
+         _entityNameBuilder ??= new EntityNameBuilder(this, debugSystem.NameSettings);
 
          ComponentsToRemove.Clear();
          Components.Clear();
@@ -42,31 +42,31 @@ namespace Mitfart.LeoECSLite.UnityIntegration.EntityView{
       
       public void Deactivate(){
          gameObject.SetActive(IsActive = false);
-         _nameBuilder.Reset();
+         _entityNameBuilder.Reset();
       }
 
 
 
       public void UpdateView(){
-         UpdateComponents(true);
+         UpdateComponents(updateValues: true);
          UpdateName();
       }
       
       public void UpdateName(){
-         _nameBuilder.Update();
+         _entityNameBuilder.Update();
       }
-
+      
       public void UpdateComponents(bool updateValues = false){
          RemoveComponents();
          
          DebugSystem.ForeachComponent(
             Entity, component => {
-               var view = GetOrAdd(component.GetType());
+               var view = GetOrAddComponentView(component.GetType());
 
                if (updateValues) 
                   view.UpdateValue();
             });
-         _nameBuilder.BakeComponents(Components.Keys);
+         _entityNameBuilder.BakeComponents(Components.Keys);
       }
       
       public void UpdateComponentsValues(){
@@ -74,8 +74,11 @@ namespace Mitfart.LeoECSLite.UnityIntegration.EntityView{
             view.UpdateValue();
       }
       
-      public void ChangeTag(string newTag) {
-         _nameBuilder.ChangeTag(newTag);
+      public void SetTag(string newTag) {
+         if (string.Equals(newTag, Tag)) return;
+         
+         _entityNameBuilder.SetTag(newTag);
+         Tag = newTag;
       }
       
       private void RemoveComponents(){
@@ -86,7 +89,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.EntityView{
       
       
       
-      public BaseEcv GetOrAdd(Type compType){
+      public BaseEcv GetOrAddComponentView(Type compType){
          if (Components.TryGetValue(compType, out var view)) return view;
 
          view = gameObject.AddEcsComponentView(compType);
@@ -98,7 +101,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.EntityView{
          return view;
       }
       
-      public void Remove(BaseEcv compView){
+      public void RemoveComponentView(BaseEcv compView){
          var componentType = compView.GetComponentType();
          
          OnRemoveComponent?.Invoke(compView);
