@@ -1,4 +1,5 @@
 using System;
+using Mitfart.LeoECSLite.UnityIntegration.Editor.Search;
 using Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements;
 using Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.Component;
 using Mitfart.LeoECSLite.UnityIntegration.EntityView;
@@ -22,20 +23,20 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.ContextualMenu{
       
       [MenuItem("CONTEXT/MonoEntityView/Add Component")]
       public static void AddComponent(MenuCommand menuCommand){
-         var monoView     = (MonoEntityView)menuCommand.context;
-         var searchWindow = ComponentsSearchWindow.CreateAndInit(monoView.DebugSystem);
+         var monoView = (MonoEntityView) menuCommand.context;
+         
+         ComponentsSearchWindow.CreateAndInit(
+            monoView.DebugSystem, componentType => {
+               var pool = monoView.World.GetPool(componentType);
+               if (pool.Has(monoView.Entity)){
+                  Debug.Log($"Can't add another instance of <{componentType}>!");
+                  return false;
+               }
 
-         searchWindow.onChoose = componentType => {
-            var pool = monoView.World.GetPool(componentType);
-            if (pool.Has(monoView.Entity)){
-               Debug.Log($"Can't add another instance of <{componentType}>!");
-               return false;
-            }
-
-            pool.AddRaw(monoView.Entity, Activator.CreateInstance(componentType));
-            monoView.GetOrAddComponentView(componentType);
-            return true;
-         };
+               pool.AddRaw(monoView.Entity, Activator.CreateInstance(componentType));
+               monoView.GetOrAddComponentView(componentType);
+               return true;
+            });
       }
       
       [MenuItem("CONTEXT/MonoEntityView/Add Component", true)]

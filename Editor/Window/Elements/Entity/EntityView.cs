@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Mitfart.LeoECSLite.UnityIntegration.ComponentView;
 using Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions;
+using Mitfart.LeoECSLite.UnityIntegration.Editor.Search;
 using Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.Component;
 using Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.Nav;
 using Mitfart.LeoECSLite.UnityIntegration.EntityView;
@@ -53,19 +54,20 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.Entity{
 
          void AddComponentToEntity(){
             if (MonoView == null) return;
-            var searchWindow = ComponentsSearchWindow.CreateAndInit(MonoView.DebugSystem);
             
-            searchWindow.onChoose = componentType => {
-               var pool = MonoView.World.GetPool(componentType);
-               if (pool.Has(MonoView.Entity)){
-                  Debug.Log($"Can't add another instance of <{componentType}>!");
-                  return false;
-               }
+            ComponentsSearchWindow.CreateAndInit(
+               MonoView.DebugSystem, 
+               componentType => {
+                  var pool = MonoView.World.GetPool(componentType);
+                  if (pool.Has(MonoView.Entity)){
+                     Debug.Log($"Can't add another instance of <{componentType}>!");
+                     return false;
+                  }
 
-               pool.AddRaw(MonoView.Entity, Activator.CreateInstance(componentType));
-               MonoView.GetOrAddComponentView(componentType);
-               return true;
-            };
+                  pool.AddRaw(MonoView.Entity, Activator.CreateInstance(componentType));
+                  MonoView.GetOrAddComponentView(componentType);
+                  return true;
+               });
          }
 
          #endregion

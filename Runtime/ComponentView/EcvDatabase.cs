@@ -44,7 +44,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.ComponentView{
 
          if (Registered_Ecv.TryGetValue(type, out var view)) return go.AddComponent(view.GetType()) as BaseEcv;
 
-         var comp = (NotDefinedEcv)go.AddComponent(typeof(NotDefinedEcv));
+         var comp = (NotRegisteredEcv)go.AddComponent(typeof(NotRegisteredEcv));
          comp.SetComponentType(type);
          return comp;
       }

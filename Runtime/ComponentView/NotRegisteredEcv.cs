@@ -2,7 +2,7 @@ using System;
 using UnityEditor;
 
 namespace Mitfart.LeoECSLite.UnityIntegration.ComponentView{
-   public sealed class NotDefinedEcv : BaseEcv{
+   public sealed class NotRegisteredEcv : BaseEcv{
       private Type _componentType;
 
       

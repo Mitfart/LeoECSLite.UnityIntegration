@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Mitfart.LeoECSLite.UnityIntegration.Editor.Search;
 using Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.Component;
 using UnityEngine.UIElements;
 
@@ -63,13 +64,14 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.Sort{
          if (_debugWindow == null) return;
 
          ComponentsSearchWindow
-           .CreateAndInit(_debugWindow.ActiveSystem)
-           .onChoose = componentType => {
-            if (Contains(componentType)) return false;
+           .CreateAndInit(
+               _debugWindow.ActiveSystem,
+               componentType => {
+                  if (Contains(componentType)) return false;
 
-            AddTag(componentType);
-            return true;
-         };
+                  AddTag(componentType);
+                  return true;
+               });
       }
    }
 }

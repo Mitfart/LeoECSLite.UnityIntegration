@@ -37,6 +37,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window{
          InitElements();
       }
       
+      
       private void CreateElements(){
          _sortTagsContainer = new SortTagsContainerView(this);
          _worldsEnum        = new StringsDropdown();
@@ -45,6 +46,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window{
          _entitiesList      = new ListView();
          _entitiesContainer = new ScrollView();
       }
+      
       private void AddElements(){
          rootVisualElement
            .AddChild(_sortTagsContainer)
@@ -58,30 +60,24 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window{
            .right
            .AddChild(_entitiesContainer);
       }
+      
       private void InitElements(){
          InitWorldsEnum();
          InitEntitiesList();
       }
       
       
-      
       private void InitWorldsEnum(){
          foreach (var systemKey in EcsWorldDebugSystem.ActiveSystems.Keys)
             _worldsEnum.Add(systemKey);
 
-         _worldsEnum.index         =  0;
-         _worldsEnum.OnChangeValue += ChangeWorld;
+         _worldsEnum.index    =  0;
+         _worldsEnum.OnChoose += ChangeWorld;
 
          ChangeWorld(_worldsEnum.value, null);
       }
-      private void ChangeWorld(string newValue, string oldValue){
-         if (EcsWorldDebugSystem.ActiveSystems.TryGetValue(newValue, out var debugSystem))
-            SetActiveWorldDebugSystem(debugSystem);
-         else
-            throw new Exception($"Can't find System relative to `{newValue}` world!");
-      }
-
-      private void InitEntitiesList(){
+      
+      private void InitEntitiesList() {
          _entitiesList.itemsSource = ActiveSystem.Sort.SortedAliveEntities;
          
          _entitiesList.bindItem          =  BindItem;
@@ -99,11 +95,11 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window{
             ((Label)element).text = entityView.name;
          }
 
-         VisualElement MakeItem(){
+         VisualElement MakeItem() {
             return new Label{ style ={ unityTextAlign = TextAnchor.MiddleLeft } };
          }
 
-         void OnSelectionChange(IEnumerable<object> objects){
+         void OnSelectionChange(IEnumerable<object> objects) {
             var entities = objects as object[] ?? objects.ToArray();
 
             foreach (var entityView in _activeEntitiesViews.Values)
@@ -122,10 +118,14 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window{
                _activeEntitiesViews.First().Value.IsExpanded = true;
          }
       }
-      private void SetCreateDestroyEntitiesListDirty(int e) => SetEntitiesListDirty();
-      private void SetEntitiesListDirty(){
-         _isEntitiesListDirty = true;
+      
+      
+      private void ChangeWorld(string newValue, string oldValue){
+         if (EcsWorldDebugSystem.ActiveSystems.TryGetValue(newValue, out var debugSystem))
+            SetActiveWorldDebugSystem(debugSystem);
+         else throw new Exception($"Can't find System relative to `{newValue}` world!");
       }
+      
 
       
       
@@ -154,9 +154,9 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window{
          if (ActiveSystem != null){
             ActiveSystem.OnUpdate                -= UpdateView;
             ActiveSystem.Sort.OnSortFilterChange -= SetEntitiesListDirty;
-            ActiveSystem.Entities.OnCreate       -= SetCreateDestroyEntitiesListDirty;
-            ActiveSystem.Entities.OnDestroy      -= SetCreateDestroyEntitiesListDirty;
-            ActiveSystem.Entities.OnDestroy      -= DisposeDestroyEntityView;
+            ActiveSystem.Entities.OnCreate       -= SetEntitiesListDirty;
+            ActiveSystem.Entities.OnDestroy      -= SetEntitiesListDirty;
+            ActiveSystem.Entities.OnDestroy      -= DestroyEntityView;
             ActiveSystem.OnDestroy               -= DisposeWorldView;
             
             _sortTagsContainer.OnAddSortTag    -= ActiveSystem.Sort.AddSortSortComponent;
@@ -169,9 +169,9 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window{
 
          ActiveSystem.OnUpdate                += UpdateView;
          ActiveSystem.Sort.OnSortFilterChange += SetEntitiesListDirty;
-         ActiveSystem.Entities.OnCreate       += SetCreateDestroyEntitiesListDirty;
-         ActiveSystem.Entities.OnDestroy      += SetCreateDestroyEntitiesListDirty;
-         ActiveSystem.Entities.OnDestroy      += DisposeDestroyEntityView;
+         ActiveSystem.Entities.OnCreate       += SetEntitiesListDirty;
+         ActiveSystem.Entities.OnDestroy      += SetEntitiesListDirty;
+         ActiveSystem.Entities.OnDestroy      += DestroyEntityView;
          ActiveSystem.OnDestroy               += DisposeWorldView;
          
          _sortTagsContainer.OnAddSortTag    += ActiveSystem.Sort.AddSortSortComponent;
@@ -179,6 +179,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window{
 
          InitEntitiesList();
       }
+      
       private void DisposeWorldView(EcsWorldDebugSystem debugSystem){
          var debugName = debugSystem.GetDebugName();
          
@@ -189,28 +190,26 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window{
       }
       
 
+      
       private Elements.Entity.EntityView CreateEntityView(int entity) {
          return !ActiveSystem.View.TryGetEntityView(entity, out var view) 
                    ? null 
                    : new Elements.Entity.EntityView().Init(view);
       }
-      private void DisposeDestroyEntityView(int entity){
-         if (!_activeEntitiesViews.TryGetValue(entity, out var view)) return;
-         view.Dispose();
-      }
+      
+      private void SetEntitiesListDirty(int e) => SetEntitiesListDirty();
+      private void SetEntitiesListDirty()      => _isEntitiesListDirty = true;
+      
+      private void DestroyEntityView(int entity){ if (_activeEntitiesViews.TryGetValue(entity, out var view)) view.Dispose(); }
 
 
 
       private void Reset(){
          ResetInspector();
-         ResetWorldEnum();
+         _worldsEnum?.Reset();
       }
-      private void ResetWorldEnum(){
-         if (_worldsEnum == null) return;
-         
-         _worldsEnum.Clear();
-         _worldsEnum.OnChangeValue -= ChangeWorld;
-      }
+      
+      
       private void ResetInspector(){
          foreach (var entityView in _activeEntitiesViews.Values) 
             entityView.Dispose();
@@ -244,12 +243,6 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window{
                throw new ArgumentOutOfRangeException(nameof(state), state, null);
          }
       }
-
-      #endregion
-
-
-      #region Open
-      
 
       #endregion
    }

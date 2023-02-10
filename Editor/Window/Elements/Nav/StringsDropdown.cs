@@ -3,7 +3,7 @@ using UnityEngine.UIElements;
 
 namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.Nav{
    public class StringsDropdown : DropdownField{
-      public event Action<string, string> OnChangeValue;
+      public event Action<string, string> OnChoose;
 
       
       public StringsDropdown(params object[] choices){
@@ -12,7 +12,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.Nav{
 
          this.RegisterValueChangedCallback(
             evt => {
-               OnChangeValue?.Invoke(evt.newValue, value);
+               OnChoose?.Invoke(evt.newValue, value);
                value = evt.newValue;
             });
       }
@@ -20,5 +20,11 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.Nav{
       
       public void Add   (string choice) => choices.Add(choice);
       public void Remove(string choice) => choices.Remove(choice);
+
+
+      public void Reset() {
+         Clear();
+         OnChoose = null;
+      }
    }
 }

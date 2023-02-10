@@ -8,8 +8,8 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Ecv{
-   [CustomEditor(typeof(NotDefinedEcv))]
-   public class NotDefinedEcvEditor : BaseEcvEditor {
+   [CustomEditor(typeof(NotRegisteredEcv))]
+   public class NotRegisteredEcvEditor : BaseEcvEditor {
       private BaseEcv     _typedTarget;
       private FieldInfo[] _fields;
       private Label[]     _fieldsValuesLabels;
@@ -18,7 +18,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Ecv{
 
       
       protected override void CreateEditor(VisualElement root) {
-         _typedTarget = (NotDefinedEcv) target;
+         _typedTarget = (NotRegisteredEcv) target;
          
          var componentType = _typedTarget.GetComponentType();
          if (componentType == null) return;
