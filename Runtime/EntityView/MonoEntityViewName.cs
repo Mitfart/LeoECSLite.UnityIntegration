@@ -49,7 +49,8 @@ namespace Mitfart.LeoECSLite.UnityIntegration.EntityView{
      
 
      public void SetTag(string newTag) {
-        _nameBuilder.Replace(_monoEntityView.Tag, newTag);
+        if (!string.IsNullOrWhiteSpace(_monoEntityView.Tag))
+           _nameBuilder.Replace(_monoEntityView.Tag, newTag);
         Set();
      }
      

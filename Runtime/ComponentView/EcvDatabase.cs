@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -11,19 +12,16 @@ namespace Mitfart.LeoECSLite.UnityIntegration.ComponentView{
       
       static EcvDatabase(){
          var registerDummy = new GameObject();
+         var ecvTypes = TypeCache.GetTypesDerivedFrom<BaseEcv>();
 
-         foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
-         foreach (var type in assembly.GetTypes()){
-            if (!typeof(BaseEcv).IsAssignableFrom(type) ||
-                type.IsAbstract ||
-                type.IsGenericType)
-               continue;
+         foreach (var type in ecvTypes){
+            if (type.IsAbstract || type.IsGenericType) continue;
             if (registerDummy.AddComponent(type) is not BaseEcv view) continue;
 
             view.Register();
          }
 
-         Object.Destroy(registerDummy);
+         Object.DestroyImmediate(registerDummy);
       }
 
 

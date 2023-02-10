@@ -19,9 +19,9 @@ namespace Mitfart.LeoECSLite.UnityIntegration.System{
       public event Action<EcsWorldDebugSystem> OnDestroy;
 
 
-      public EWDSView     View     { get; }
-      public EWDSEntities Entities { get; }
-      public EWDSSort     Sort     { get; }
+      public EWDSView     View     { get; set; }
+      public EWDSEntities Entities { get; set; }
+      public EWDSSort     Sort     { get; set; }
 
       public string             WorldName    { get; }
       public EntityNameSettings NameSettings { get; }
@@ -32,21 +32,22 @@ namespace Mitfart.LeoECSLite.UnityIntegration.System{
       public EcsWorldDebugSystem(string worldName = null, EntityNameSettings nameSettings = default){
          WorldName    = worldName;
          NameSettings = nameSettings;
-
-         View     = this.CreateView();
-         Entities = new EWDSEntities(this);
-         Sort     = new EWDSSort(this);
       }
 
       
 
       public void PreInit(IEcsSystems systems){
          InitWorld();
+         
+         View     = this.CreateView();
+         Entities = new EWDSEntities(this);
+         Sort     = new EWDSSort(this);
+         
          InitEntities();
-
+         
+         
          ActiveSystems.Add(this.GetDebugName(), this);
          OnInit?.Invoke(this);
-         
 
          void InitWorld(){
             World = systems.GetWorld(WorldName) ?? throw new Exception($"Cant find required world! ({WorldName})");

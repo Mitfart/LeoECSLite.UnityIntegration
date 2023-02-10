@@ -48,7 +48,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Search{
 
          AddRegisteredComponents();
 
-         AddNotRegisteredComponents();
+         //AddNotRegisteredComponents();
 
          return items;
 
@@ -60,7 +60,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Search{
                GroupsBuilder.Clear();
             
                AddGroupsByNamespace(items, groups, componentType, out var indentLevel);
-               TryAddGlobalNamespaceGroup(ref indentLevel);
+               //TryAddGlobalNamespaceGroup(ref indentLevel);
 
                AddItem(items, componentType.Name, indentLevel, componentType);
             }
@@ -108,12 +108,12 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Search{
          
          indentLevel = splitName.Length;
          
-         for (var i = 1; i < indentLevel; i++)
+         for (var i = 0; i < indentLevel-1; i++)
             AddGroup(
                items,
                groups,
                splitName[i],
-               i);
+               i + 1);
       }
       
       private static void AddGroup(
