@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using System;
 using Leopotam.EcsLite;
 using Mitfart.LeoECSLite.UnityIntegration.EntityView;
@@ -73,3 +74,4 @@ namespace Mitfart.LeoECSLite.UnityIntegration.ComponentView{
       }
    }
 }
+#endif
