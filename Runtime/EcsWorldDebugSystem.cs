@@ -14,6 +14,12 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
         private static int[]      _entitiesCache   = new int[32];
         private static object[]   _componentsCache = new object[32];
         private static IEcsPool[] _poolsCache      = new IEcsPool[32];
+        
+        public string                              WorldName           { get; }
+        public MonoEntityView.NameBuilder.Settings NameSettings        { get; }
+        public EcsWorld                            World               { get; private set; }
+        public HashSet<int>                        AliveEntities       { get; private set; }
+        public List<int>                           SortedAliveEntities { get; private set; }
       
         private GameObject       _rootGo;
         private HashSet<int>     _dirtyEntities;
@@ -22,11 +28,8 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
         private readonly List<Type> _sortComponentTypes = new();
         private          EcsFilter  _sortFilter;
 
-        public string                              WorldName           { get; }
-        public MonoEntityView.NameBuilder.Settings NameSettings        { get; }
-        public EcsWorld                            World               { get; private set; }
-        public HashSet<int>                        AliveEntities       { get; private set; }
-        public List<int>                           SortedAliveEntities { get; private set; }
+        private EcsPool<DebugTag> _debugTagPool;
+
 
       
       
@@ -41,6 +44,8 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
             InitWorld();
             CreateDebugObject();
             InitEntities();
+
+            _debugTagPool = World.GetPool<DebugTag>();
 
             ActiveSystems.Add(GetDebugName(), this);
             OnInit?.Invoke(this);
@@ -195,6 +200,11 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
         }
         public void OnEntityChanged(int entity) {
             _dirtyEntities.Add(entity);
+
+            if (_debugTagPool.Has(entity) 
+             && World.GetComponentsCount(entity) == 1) {
+                World.DelEntity(entity);
+            }
         }
         public void OnEntityDestroyed(int entity) {
             if (TryGetEntityView(entity, out MonoEntityView view)) 
