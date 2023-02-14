@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
 using UnityEditor;
@@ -5,46 +6,48 @@ using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace Mitfart.LeoECSLite.UnityIntegration.ComponentView{
-   public static class EcvDatabase{
-      public static readonly Dictionary<Type, BaseEcv> Registered_Ecv = new();
+    public static class EcvDatabase{
+        public static readonly Dictionary<Type, BaseEcv> RegisteredEcv = new();
 
 
       
-      static EcvDatabase(){
-         var registerDummy = new GameObject();
-         var ecvTypes = TypeCache.GetTypesDerivedFrom<BaseEcv>();
+        static EcvDatabase(){
+            var                      registerDummy = new GameObject();
+            TypeCache.TypeCollection ecvTypes      = TypeCache.GetTypesDerivedFrom<BaseEcv>();
 
-         foreach (var type in ecvTypes){
-            if (type.IsAbstract || type.IsGenericType) continue;
-            if (registerDummy.AddComponent(type) is not BaseEcv view) continue;
+            foreach (Type type in ecvTypes){
+                if (type.IsAbstract || type.IsGenericType) continue;
+                if (registerDummy.AddComponent(type) is not BaseEcv view) continue;
 
-            view.Register();
-         }
+                view.Register();
+            }
 
-         Object.DestroyImmediate(registerDummy);
-      }
-
-
-
-      public static void Register(this BaseEcv view){
-         var componentType = view.GetComponentType();
-         if (componentType == null) return;
-
-         if (!Registered_Ecv.TryGetValue(componentType, out var prevView) ||
-             view.GetPriority() > prevView.GetPriority())
-            Registered_Ecv[componentType] = view;
-      }
+            Object.DestroyImmediate(registerDummy);
+        }
 
 
-      public static BaseEcv AddEcsComponentView(this GameObject go, Type type){
-         if (!type.IsValueType || type.IsPrimitive || type.IsEnum)
-            throw new Exception("Can't add none struct type as Component!");
 
-         if (Registered_Ecv.TryGetValue(type, out var view)) return go.AddComponent(view.GetType()) as BaseEcv;
+        public static void Register(this BaseEcv view) {
+            Type componentType = view.GetComponentType();
+            if (componentType == null) return;
 
-         var comp = (NotRegisteredEcv)go.AddComponent(typeof(NotRegisteredEcv));
-         comp.SetComponentType(type);
-         return comp;
-      }
-   }
+            if (!RegisteredEcv.TryGetValue(componentType, out BaseEcv prevView) ||
+                view.GetPriority() > prevView.GetPriority())
+                RegisteredEcv[componentType] = view;
+        }
+
+
+        public static BaseEcv AddEcsComponentView(this GameObject go, Type type) {
+            if (!type.IsValueType || type.IsPrimitive || type.IsEnum)
+                throw new Exception("Can't add none struct type as Component!");
+
+            if (RegisteredEcv.TryGetValue(type, out BaseEcv view)) return go.AddComponent(view.GetType()) as BaseEcv;
+
+            var comp = (NotRegisteredEcv)go.AddComponent(typeof(NotRegisteredEcv));
+            comp.SetComponentType(type);
+            return comp;
+        }
+    }
 }
+
+#endif

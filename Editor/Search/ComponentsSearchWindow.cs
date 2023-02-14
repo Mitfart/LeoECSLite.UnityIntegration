@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using Mitfart.LeoECSLite.UnityIntegration.ComponentView;
-using Mitfart.LeoECSLite.UnityIntegration.System;
 using NodeEngine.Editor.Search;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
@@ -54,7 +53,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Search{
 
          
          void AddRegisteredComponents() {
-            var componentTypes = EcvDatabase.Registered_Ecv.Keys;
+            var componentTypes = EcvDatabase.RegisteredEcv.Keys;
 
             foreach (var componentType in componentTypes) {
                GroupsBuilder.Clear();
@@ -81,7 +80,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Search{
             _ecsWorldDebugSystem.ForeachPool(pool => {
                var componentType = pool.GetComponentType();
             
-               if (EcvDatabase.Registered_Ecv.ContainsKey(componentType)) return;
+               if (EcvDatabase.RegisteredEcv.ContainsKey(componentType)) return;
             
                if (!notRegisteredGroupExist) {
                   AddGroup(items, groups, NOT_REGISTERED_GROUP, 1);

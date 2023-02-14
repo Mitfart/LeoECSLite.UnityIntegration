@@ -6,7 +6,6 @@ using Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements;
 using Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.Nav;
 using Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.Sort;
 using Mitfart.LeoECSLite.UnityIntegration.Extentions;
-using Mitfart.LeoECSLite.UnityIntegration.System;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;

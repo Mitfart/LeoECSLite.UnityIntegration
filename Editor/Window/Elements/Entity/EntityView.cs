@@ -7,7 +7,6 @@ using Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.Component;
 using Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.Nav;
 using Mitfart.LeoECSLite.UnityIntegration.EntityView;
 using Mitfart.LeoECSLite.UnityIntegration.Extentions;
-using Mitfart.LeoECSLite.UnityIntegration.System;
 using UnityEngine;
 using UnityEngine.UIElements;
 

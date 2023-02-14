@@ -41,10 +41,10 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Generator{
       }
       
       public string GetFileDirectoryPath(Type type){
-         var rootPath = GetSaveDirectoryPath();
+         string rootPath = GetSaveDirectoryPath();
          if (!groupByNamespaces) return rootPath;
 
-         var subPath = type.Namespace == null ? "_" : type.Namespace.Replace('.', '/');
+         string subPath = type.Namespace == null ? "_" : type.Namespace.Replace('.', '/');
          return $"{rootPath}{subPath}/";
       }
       
