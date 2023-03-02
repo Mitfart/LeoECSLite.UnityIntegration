@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Reflection;
 using Mitfart.LeoECSLite.UnityIntegration.ComponentView;
 using Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions;
+using Mitfart.LeoECSLite.UnityIntegration.Editor.Style;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Ecv{
+namespace Mitfart.LeoECSLite.UnityIntegration.Editor.ComponentView{
    [CustomEditor(typeof(NotRegisteredEcv))]
    public class NotRegisteredEcvEditor : BaseEcvEditor {
       private BaseEcv     _typedTarget;
@@ -69,7 +70,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Ecv{
             var fieldValue     = new Label(field.GetValue(component).ToString());
             fieldsValuesLabels[i] = fieldValue;
 
-            fieldLabel.style.width = fieldValue.style.width = StyleUtils.GetPercentsLength(50);
+            fieldLabel.style.width = fieldValue.style.width = Utils.GetPercentsLength(50);
 
             fieldsContainer
               .AddChild(

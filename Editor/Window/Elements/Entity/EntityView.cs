@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Mitfart.LeoECSLite.UnityIntegration.ComponentView;
 using Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions;
 using Mitfart.LeoECSLite.UnityIntegration.Editor.Search;
+using Mitfart.LeoECSLite.UnityIntegration.Editor.Style;
 using Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.Component;
 using Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.Nav;
 using Mitfart.LeoECSLite.UnityIntegration.EntityView;

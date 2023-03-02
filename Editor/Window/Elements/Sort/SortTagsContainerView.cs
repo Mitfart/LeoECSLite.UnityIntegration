@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Mitfart.LeoECSLite.UnityIntegration.Editor.Search;
+using Mitfart.LeoECSLite.UnityIntegration.Editor.Style;
 using Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.Component;
 using UnityEngine.UIElements;
 

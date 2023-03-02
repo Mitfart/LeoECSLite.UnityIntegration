@@ -3,8 +3,8 @@ using Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.Nav;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Mitfart.LeoECSLite.UnityIntegration.Editor{
-   public static class StyleUtils{
+namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Style{
+   public static class Utils{
       public const int METRICS_LLL = 35;
       public const int METRICS_LL  = 30;
       public const int METRICS_L   = 25;

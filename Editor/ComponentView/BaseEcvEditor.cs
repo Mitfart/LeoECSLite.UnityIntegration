@@ -2,7 +2,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Ecv {
+namespace Mitfart.LeoECSLite.UnityIntegration.Editor.ComponentView {
   public abstract class BaseEcvEditor : UnityEditor.Editor  {
     public override VisualElement CreateInspectorGUI() {
       var root = new VisualElement();

@@ -1,13 +1,11 @@
 using System;
 using Mitfart.LeoECSLite.UnityIntegration.Editor.Search;
-using Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements;
-using Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.Component;
 using Mitfart.LeoECSLite.UnityIntegration.EntityView;
 using Mitfart.LeoECSLite.UnityIntegration.Extentions;
 using UnityEditor;
 using UnityEngine;
 
-namespace Mitfart.LeoECSLite.UnityIntegration.Editor.ContextualMenu{
+namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Menu{
    public static class MonoEntityViewContextualMenu{
       [MenuItem("CONTEXT/MonoEntityView/UpdateView")]
       public static void UpdateView(MenuCommand menuCommand){

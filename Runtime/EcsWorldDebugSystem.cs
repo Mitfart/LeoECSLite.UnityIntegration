@@ -30,9 +30,9 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
 
       
       
-        public EcsWorldDebugSystem(string worldName = null, EntityNameSettings nameSettings = default){
+        public EcsWorldDebugSystem(string worldName = null, EntityNameSettings nameSettings = null){
             WorldName    = worldName;
-            NameSettings = nameSettings;
+            NameSettings = nameSettings ?? new EntityNameSettings();
         }
 
       

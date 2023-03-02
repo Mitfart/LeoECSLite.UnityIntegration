@@ -1,4 +1,5 @@
 using System;
+using Mitfart.LeoECSLite.UnityIntegration.Editor.Style;
 using UnityEngine.UIElements;
 
 namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.Sort{
@@ -23,9 +24,9 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.Sort{
     }
       
     private void SetStyle() {
-      style.SetPadding(StyleUtils.METRICS_SSS);
-      style.SetMargin(StyleUtils.METRICS_SSS);
-      style.SetBorderRadius(StyleUtils.METRICS_SSS);
+      style.SetPadding(Utils.METRICS_SSS);
+      style.SetMargin(Utils.METRICS_SSS);
+      style.SetBorderRadius(Utils.METRICS_SSS);
     }
       
       

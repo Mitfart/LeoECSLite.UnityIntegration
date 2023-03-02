@@ -3,7 +3,7 @@ using Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions;
 using UnityEditor;
 using UnityEngine.UIElements;
 
-namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Ecv{
+namespace Mitfart.LeoECSLite.UnityIntegration.Editor.ComponentView{
    [CanEditMultipleObjects]
    [CustomEditor(typeof(BaseEcv), true)]
    public class EcvEditor : BaseEcvEditor{
@@ -15,7 +15,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Ecv{
 
       
       protected override void OnEditorUpdate() {
-         ((BaseEcv) target).UpdateValue();
+         if (target is BaseEcv ecv) ecv.UpdateValue();
       }
    }
 }

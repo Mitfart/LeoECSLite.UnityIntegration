@@ -1,6 +1,6 @@
 #if UNITY_EDITOR
 namespace Mitfart.LeoECSLite.UnityIntegration.EntityView {
-    public struct EntityNameSettings{
+    public class EntityNameSettings{
         public bool   BakeComponents   { get; private set; }
         public bool   BakeEntity       { get; private set; }
         public string BakeEntityFormat { get; private set; }

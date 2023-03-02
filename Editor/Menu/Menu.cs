@@ -6,7 +6,7 @@ using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEngine;
 
-namespace Mitfart.LeoECSLite.UnityIntegration.Editor{
+namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Menu{
    public static class Menu {
       private static EcvGeneratorSettings EcvGeneratorSettings => EcvGeneratorSettings.instance;
 

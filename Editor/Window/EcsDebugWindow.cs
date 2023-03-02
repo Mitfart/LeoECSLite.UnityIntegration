@@ -214,8 +214,8 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window{
             entityView.Dispose();
          _activeEntitiesViews.Clear();
          
-         _entitiesContainer?.Clear();
-         _entitiesList?.Clear();
+         _entitiesContainer.Clear();
+         _entitiesList.Clear();
       }
 
       
@@ -232,10 +232,10 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window{
 
       private void OnPlayModeStateChanged(PlayModeStateChange state){
          switch (state){
-            case PlayModeStateChange.EnteredEditMode: break;
             case PlayModeStateChange.ExitingEditMode: break;
             case PlayModeStateChange.EnteredPlayMode: break;
             case PlayModeStateChange.ExitingPlayMode:
+            case PlayModeStateChange.EnteredEditMode:
                Reset();
                break;
             default:

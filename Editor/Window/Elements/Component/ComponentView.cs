@@ -1,6 +1,7 @@
 using System;
 using Mitfart.LeoECSLite.UnityIntegration.ComponentView;
 using Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions;
+using Mitfart.LeoECSLite.UnityIntegration.Editor.Style;
 using Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.Nav;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
