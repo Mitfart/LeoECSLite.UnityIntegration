@@ -79,26 +79,33 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window{
       private void InitEntitiesList() {
          _entitiesList.itemsSource = ActiveSystem.Sort.SortedAliveEntities;
          
-         _entitiesList.bindItem          =  BindItem;
-         _entitiesList.makeItem          =  MakeItem;
-         _entitiesList.onSelectionChange += OnSelectionChange;
+         _entitiesList.bindItem = BindItem;
+         _entitiesList.makeItem = MakeItem;
+#if UNITY_2022
+         _entitiesList.selectionChanged -= SelectionChange;
+         _entitiesList.selectionChanged += SelectionChange;
+#else
+         _entitiesList.onSelectionChange -= SelectionChange;
+         _entitiesList.onSelectionChange += SelectionChange;
+#endif
          
          _entitiesList.showFoldoutHeader       = true;
          _entitiesList.showBoundCollectionSize = true;
+         _entitiesList.ClearSelection();
 
 
 
          void BindItem(VisualElement element, int e){
             if (!ActiveSystem.View.TryGetEntityView(ActiveSystem.Sort.SortedAliveEntities[e], out var entityView)) return;
 
-            ((Label)element).text = entityView.name;
+            ((Label) element).text = entityView.name;
          }
 
          VisualElement MakeItem() {
             return new Label{ style ={ unityTextAlign = TextAnchor.MiddleLeft } };
          }
 
-         void OnSelectionChange(IEnumerable<object> objects) {
+         void SelectionChange(IEnumerable<object> objects) {
             var entities = objects as object[] ?? objects.ToArray();
 
             foreach (var entityView in _activeEntitiesViews.Values)
