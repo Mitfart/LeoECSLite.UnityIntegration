@@ -6,7 +6,7 @@ using Leopotam.EcsLite;
 using Mitfart.LeoECSLite.UnityIntegration.Extentions;
 
 namespace Mitfart.LeoECSLite.UnityIntegration {
-    public class EwdsSort {
+    public class EWDSSort {
         private EcsWorldDebugSystem _debugSystem;
     
         public List<int>  SortedAliveEntities { get; }
@@ -17,7 +17,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration {
 
 
     
-        public EwdsSort(EcsWorldDebugSystem debugSystem) {
+        public EWDSSort(EcsWorldDebugSystem debugSystem) {
             _debugSystem        = debugSystem;
             ComponentTypes      = new List<Type>();
             SortedAliveEntities = new List<int>(_debugSystem.World.GetWorldSize());

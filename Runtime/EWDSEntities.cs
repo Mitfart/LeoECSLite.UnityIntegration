@@ -6,19 +6,19 @@ using Mitfart.LeoECSLite.UnityIntegration.EntityView;
 using Mitfart.LeoECSLite.UnityIntegration.Extentions;
 
 namespace Mitfart.LeoECSLite.UnityIntegration {
-    public class EwdsEntities : IEcsWorldEventListener {
+    public class EWDSEntities : IEcsWorldEventListener {
         private EcsWorldDebugSystem _debugSystem;
     
         public HashSet<int> Dirty { get; }
         public HashSet<int> Alive { get; }
     
         public event Action<int> OnCreate;
-        public event Action<int> OnChange; // ????????????
+        public event Action<int> OnChange;
         public event Action<int> OnDestroy;
 
     
     
-        public EwdsEntities(EcsWorldDebugSystem debugSystem) {
+        public EWDSEntities(EcsWorldDebugSystem debugSystem) {
             _debugSystem = debugSystem;
 
             int size = _debugSystem.GetWorldSize();

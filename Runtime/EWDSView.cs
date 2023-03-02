@@ -5,7 +5,7 @@ using Mitfart.LeoECSLite.UnityIntegration.Extentions;
 using UnityEngine;
 
 namespace Mitfart.LeoECSLite.UnityIntegration {
-    public class EwdsView : MonoBehaviour {
+    public class EWDSView : MonoBehaviour {
         public event Action<int> OnEntityChange;
     
         private EcsWorldDebugSystem _debugSystem;
@@ -13,7 +13,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration {
 
     
     
-        public EwdsView Init(EcsWorldDebugSystem debugSystem) {
+        public EWDSView Init(EcsWorldDebugSystem debugSystem) {
             _debugSystem     = debugSystem;
             _monoEntityViews = new MonoEntityView[_debugSystem.GetWorldSize()];
       

@@ -20,9 +20,9 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
         public event Action<EcsWorldDebugSystem> OnDestroy;
 
 
-        public EwdsView     View     { get; set; }
-        public EwdsEntities Entities { get; set; }
-        public EwdsSort     Sort     { get; set; }
+        public EWDSView     View     { get; private set; }
+        public EWDSEntities Entities { get; private set; }
+        public EWDSSort     Sort     { get; private set; }
 
         public string             WorldName    { get; }
         public EntityNameSettings NameSettings { get; }
@@ -41,8 +41,8 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
             InitWorld();
          
             View     = this.CreateView();
-            Entities = new EwdsEntities(this);
-            Sort     = new EwdsSort(this);
+            Entities = new EWDSEntities(this);
+            Sort     = new EWDSSort(this);
          
             InitEntities();
          

@@ -4,10 +4,10 @@ using UnityEngine;
 
 namespace Mitfart.LeoECSLite.UnityIntegration.Extentions {
     public static class DebugSystemViewExt {
-        public static EwdsView CreateView(this EcsWorldDebugSystem debugSystem) {
+        public static EWDSView CreateView(this EcsWorldDebugSystem debugSystem) {
             return 
                 new GameObject()
-                   .AddComponent<EwdsView>()
+                   .AddComponent<EWDSView>()
                    .Init(debugSystem);
         }
     
@@ -18,7 +18,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Extentions {
                    .Init(debugSystem, entity);
         }
     
-        public static MonoEntityView GetOrCreate(this EwdsView debugSystemView, int entity) {
+        public static MonoEntityView GetOrCreate(this EWDSView debugSystemView, int entity) {
             if (!debugSystemView.TryGetEntityView(entity, out MonoEntityView view)) 
                 view = debugSystemView.CreateEntityView(entity);
             return view;

@@ -10,9 +10,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Ecv{
       protected override void CreateEditor(VisualElement root) {
          root
            .AddScriptProperty(serializedObject)
-           .AddPropertyVisualElement(
-               ((BaseEcv)target).GetValueProperty(serializedObject), 
-               1);
+           .AddPropertyVisualElement(((BaseEcv) target).GetValueProperty(serializedObject), 1);
       }
 
       

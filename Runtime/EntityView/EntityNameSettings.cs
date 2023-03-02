@@ -6,16 +6,23 @@ namespace Mitfart.LeoECSLite.UnityIntegration.EntityView {
         public string BakeEntityFormat { get; private set; }
     
     
-        public EntityNameSettings(string bakeEntityFormat = "X8", bool bakeComponents = false, bool bakeEntity = true){
-            BakeEntityFormat = bakeEntityFormat;
+        public EntityNameSettings(bool bakeComponents = false, string bakeEntityFormat = "X8", bool bakeEntity = true){
             BakeComponents   = bakeComponents;
+            BakeEntityFormat = bakeEntityFormat;
             BakeEntity       = bakeEntity;
         }
 
-    
-        public EntityNameSettings WithBakingComponents()                { BakeComponents   = true;   return this; }
-        public EntityNameSettings WithBakingEntity()                    { BakeEntity       = true;   return this; }
-        public EntityNameSettings WithBakingEntityFormat(string format) { BakeEntityFormat = format; return this; }
+
+        public EntityNameSettings WithBakingComponents() {
+            BakeComponents = true;   
+            return this;
+        }
+        
+        public EntityNameSettings WithBakingEntity(string format = null) {
+            BakeEntity       = true;
+            BakeEntityFormat = format;
+            return this;
+        }
     }
 }
 
