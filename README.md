@@ -2,6 +2,8 @@
 Интеграция в редактор Unity с мониторингом состояния мира
 (не подразусевает [конвертацию/создание энтити](https://github.com/Mitfart/LeoECSLite.UniLeo), лишь просмотр!)
 
+> Проверено на Unity ***2023.3.19 LTS*** (зависит от Unity) 
+
 
 # Содержание
 * [Социальные ресурсы](#Социальные-ресурсы)
@@ -65,7 +67,8 @@ void Update() {
 ```
 
 ### Объявление компенента
-> Для отображения компонента в редакторе, необходимо создать **ECV< TComp >**  
+> Для отображения компонента в редакторе, необходимо создать \
+>**ECV< TComp >**  
 > `(ECV - ECS Component View)`
 
 ```c#
@@ -78,8 +81,7 @@ public struct Comp {
 // WILL GENERATE:
 #if UNITY_EDITOR 
 using Mitfart.LeoECSLite.UnityIntegration; 
-// using Comp.Namespace
-public partial class ECV_Comp : ECV<Comp>{ }
+public partial class ECV_Comp : ECV<Comp.Namespace.Comp>{ }
 #endif
 ```
 > **[GenerateView]** - атрибут для генерации стандартного **ECV< TComp >** для компонента \
@@ -91,8 +93,9 @@ public partial class ECV_Comp : ECV<Comp>{ }
 > Если такое поведение нужно, то его
 > можно добавить создав пресет настроек для системы `MonoEntityView.NameBuilder.Settings`
 > ```cs
-> var nameSettings = new MonoEntityView.NameBuilder.Settings();
-> nameSettings.bakeComponents = true;
+> var nameSettings = new EntityNameSettings(bakeComponents: true);
+> // -- OR --
+> var nameSettings = new EntityNameSettings().WithBakingComponents();
 > ...
 > .Add(new Mitfart.LeoECSLite.UnityIntegration.EcsWorldDebugSystem(null, nameSettings))
 > ...
@@ -127,11 +130,10 @@ public partial class ECV_Comp : ECV<Comp>{ }
 
 ### Минусы
 + Необходимость создания `View-компонентов ` (`ECV<>`) \
-  `(Решается кодогенерацией)`
+  `(Решается простой кодогенерацией)`
 
 ### Планируется
 + `Возможность фильтрации сущностей по DebugTag`
-+ `Возможность дэбага систем`
 
 
 

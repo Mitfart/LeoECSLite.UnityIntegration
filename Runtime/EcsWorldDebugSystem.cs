@@ -1,53 +1,53 @@
 #if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Leopotam.EcsLite;
 using Mitfart.LeoECSLite.UnityIntegration.EntityView;
-using UnityEngine;
-using Object = UnityEngine.Object;
+using Mitfart.LeoECSLite.UnityIntegration.Extentions;
 
 namespace Mitfart.LeoECSLite.UnityIntegration{
-    public class EcsWorldDebugSystem : IEcsPreInitSystem, IEcsRunSystem, IEcsWorldEventListener{
+    public class EcsWorldDebugSystem : IEcsPreInitSystem, IEcsRunSystem, IEcsWorldEventListener {
         public static readonly Dictionary<string, EcsWorldDebugSystem> ActiveSystems = new();
 
-        private static int[]      _entitiesCache   = new int[32];
-        private static object[]   _componentsCache = new object[32];
-        private static IEcsPool[] _poolsCache      = new IEcsPool[32];
-        
-        public string                              WorldName           { get; }
-        public MonoEntityView.NameBuilder.Settings NameSettings        { get; }
-        public EcsWorld                            World               { get; private set; }
-        public HashSet<int>                        AliveEntities       { get; private set; }
-        public List<int>                           SortedAliveEntities { get; private set; }
+        private static int[]      ENTITIES_CACHE   = new int[32];
+        private static object[]   COMPONENTS_CACHE = new object[32];
+        private static IEcsPool[] POOLS_CACHE      = new IEcsPool[32];
       
-        private GameObject       _rootGo;
-        private HashSet<int>     _dirtyEntities;
-        private MonoEntityView[] _monoEntityViews;
-      
-        private readonly List<Type> _sortComponentTypes = new();
-        private          EcsFilter  _sortFilter;
+        public event Action<int> OnWorldResize;
 
-        private EcsPool<DebugTag> _debugTagPool;
+        public event Action<EcsWorldDebugSystem> OnInit;
+        public event Action<EcsWorldDebugSystem> OnUpdate;
+        public event Action<EcsWorldDebugSystem> OnDestroy;
 
 
+        public EWDSView     View     { get; private set; }
+        public EWDSEntities Entities { get; private set; }
+        public EWDSSort     Sort     { get; private set; }
+
+        public string             WorldName    { get; }
+        public EntityNameSettings NameSettings { get; }
+        public EcsWorld           World        { get; private set; }
+
       
       
-        public EcsWorldDebugSystem(string worldName = null, MonoEntityView.NameBuilder.Settings nameSettings = default){
+        public EcsWorldDebugSystem(string worldName = null, EntityNameSettings nameSettings = null){
             WorldName    = worldName;
-            NameSettings = nameSettings;
+            NameSettings = nameSettings ?? new EntityNameSettings();
         }
 
       
 
         public void PreInit(IEcsSystems systems) {
             InitWorld();
-            CreateDebugObject();
+         
+            View     = this.CreateView();
+            Entities = new EWDSEntities(this);
+            Sort     = new EWDSSort(this);
+         
             InitEntities();
-
-            _debugTagPool = World.GetPool<DebugTag>();
-
-            ActiveSystems.Add(GetDebugName(), this);
+         
+         
+            ActiveSystems.Add(this.GetDebugName(), this);
             OnInit?.Invoke(this);
 
             void InitWorld() {
@@ -55,185 +55,55 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
                 World.AddEventListener(this);
             }
 
-            void CreateDebugObject() {
-                _rootGo = new GameObject(GetDebugName()){ hideFlags = HideFlags.NotEditable };
-                Object.DontDestroyOnLoad(_rootGo);
-            }
-
-            void InitEntities() {
-                int size = World.GetWorldSize();
-                _monoEntityViews    = new MonoEntityView[size];
-                _dirtyEntities      = new HashSet<int>(size);
-                AliveEntities       = new HashSet<int>(size);
-                SortedAliveEntities = new List<int>(size);
-                ForeachEntity(OnEntityCreated);
-            }
+            void InitEntities() => ForeachEntity(OnEntityCreated);
         }
       
         public void Run(IEcsSystems systems) {
-            UpdateDirtyEntities();
-            UpdateSortedEntities();
-
+            Entities.UpdateDirtyEntities();
+            Sort.UpdateSortedEntities();
             OnUpdate?.Invoke(this);
         }
-        private void UpdateDirtyEntities() {
-            foreach (int entity in _dirtyEntities){
-                if (!TryGetEntityView(entity, out MonoEntityView view)) continue;
-            
-                view.UpdateComponents();
-                view.UpdateName();
-
-                OnEntityChange?.Invoke(entity);
-            }
-            _dirtyEntities.Clear();
-        }
-        private void UpdateSortedEntities() {
-            SortedAliveEntities.Clear();
-
-            if (_sortFilter == null){
-                foreach (int e in AliveEntities)
-                    SortedAliveEntities.Add(e);
-                return;
-            }
-         
-            foreach (int e in _sortFilter)
-                SortedAliveEntities.Add(e);
-        }
-
-
-
-        public bool TryGetEntityView(int entity, out MonoEntityView view) {
-            if (entity < 0 || entity >= _monoEntityViews.Length){
-                view = null;
-                return false;
-            }
-            view = _monoEntityViews[entity];
-            return view != null;
-        }
-        private MonoEntityView CreateEntityView(int entity) {
-            var viewObject = new GameObject();
-            viewObject.transform.SetParent(_rootGo.transform, false);
-
-            var view = viewObject.AddComponent<MonoEntityView>();
-            view.Init(this, entity);
-
-            return _monoEntityViews[entity] = view;
-        }
-
+      
       
 
         public int ForeachEntity(Action<int> action) {
-            int count = World.GetAllEntities(ref _entitiesCache);
-            for (var i = 0; i < count; i++) action.Invoke(_entitiesCache[i]);
+            int count = World.GetAllEntities(ref ENTITIES_CACHE);
+            for (var i = 0; i < count; i++) action.Invoke(ENTITIES_CACHE[i]);
             return count;
         }
+      
         public int ForeachComponent(int entity, Action<object> action) {
-            int count = World.GetComponents(entity, ref _componentsCache);
-            for (var i = 0; i < count; i++) action.Invoke(_componentsCache[i]);
+            int count = World.GetComponents(entity, ref COMPONENTS_CACHE);
+            for (var i = 0; i < count; i++) action.Invoke(COMPONENTS_CACHE[i]);
             return count;
         }
+      
         public int ForeachPool(Action<IEcsPool> action) {
-            int count = World.GetAllPools(ref _poolsCache);
-            for (var i = 0; i < count; i++) action.Invoke(_poolsCache[i]);
+            int count = World.GetAllPools(ref POOLS_CACHE);
+            for (var i = 0; i < count; i++) action.Invoke(POOLS_CACHE[i]);
             return count;
         }
-
       
       
-        public void OnAddTag(Type type) {
-            _sortComponentTypes.Add(type);
-            UpdateSortFilter();
-        }
-        public void OnRemoveTag(Type type) {
-            _sortComponentTypes.Remove(type);
-            UpdateSortFilter();
-        }
-        private void UpdateSortFilter() {
-            if (_sortComponentTypes.Count <= 0){
-                _sortFilter = null;
-                OnSortFilterChange?.Invoke();
-                return;
-            }
-         
-            EcsWorld.Mask sortMask = World.Filter(_sortComponentTypes.First());
-            for (var i = 1; i < _sortComponentTypes.Count; i++)
-                sortMask.Inc(_sortComponentTypes[i]);
-            _sortFilter = sortMask.End();
-         
-            OnSortFilterChange?.Invoke();
-        }
       
-
-        public string GetDebugName() {
-            return !string.IsNullOrWhiteSpace(WorldName) ? $"[ECS-WORLD {WorldName}]" : "[ECS-WORLD]";
-        }
-
+        public void OnEntityCreated(int   entity) => Entities.OnEntityCreated(entity);
+        public void OnEntityChanged(int   entity) => Entities.OnEntityChanged(entity);
+        public void OnEntityDestroyed(int entity) => Entities.OnEntityDestroyed(entity);
       
+        public void OnFilterCreated(EcsFilter filter) { }
 
-        #region Events
-
-        public event Action<int> OnEntityCreate;
-        public event Action<int> OnEntityChange;
-        public event Action<int> OnEntityDespose;
-
-        public event Action<int> OnWorldResize;
-        public event Action      OnSortFilterChange;
-
-        public event Action<EcsWorldDebugSystem> OnInit;
-        public event Action<EcsWorldDebugSystem> OnUpdate;
-        public event Action<EcsWorldDebugSystem> OnDestroy;
-
-        #endregion
-
-
-
-        #region EcsWorldEvents
-
-        public void OnEntityCreated(int entity) {
-            if (!TryGetEntityView(entity, out MonoEntityView view)) 
-                view = CreateEntityView(entity);
-            view.Activate();
-
-            _dirtyEntities.Add(entity);
-            AliveEntities.Add(entity);
-            OnEntityCreate?.Invoke(entity);
-        }
-        public void OnEntityChanged(int entity) {
-            _dirtyEntities.Add(entity);
-
-            if (_debugTagPool.Has(entity) 
-             && World.GetComponentsCount(entity) == 1) {
-                World.DelEntity(entity);
-            }
-        }
-        public void OnEntityDestroyed(int entity) {
-            if (TryGetEntityView(entity, out MonoEntityView view)) 
-                view.Deactivate();
-
-            _dirtyEntities.Remove(entity);
-            AliveEntities.Remove(entity);
-            OnEntityDespose?.Invoke(entity);
-        }
-
-
-        public void OnFilterCreated(EcsFilter filter) {}
         public void OnWorldResized(int newSize) {
-            Array.Resize(ref _monoEntityViews, newSize);
+            View.SetWorldSize(newSize);
             OnWorldResize?.Invoke(newSize);
         }
-
-
+      
         public void OnWorldDestroyed(EcsWorld world) {
             OnDestroy?.Invoke(this);
 
-            SortedAliveEntities.Clear();
-            ActiveSystems.Remove(GetDebugName());
+            View.Destroy();
             World.RemoveEventListener(this);
-
-            Object.Destroy(_rootGo);
+            ActiveSystems.Remove(this.GetDebugName());
         }
-
-        #endregion
     }
 }
 
