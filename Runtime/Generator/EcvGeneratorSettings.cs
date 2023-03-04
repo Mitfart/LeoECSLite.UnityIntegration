@@ -4,7 +4,9 @@ using UnityEditor;
 using UnityEngine;
 
 namespace Mitfart.LeoECSLite.UnityIntegration.Generator{
-   public sealed class EcvGeneratorSettings : ScriptableSingleton<EcvGeneratorSettings>{
+   [FilePath(SETTINGS_SAVE_PATH, FilePathAttribute.Location.PreferencesFolder)]
+   public sealed class EcvGeneratorSettings : ScriptableSingleton<EcvGeneratorSettings> {
+      private const string SETTINGS_SAVE_PATH          = "Plugins/Mitfart/LeoECSLite_UnityIntegration/EcvGeneratorSettings.st";
       private const string DEFAULT_PREFIX              = "ECV_";
       private const string DEFAULT_POSTFIX             = "";
       private const string DEFAULT_SAVE_FOLDER_PATH    = "Generated_ECV";
@@ -18,6 +20,8 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Generator{
       public bool   autoGenerate           = DEFAULT_AUTO_GENERATE;
       public bool   rewriteExisting        = DEFAULT_REWRITE_EXISTING;
       public bool   groupByNamespaces      = DEFAULT_GROUP_BY_NAMESPACES;
+
+      public bool IsDirty => EditorUtility.IsDirty(this);
       
       private void OnValidate(){
          if (string.IsNullOrWhiteSpace(prefix) && string.IsNullOrWhiteSpace(postfix)) 
@@ -25,9 +29,14 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Generator{
          
          if (string.IsNullOrWhiteSpace(relativeSaveFolderPath))
             relativeSaveFolderPath = DEFAULT_SAVE_FOLDER_PATH;
-         Save(false);
+         
+         if (!IsDirty) 
+            EditorUtility.SetDirty(this);
       }
-      
+
+      public void Save() {
+         if (IsDirty) base.Save(true);
+      }
       
       
       

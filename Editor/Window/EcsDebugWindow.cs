@@ -92,6 +92,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window{
          _entitiesList.showFoldoutHeader       = true;
          _entitiesList.showBoundCollectionSize = true;
          _entitiesList.ClearSelection();
+         _entitiesList.Rebuild();
 
 
 
@@ -121,7 +122,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window{
             }
 
             if (entities.Length == 1)
-               _activeEntitiesViews.First().Value.IsExpanded = true;
+               _activeEntitiesViews[(int) entities[0]].IsExpanded = true;
          }
       }
       
@@ -167,7 +168,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window{
             
             _sortTagsContainer.OnAddSortTag    -= ActiveSystem.Sort.AddSortSortComponent;
             _sortTagsContainer.OnRemoveSortTag -= ActiveSystem.Sort.RemoveSortSortComponent;
-            ResetInspector();
+            ClearActiveEntities();
          }
 
          ActiveSystem = newActiveDebugSystem;
@@ -190,7 +191,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window{
          var debugName = debugSystem.GetDebugName();
          
          if (_worldsEnum.value == debugName)
-            ResetInspector();
+            ClearActiveEntities();
          
          _worldsEnum.Remove(debugName);
       }
@@ -205,24 +206,37 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window{
       
       private void SetEntitiesListDirty(int e) => SetEntitiesListDirty();
       private void SetEntitiesListDirty()      => _isEntitiesListDirty = true;
-      
-      private void DestroyEntityView(int entity){ if (_activeEntitiesViews.TryGetValue(entity, out var view)) view.Dispose(); }
+
+      private void DestroyEntityView(int entity) {
+         if (_activeEntitiesViews.TryGetValue(entity, out var view)) 
+            view.Dispose();
+      }
 
 
 
-      private void Reset(){
-         ResetInspector();
-         _worldsEnum?.Reset();
+      private void Clear(){
+         ClearActiveEntities();
+         _worldsEnum?.Clear();
+         _entitiesContainer?.Clear();
+         ClearEntitiesList();
       }
       
       
-      private void ResetInspector(){
+      private void ClearActiveEntities(){
+         if (_activeEntitiesViews == null) return;
+         
          foreach (var entityView in _activeEntitiesViews.Values) 
             entityView.Dispose();
-         _activeEntitiesViews.Clear();
          
-         _entitiesContainer.Clear();
+         _activeEntitiesViews.Clear();
+      }
+
+      private void ClearEntitiesList() {
+         if (_entitiesList == null) return;
+
          _entitiesList.Clear();
+         _entitiesList.itemsSource = Enumerable.Empty<Elements.Entity.EntityView>().ToList();
+         _entitiesList.RefreshItems();
       }
 
       
@@ -241,9 +255,9 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window{
          switch (state){
             case PlayModeStateChange.ExitingEditMode: break;
             case PlayModeStateChange.EnteredPlayMode: break;
-            case PlayModeStateChange.ExitingPlayMode:
             case PlayModeStateChange.EnteredEditMode:
-               Reset();
+            case PlayModeStateChange.ExitingPlayMode:
+               Clear();
                break;
             default:
                throw new ArgumentOutOfRangeException(nameof(state), state, null);

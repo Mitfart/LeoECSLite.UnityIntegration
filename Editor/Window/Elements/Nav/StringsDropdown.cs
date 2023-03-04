@@ -7,7 +7,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.Nav{
 
       
       public StringsDropdown(params object[] choices){
-         foreach (var choice in choices)
+         foreach (object choice in choices)
             Add(choice.ToString());
 
          this.RegisterValueChangedCallback(
@@ -21,9 +21,9 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.Nav{
       public void Add   (string choice) => choices.Add(choice);
       public void Remove(string choice) => choices.Remove(choice);
 
-
-      public void Reset() {
-         Clear();
+      
+      public new void Clear() {
+         base.Clear();
          OnChoose = null;
       }
    }

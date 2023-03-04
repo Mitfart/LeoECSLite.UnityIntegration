@@ -4,20 +4,26 @@ using UnityEngine;
 
 namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Generator{
    public class GeneratorSettingsWindow : EditorWindow{
-      private static EcvGeneratorSettings _settings;
+      private static EcvGeneratorSettings SETTINGS;
       
       
       
       private void OnEnable(){
-         _settings           =  EcvGeneratorSettings.instance;
-         _settings.hideFlags &= ~HideFlags.NotEditable;
+         SETTINGS           =  EcvGeneratorSettings.instance;
+         SETTINGS.hideFlags &= ~HideFlags.NotEditable;
       }
 
       private void OnGUI(){
          UnityEditor
            .Editor
-           .CreateEditor(_settings)
+           .CreateEditor(SETTINGS)
            .DrawDefaultInspector();
+
+         bool enabled = GUI.enabled;
+         GUI.enabled = SETTINGS.IsDirty;
+         if (GUILayout.Button(nameof(EcvGeneratorSettings.Save)))
+            SETTINGS.Save();
+         GUI.enabled = enabled;
       }
    }
 }
