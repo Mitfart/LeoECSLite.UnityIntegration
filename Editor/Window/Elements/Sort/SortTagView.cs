@@ -8,12 +8,12 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.Sort{
 
       
       
-    public SortTagView(string text, Action action = null) : base(action){
+    public SortTagView(string text, Action action = null) : base(action) {
       _clickAction =  action;
       clicked      += InvokeClickAction;
 
       this.text = text;
-         
+
       Create();
       SetStyle();
     }
@@ -24,9 +24,9 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.Sort{
     }
       
     private void SetStyle() {
-      style.SetPadding(Utils.METRICS_SSS);
-      style.SetMargin(Utils.METRICS_SSS);
-      style.SetBorderRadius(Utils.METRICS_SSS);
+      style.SetPadding(Utils.METRICS_0500);
+      style.SetMargin(Utils.METRICS_0500);
+      style.SetBorderRadius(Utils.METRICS_0500);
     }
       
       

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Mitfart.LeoECSLite.UnityIntegration.Editor.Search;
 using Mitfart.LeoECSLite.UnityIntegration.Editor.Style;
-using Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.Component;
 using UnityEngine.UIElements;
 
 namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.Sort{
@@ -25,7 +24,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.Sort{
       
       
       private void Create() {
-         Add(new SortTagView(Icons.Plus, OpenComponentsMenu));
+         Add(new SortTagView(Icons.Text_Plus, OpenComponentsMenu));
       }
       
       private void SetStyle() {

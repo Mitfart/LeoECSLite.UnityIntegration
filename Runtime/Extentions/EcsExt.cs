@@ -5,13 +5,9 @@ using Leopotam.EcsLite;
 namespace Mitfart.LeoECSLite.UnityIntegration.Extentions {
   public static class EcsExt {
     private static readonly MethodInfo GetPoolMethodInfo = typeof(EcsWorld).GetMethod(nameof(EcsWorld.GetPool));
-    private static readonly MethodInfo FilterMethodInfo   = typeof(EcsWorld).GetMethod(nameof(EcsWorld.Filter));
-
-    private static readonly MethodInfo ExcMethodInfo =
-      typeof(EcsWorld.Mask).GetMethod(nameof(EcsWorld.Mask.Exc));
-
-    private static readonly MethodInfo IncMethodInfo =
-      typeof(EcsWorld.Mask).GetMethod(nameof(EcsWorld.Mask.Inc));
+    private static readonly MethodInfo FilterMethodInfo  = typeof(EcsWorld).GetMethod(nameof(EcsWorld.Filter));
+    private static readonly MethodInfo ExcMethodInfo     = typeof(EcsWorld.Mask).GetMethod(nameof(EcsWorld.Mask.Exc));
+    private static readonly MethodInfo IncMethodInfo     = typeof(EcsWorld.Mask).GetMethod(nameof(EcsWorld.Mask.Inc));
 
 
     public static IEcsPool GetPool(this EcsWorld world, Type type) {
@@ -33,7 +29,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Extentions {
 
     public static EcsWorld.Mask Inc(this EcsWorld.Mask mask, Type type) {
       MethodInfo method = IncMethodInfo.MakeGenericMethod(type);
-      return (EcsWorld.Mask)method.Invoke(mask, null);
+      return (EcsWorld.Mask) method.Invoke(mask, null);
     }
 
 

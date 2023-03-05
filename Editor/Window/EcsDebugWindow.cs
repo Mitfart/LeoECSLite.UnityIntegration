@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions;
-using Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements;
 using Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.Nav;
 using Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.Sort;
 using Mitfart.LeoECSLite.UnityIntegration.Extentions;
@@ -12,7 +11,7 @@ using UnityEngine.UIElements;
 
 namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window{
    public class EcsDebugWindow : EditorWindow{
-      private readonly Dictionary<int, Elements.Entity.EntityView> _activeEntitiesViews = new();
+      private readonly Dictionary<int, Elements.Entity.UIEntityView> _activeEntitiesViews = new();
       
       private SplitView  _content;
       private ScrollView _entitiesContainer;
@@ -136,7 +135,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window{
 
       
       
-      private void UpdateView(EcsWorldDebugSystem system){
+      private void UpdateView(){
          foreach (var view in _activeEntitiesViews.Values){
             if (view.IsExpanded){
                view.MonoView.UpdateComponentsValues();
@@ -198,10 +197,10 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window{
       
 
       
-      private Elements.Entity.EntityView CreateEntityView(int entity) {
+      private Elements.Entity.UIEntityView CreateEntityView(int entity) {
          return !ActiveSystem.View.TryGetEntityView(entity, out var view) 
                    ? null 
-                   : new Elements.Entity.EntityView().Init(view);
+                   : new Elements.Entity.UIEntityView().Init(view);
       }
       
       private void SetEntitiesListDirty(int e) => SetEntitiesListDirty();
@@ -235,7 +234,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window{
          if (_entitiesList == null) return;
 
          _entitiesList.Clear();
-         _entitiesList.itemsSource = Enumerable.Empty<Elements.Entity.EntityView>().ToList();
+         _entitiesList.itemsSource = Enumerable.Empty<Elements.Entity.UIEntityView>().ToList();
          _entitiesList.RefreshItems();
       }
 

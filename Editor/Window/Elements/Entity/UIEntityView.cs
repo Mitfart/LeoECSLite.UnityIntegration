@@ -4,7 +4,6 @@ using Mitfart.LeoECSLite.UnityIntegration.ComponentView;
 using Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions;
 using Mitfart.LeoECSLite.UnityIntegration.Editor.Search;
 using Mitfart.LeoECSLite.UnityIntegration.Editor.Style;
-using Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.Component;
 using Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.Nav;
 using Mitfart.LeoECSLite.UnityIntegration.EntityView;
 using Mitfart.LeoECSLite.UnityIntegration.Extentions;
@@ -12,7 +11,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.Entity{
-   public sealed class EntityView : VisualElement{
+   public sealed class UIEntityView : VisualElement{
       public override  VisualElement      contentContainer{ get; }
       
       private readonly FoldoutWithButtons _contentFoldout;
@@ -28,16 +27,16 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.Entity{
 
 
 
-      public EntityView(){
+      public UIEntityView(){
          contentContainer = this;
          contentContainer
             = _contentFoldout
                  = this.AddAndGet(new Box())
                        .AddAndGet(new FoldoutWithButtons());
 
-         _contentFoldout.AddButton(Icons.Plus  , AddComponentToEntity);
-         _contentFoldout.AddButton(Icons.Reload, UpdateEntity);
-         _contentFoldout.AddButton(Icons.Close,  DeleteEntity);
+         _contentFoldout.AddButton(Icons.Plus_More, AddComponentToEntity);
+         _contentFoldout.AddButton(Icons.Refresh,   UpdateEntity);
+         _contentFoldout.AddButton(Icons.Close,     DeleteEntity);
 
 
          #region ClickEvents
@@ -74,7 +73,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.Entity{
       }
 
 
-      public EntityView Init(MonoEntityView monoEntityView){
+      public UIEntityView Init(MonoEntityView monoEntityView){
          MonoView = monoEntityView;
          
          _uiComponentViews.Clear();

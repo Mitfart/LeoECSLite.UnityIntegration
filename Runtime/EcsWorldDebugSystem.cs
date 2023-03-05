@@ -16,7 +16,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
         public event Action<int> OnWorldResize;
 
         public event Action<EcsWorldDebugSystem> OnInit;
-        public event Action<EcsWorldDebugSystem> OnUpdate;
+        public event Action OnUpdate;
         public event Action<EcsWorldDebugSystem> OnDestroy;
 
 
@@ -25,8 +25,9 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
         public EWDSSort     Sort     { get; private set; }
 
         public string             WorldName    { get; }
-        public EntityNameSettings NameSettings { get; }
         public EcsWorld           World        { get; private set; }
+        public NamedWorld         NamedWorld   { get; private set; }
+        public EntityNameSettings NameSettings { get; }
 
       
       
@@ -38,6 +39,8 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
       
 
         public void PreInit(IEcsSystems systems) {
+            string worldDebugName = this.GetDebugName();
+            
             InitWorld();
          
             View     = this.CreateView();
@@ -45,14 +48,15 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
             Sort     = new EWDSSort(this);
          
             InitEntities();
-         
-         
-            ActiveSystems.Add(this.GetDebugName(), this);
+
+            ActiveSystems.Add(worldDebugName, this);
             OnInit?.Invoke(this);
 
+            
             void InitWorld() {
                 World = systems.GetWorld(WorldName) ?? throw new Exception($"Cant find required world! ({WorldName})");
                 World.AddEventListener(this);
+                NamedWorld = new NamedWorld(World, worldDebugName);
             }
 
             void InitEntities() => ForeachEntity(OnEntityCreated);
@@ -61,7 +65,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration{
         public void Run(IEcsSystems systems) {
             Entities.UpdateDirtyEntities();
             Sort.UpdateSortedEntities();
-            OnUpdate?.Invoke(this);
+            OnUpdate?.Invoke();
         }
       
       

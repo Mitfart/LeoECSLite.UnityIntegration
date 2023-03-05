@@ -1,5 +1,6 @@
 using Mitfart.LeoECSLite.UnityIntegration.Attributes;
 using Mitfart.LeoECSLite.UnityIntegration.Editor.Generator;
+using Mitfart.LeoECSLite.UnityIntegration.Editor.NEW;
 using Mitfart.LeoECSLite.UnityIntegration.Editor.Window;
 using Mitfart.LeoECSLite.UnityIntegration.Generator;
 using UnityEditor;
@@ -15,6 +16,10 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Menu{
       [MenuItem(MenuPath.DEBUG_WINDOW)]
       public static void OpenEcsDebugWindow() {
          EditorWindow.GetWindow<EcsDebugWindow>(nameof(EcsDebugWindow)).Show();
+      }
+      [MenuItem(MenuPath.DEBUG_WINDOW_NEW)]
+      public static void OpenEcsDebugWindowNew() {
+         EditorWindow.GetWindow<NewEDW>(nameof(NewEDW)).Show();
       }
       
       [MenuItem(MenuPath.GENERATOR_SETTINGS)]

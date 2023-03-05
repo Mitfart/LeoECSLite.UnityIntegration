@@ -27,8 +27,8 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.Component{
                this.AddAndGet(new Box())
                    .AddAndGet(new FoldoutWithButtons());
 
-         _contentFoldout.AddButton(Icons.Reload, () => { if (MonoView != null) MonoView.UpdateValue(); });
-         _contentFoldout.AddButton(Icons.Close,  () => { if (MonoView != null) MonoView.Remove();      });
+         _contentFoldout.AddButton(Icons.Refresh, () => { if (MonoView != null) MonoView.UpdateValue(); });
+         _contentFoldout.AddButton(Icons.Close,   () => { if (MonoView != null) MonoView.Remove();});
       }
 
       
@@ -42,7 +42,6 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.Component{
             Remove(ComponentInspector);
          
          ComponentInspector = this.AddAndGet(new InspectorElement(monoCompView));
-
          return this;
       }
    }

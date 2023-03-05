@@ -7,15 +7,17 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.Nav{
    public sealed class ButtonsContainer : VisualElement{
       public ButtonsContainer(){
          style.flexDirection = FlexDirection.Row;
-         style.marginLeft    = style.marginRight = -Utils.METRICS_SSS;
+         style.marginLeft    = style.marginRight = -Utils.METRICS_0500;
       }
 
       
-      public void AddButton(string newText, Action action){
+      public Button AddButton(string newText, Action action) {
          var btn = this.AddAndGet(new Button(action){ text = newText });
 
          btn.WithSquareButtonStyle();
-         btn.style.marginLeft = btn.style.marginRight = Utils.METRICS_SSS;
+         btn.style.marginLeft = btn.style.marginRight = Utils.METRICS_0500;
+
+         return btn;
       }
    }
 }

@@ -1,5 +1,6 @@
 using System;
 using Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions;
+using Mitfart.LeoECSLite.UnityIntegration.Editor.Style;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -34,8 +35,20 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.Nav{
       }
 
       
-      public void AddButton(string newText, Action action){
-         _buttonsContainer.AddButton(newText, action);
+      public Button AddButton(string newText, Action action) {
+         return _buttonsContainer.AddButton(newText, action);
+      }
+      public Button AddButton(Texture2D icon, Action action) {
+         return _buttonsContainer
+           .AddButton(string.Empty, action)
+               .AddChild(new VisualElement {
+                   style = {
+                      backgroundImage = icon, 
+                      width           = Utils.GetPercentsLength(100),
+                      height          = Utils.GetPercentsLength(100)
+                   }
+                });
+            ;
       }
    }
 }
