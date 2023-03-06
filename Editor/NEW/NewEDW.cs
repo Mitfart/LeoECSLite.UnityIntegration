@@ -2,6 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions;
+using Mitfart.LeoECSLite.UnityIntegration.Editor.NEW.Component;
+using Mitfart.LeoECSLite.UnityIntegration.Editor.NEW.Component.Filter;
+using Mitfart.LeoECSLite.UnityIntegration.Editor.NEW.Entity;
+using Mitfart.LeoECSLite.UnityIntegration.Editor.NEW.Entity.List;
+using Mitfart.LeoECSLite.UnityIntegration.Editor.NEW.World;
 using Mitfart.LeoECSLite.UnityIntegration.Editor.Style;
 using Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.Nav;
 using Mitfart.LeoECSLite.UnityIntegration.EntityView;
@@ -17,7 +22,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.NEW {
       private readonly Dictionary<int, UIEntity> _entityViews = new();
       
       private VisualElement _header;
-      private Filter        _filter;
+      private Filter _filter;
       
       private SplitView        _content;
       private VisualElement    _dragLine;
@@ -26,8 +31,6 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.NEW {
       private ScrollView       _entitiesContainer;
 
       public EcsWorldDebugSystem ActiveDebugSystem { get; private set; }
-      
-      private bool _isEntitiesListDirty;
 
       
 
@@ -74,10 +77,9 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.NEW {
          if (EcsWorldDebugSystem.ActiveSystems.Count <= 0) return;
          
          InitWorldTabs();
-         
-         _entitiesList.OnSelectEntities += OnSelectEntities;
       }
 
+      
 
       private void InitContentContainer() {
          _content.style.SetBorderColor(Utils.Color_DDD);
@@ -95,7 +97,8 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.NEW {
       }
       
       
-      private void OnSelectEntities(IEnumerable<object> entities) {
+      
+      private void SelectEntities(IEnumerable<object> entities) {
          List<object> selectedEntities  = entities.ToList();
          var          entitiesToDispose = new List<int>();
          
@@ -110,20 +113,17 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.NEW {
          }
          
          foreach (int entity in selectedEntities) {
-            if (!ActiveDebugSystem.View.TryGetEntityView(entity, out MonoEntityView monoView)) continue;
-
-            UIEntity uiView = new UIEntity().Init(monoView);
+            UIEntity uiView = CreateUIEntity(entity);
+            
             _entitiesContainer.Add(uiView);
             _entityViews.Add(entity, uiView);
          }
       }
       
       
-      private void OnInspectorUpdate() {
-         if (!_isEntitiesListDirty) return;
-
-         _entitiesList.Reset();
-         _isEntitiesListDirty = false;
+      
+      private void OnInspectorUpdate() { 
+         _entitiesList.Refresh();
       }
 
       private void UpdateView() {
@@ -145,68 +145,64 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.NEW {
          if (ActiveDebugSystem == newActiveDebugSystem) return;
 
          if (ActiveDebugSystem != null){
-            ActiveDebugSystem.OnUpdate                -= UpdateView;
-            ActiveDebugSystem.Sort.OnSortFilterChange -= SetEntitiesListDirty;
-            ActiveDebugSystem.Entities.OnCreate       -= SetEntitiesListDirty;
-            ActiveDebugSystem.Entities.OnDestroy      -= SetEntitiesListDirty;
-            ActiveDebugSystem.Entities.OnDestroy      -= DisposeEntity;
-            ActiveDebugSystem.OnDestroy               -= DisposeWorldView;
+            ActiveDebugSystem.OnUpdate           -= UpdateView;
+            ActiveDebugSystem.Entities.OnCreate  -= _entitiesList.MarkDirty;
+            ActiveDebugSystem.Entities.OnDestroy -= _entitiesList.MarkDirty;
+            ActiveDebugSystem.Entities.OnDestroy -= DisposeEntity;
+            ActiveDebugSystem.OnDestroy          -= DisposeWorldView;
             
-            DisposeActiveEntities();
+            ResetActiveEntities();
          }
 
          ActiveDebugSystem = newActiveDebugSystem;
          if (ActiveDebugSystem == null) return;
 
-         ActiveDebugSystem.OnUpdate                += UpdateView;
-         ActiveDebugSystem.Sort.OnSortFilterChange += SetEntitiesListDirty;
-         ActiveDebugSystem.Entities.OnCreate       += SetEntitiesListDirty;
-         ActiveDebugSystem.Entities.OnDestroy      += SetEntitiesListDirty;
-         ActiveDebugSystem.Entities.OnDestroy      += DisposeEntity;
-         ActiveDebugSystem.OnDestroy               += DisposeWorldView;
+         ActiveDebugSystem.OnUpdate           += UpdateView;
+         ActiveDebugSystem.Entities.OnCreate  += _entitiesList.MarkDirty;
+         ActiveDebugSystem.Entities.OnDestroy += _entitiesList.MarkDirty;
+         ActiveDebugSystem.Entities.OnDestroy += DisposeEntity;
+         ActiveDebugSystem.OnDestroy          += DisposeWorldView;
 
-         _entitiesList.Init(ActiveDebugSystem.Sort.SortedAliveEntities);
-      }
-
-
-      
-      private void SetEntitiesListDirty() {
-         _isEntitiesListDirty = true;
-      }
-      
-      private void SetEntitiesListDirty(int e) {
-         SetEntitiesListDirty();
+         _entitiesList.Init(this, SelectEntities);
       }
       
       
-      
-      private void DisposeEntity(int entity) {
-         if (!_entityViews.TryGetValue(entity, out UIEntity uiView)) return;
-
-         _entitiesContainer.Remove(uiView);
-         _entityViews.Remove(entity);
-      }
       
       private void DisposeWorldView(EcsWorldDebugSystem debugSystem) {
          _worldTabs.RemoveTab(debugSystem.NamedWorld);
       }
+
+
+      
+      private UIEntity CreateUIEntity(int entity) {
+         return !ActiveDebugSystem
+                .View
+                .TryGetEntityView(entity, out MonoEntityView monoView) 
+            ? null 
+            : new UIEntity().Init(monoView);
+      }
+
+      private void DisposeEntity(int entity) {
+         if (!_entityViews.TryGetValue(entity, out UIEntity uiView)) return;
+
+         uiView.Reset();
+         _entitiesContainer.Remove(uiView);
+         _entityViews.Remove(entity);
+      }
+      
       
       
       private void Reset() {
          _worldTabs?.Reset();
          _filter?.Reset();
-
-         if (_entitiesList != null) {
-            _entitiesList.Reset();
-            _entitiesList.OnSelectEntities -= OnSelectEntities;
-         }
-
-         DisposeActiveEntities();
+         _entitiesList?.Reset();
+         
+         ResetActiveEntities();
       }
       
-      
-      private void DisposeActiveEntities() {
+      private void ResetActiveEntities() {
          if (_entityViews == null) return;
+         
          UIEntity[] entitiesToDispose = _entityViews.Values.ToArray();
 
          foreach (UIEntity entityView in entitiesToDispose) 
@@ -214,6 +210,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.NEW {
          
          _entityViews.Clear();
       }
+      
       
       
       #region OnPlayModeStateChanged

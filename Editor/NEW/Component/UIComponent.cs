@@ -4,7 +4,7 @@ using Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
 
-namespace Mitfart.LeoECSLite.UnityIntegration.Editor.NEW {
+namespace Mitfart.LeoECSLite.UnityIntegration.Editor.NEW.Component {
    public class UIComponent : Foldout {
       public Type    ComponentType { get; }
       public BaseEcv MonoView      { get; }

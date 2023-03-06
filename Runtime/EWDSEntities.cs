@@ -1,5 +1,4 @@
 #if UNITY_EDITOR
-using System;
 using System.Collections.Generic;
 using Leopotam.EcsLite;
 using Mitfart.LeoECSLite.UnityIntegration.EntityView;
@@ -7,14 +6,16 @@ using Mitfart.LeoECSLite.UnityIntegration.Extentions;
 
 namespace Mitfart.LeoECSLite.UnityIntegration {
     public class EWDSEntities : IEcsWorldEventListener {
+        public delegate void EntityAction(int entity = -1);
+        
         private EcsWorldDebugSystem _debugSystem;
     
         public HashSet<int> Dirty { get; }
         public HashSet<int> Alive { get; }
     
-        public event Action<int> OnCreate;
-        public event Action<int> OnChange;
-        public event Action<int> OnDestroy;
+        public event EntityAction OnCreate;
+        public event EntityAction OnChange;
+        public event EntityAction OnDestroy;
 
     
     

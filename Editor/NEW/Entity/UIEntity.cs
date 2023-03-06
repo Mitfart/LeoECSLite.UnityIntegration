@@ -1,19 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Mitfart.LeoECSLite.UnityIntegration.ComponentView;
 using Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions;
+using Mitfart.LeoECSLite.UnityIntegration.Editor.NEW.Component;
 using Mitfart.LeoECSLite.UnityIntegration.Editor.Style;
 using Mitfart.LeoECSLite.UnityIntegration.EntityView;
 using UnityEngine.UIElements;
 
-namespace Mitfart.LeoECSLite.UnityIntegration.Editor.NEW {
+namespace Mitfart.LeoECSLite.UnityIntegration.Editor.NEW.Entity {
    public class UIEntity : VisualElement {
       private readonly Dictionary<BaseEcv, UIComponent> _uiComponentViews = new();
 
       public MonoEntityView MonoView { get; private set; }
       public int            Entity   => MonoView.Entity;
       
-      private ScrollView _labelContainer;
+      private ScrollView    _labelContainer;
       private Label         _tagLabel;
       private Label         _indexLabel;
       private VisualElement _componentsContainer;
@@ -25,7 +25,34 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.NEW {
          AddElements();
          InitElements();
       }
+      
+      
+      
+      public UIEntity Init(MonoEntityView monoView) {
+         if (MonoView == monoView) return this;
+         MonoView = monoView;
+         
+         MonoView.OnAddComponent    += AddComponent;
+         MonoView.OnRemoveComponent += RemoveComponent;
+         
+         InitEntityLabel();
+         AddAllComponents();
+         
+         return this;
+      }
+      
+      public void Reset() {
+         _indexLabel.text = string.Empty;
+         _tagLabel.text   = string.Empty;
+         
+         MonoView.OnAddComponent    -= AddComponent;
+         MonoView.OnRemoveComponent -= RemoveComponent;
+         
+         _uiComponentViews?.Clear();
+         _componentsContainer?.Clear();
+      }
 
+      
 
       private void CreateElements() {
          _labelContainer      = new ScrollView(ScrollViewMode.Horizontal);
@@ -51,7 +78,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.NEW {
          
          _tagLabel.style.SetMargin(0);
          _tagLabel.style.SetPadding(Utils.METRICS_1500, Utils.METRICS_0500);
-         _tagLabel.style.opacity   = .75f;
+         _tagLabel.style.opacity = .75f;
          _indexLabel.style.SetMargin(0);
          _indexLabel.style.SetPadding(Utils.METRICS_1500, Utils.METRICS_0500);
          _indexLabel.style.opacity = .75f;
@@ -64,61 +91,47 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.NEW {
          _componentsContainer.style.SetBorderRadius(Utils.METRICS_0750);
          _componentsContainer.style.backgroundColor = Utils.Color_DD;
       }
-
-      
-      public UIEntity Init(MonoEntityView monoView) {
-         if (MonoView == monoView) return this;
-
-         MonoView         = monoView;
-         _tagLabel.text   = MonoView.Tag;
-         _indexLabel.text = Entity.ToString();
-         
-         MonoView.OnAddComponent    += AddComponent;
-         MonoView.OnRemoveComponent += RemoveComponentView;
-         
-         AddAllComponents();
-         
-         if (string.IsNullOrWhiteSpace(  _tagLabel.text)) _tagLabel.style.display   = DisplayStyle.None;
-         if (string.IsNullOrWhiteSpace(_indexLabel.text)) _indexLabel.style.display = DisplayStyle.None;
-         
-         return this;
-      }
-
-      
-      public void Reset() {
-         _indexLabel.text = string.Empty;
-         _tagLabel.text   = string.Empty;
-         
-         MonoView.OnAddComponent    -= AddComponent;
-         MonoView.OnRemoveComponent -= RemoveComponentView;
-         
-         _componentsContainer.Clear();
-      }
-
-      
-      
-      private void AddComponent(BaseEcv monoCompView) {
-         UIComponent comp = _componentsContainer.AddAndGet(GetUIComponentView(monoCompView));
-         _uiComponentViews.Add(monoCompView, comp);
-      }
-      
-      private void RemoveComponentView(BaseEcv monoCompView) {
-         if (!_uiComponentViews.TryGetValue(monoCompView, out UIComponent uiComp)) return;
-         
-         _uiComponentViews.Remove(monoCompView);
-         Remove(uiComp);
-      }
-      
-
-      private UIComponent GetUIComponentView(BaseEcv monoCompView) {
-         return new UIComponent(monoCompView);
-      }
-      
       
       
       private void AddAllComponents() {
          foreach (BaseEcv componentView in MonoView.Components.Values)
             AddComponent(componentView);
+      }
+      
+      
+      
+      private void AddComponent(BaseEcv monoComp) {
+         UIComponent comp = _componentsContainer.AddAndGet(CreateComponent(monoComp));
+         _uiComponentViews.Add(monoComp, comp);
+      }
+      
+      private UIComponent CreateComponent(BaseEcv monoComp) {
+         return new UIComponent(monoComp);
+      }
+      
+      private void RemoveComponent(BaseEcv monoComp) {
+         if (!_uiComponentViews.TryGetValue(monoComp, out UIComponent uiComp)) return;
+         
+         _uiComponentViews.Remove(monoComp);
+         Remove(uiComp);
+      }
+
+
+
+      private void InitEntityLabel() {
+         _tagLabel.text   = MonoView.Tag;
+         _indexLabel.text = Entity.ToString();
+         
+         
+         _indexLabel.style.display = 
+            string.IsNullOrWhiteSpace(_indexLabel.text) 
+               ? DisplayStyle.None
+               : DisplayStyle.Flex;
+         
+         _tagLabel.style.display = 
+            string.IsNullOrWhiteSpace(_tagLabel.text) 
+               ? DisplayStyle.None
+               : DisplayStyle.Flex;
       }
    }
 }
