@@ -10,19 +10,20 @@ using UnityEngine.UIElements;
 
 namespace Mitfart.LeoECSLite.UnityIntegration.Editor.NEW.Component.Filter {
    public class Filter : VisualElement {
-      private readonly NewEDW                               _debugWindow;
-      private readonly Dictionary<FilterTag, FilterTagView> _tagViews;
+      private readonly NewEDW _window;
+      
       private readonly List<FilterTag>                      _tags;
+      private readonly Dictionary<FilterTag, FilterTagView> _tagViews;
 
       private Button _addTagBtn;
       private Button _clearBtn;
       
       
       
-      public Filter(NewEDW debugWindow) {
+      public Filter(NewEDW window) {
          _tags        = new List<FilterTag>();
          _tagViews    = new Dictionary<FilterTag, FilterTagView>();
-         _debugWindow = debugWindow;
+         _window = window;
          
          CreateElements();
          AddElements();
@@ -48,6 +49,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.NEW.Component.Filter {
          style.backgroundColor = Utils.Color_DD;
          style.flexDirection   = FlexDirection.Row;
          style.alignItems      = Align.Center;
+         style.flexWrap        = Wrap.Wrap;
          
          SetButtonStyle(_addTagBtn);
          SetButtonStyle(_clearBtn);
@@ -61,8 +63,13 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.NEW.Component.Filter {
 
 
 
-      public EcsFilter GetEcsFilter() {
-         EcsWorld.Mask mask = _debugWindow.ActiveDebugSystem.World.Filter(_tags[0].Type);
+      public bool TryGetEcsFilter(out EcsFilter filter) {
+         if (_tags.Count <= 0) {
+            filter = null;
+            return false;
+         }
+         
+         EcsWorld.Mask mask = _window.ActiveDebugSystem.World.Filter(_tags[0].Type);
 
          for (var i = 1; i < _tags.Count; i++) {
             FilterTag tag = _tags[i];
@@ -73,7 +80,8 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.NEW.Component.Filter {
             }
          }
 
-         return mask.End();
+         filter = mask.End();
+         return true;
       }
       
       
@@ -132,11 +140,11 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.NEW.Component.Filter {
       
       
       private void OpenComponentsMenu() {
-         if (_debugWindow == null) return;
+         if (_window == null) return;
          
          ComponentsSearchWindow
            .CreateAndInit(
-               _debugWindow.ActiveDebugSystem,
+               _window.ActiveDebugSystem,
                componentType => {
                   var tag = new FilterTag(
                      componentType, 

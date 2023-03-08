@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions;
 using Mitfart.LeoECSLite.UnityIntegration.Editor.Style;
 using Mitfart.LeoECSLite.UnityIntegration.EntityView;
@@ -43,11 +44,13 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.NEW.Entity.List {
       }
       
       public void Reset() {
-         _selectEntities       = null;
+         _selectEntities = null;
+#if UNITY_2022
          _listView.itemsSource = null;
-         
-         _listView.ClearSelection();
-         _listView.RefreshItems();
+#else
+         _listView.itemsSource = Enumerable.Empty<int>().ToList();
+#endif
+         _listView.Rebuild();
       }
 
 

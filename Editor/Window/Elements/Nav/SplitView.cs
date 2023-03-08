@@ -7,7 +7,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.Nav{
       public readonly VisualElement left;
       public readonly VisualElement right;
 
-      public SplitView() : base(0, 150, TwoPaneSplitViewOrientation.Horizontal){
+      public SplitView(float startSize = 250f) : base(0, startSize, TwoPaneSplitViewOrientation.Horizontal){
          left  = this.AddAndGet(new VisualElement{ name = "left" });
          right = this.AddAndGet(new VisualElement{ name = "right" });
 
