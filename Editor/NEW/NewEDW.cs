@@ -123,7 +123,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.NEW {
       
       
       private void OnInspectorUpdate() { 
-         _entitiesList.Refresh();
+         _entitiesList?.Refresh();
       }
 
       private void UpdateView() {
