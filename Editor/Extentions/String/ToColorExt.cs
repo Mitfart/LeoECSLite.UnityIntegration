@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using UnityEngine;
 
-namespace LeoECSLite.Debug.Editor.Extentions.String {
+namespace LeoECSLite.UnityIntegration.Editor.Extentions.String {
   public static class ToColorExt {
     public static Color ToColor(this string str) {
       byte[] bytes = Encoding.ASCII.GetBytes(str);

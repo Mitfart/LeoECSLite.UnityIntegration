@@ -1,9 +1,9 @@
 ﻿using System;
-using LeoECSLite.Debug.Editor.Extentions.String;
+using LeoECSLite.UnityIntegration.Editor.Extentions.String;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Mitfart.LeoECSLite.UnityIntegration_develop.Editor.Window.Component {
+namespace LeoECSLite.UnityIntegration.Editor.Window.Entity {
   public class UIComponentLabel : VisualElement {
     public const     string MAIN_CL       = "component_label";
     public const     string MAIN_LABEL_CL = "component_label__label";
