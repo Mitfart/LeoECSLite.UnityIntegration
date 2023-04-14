@@ -1,0 +1,20 @@
+﻿.component {
+}
+
+
+.component_label {
+    margin: var(--METRICS_0125);
+    padding: var(--METRICS_0250) var(--METRICS_0500);
+
+    border-radius: var(--METRICS_0500);
+
+    flex-direction: row;
+    align-items: center;
+    flex-shrink: 0;
+    flex-grow: 0;
+}
+
+.component_label__label {
+    color: var(--c-ddd);
+    font-size: var(--METRICS_0750);
+}

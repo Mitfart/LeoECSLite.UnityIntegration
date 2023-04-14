@@ -1,268 +1,173 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions;
-using Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.Nav;
-using Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Elements.Sort;
-using Mitfart.LeoECSLite.UnityIntegration.Extentions;
+using LeoECSLite.UnityIntegration.Editor.Extentions.UIElement;
+using LeoECSLite.UnityIntegration.Editor.Window.Entity;
+using LeoECSLite.UnityIntegration.Editor.Window.Filter.View;
+using LeoECSLite.UnityIntegration.Editor.Window.Layout;
+using LeoECSLite.UnityIntegration.Editor.Window.World;
+using LeoECSLite.UnityIntegration.Entity;
+using Leopotam.EcsLite;
 using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window{
-   public class EcsDebugWindow : EditorWindow{
-      private readonly Dictionary<int, Elements.Entity.UIEntityView> _activeEntitiesViews = new();
+namespace LeoECSLite.UnityIntegration.Editor.Window {
+  public class EcsDebugWindow : BaseEcsDebugWindow {
+    private const string STYLES_PATH   = "LeoECSLite.UnityIntegration/uss/index";
+    private const string SPLIT_VIEW_CL = "split-view";
+
+    private readonly Dictionary<int, VisualElement> _activeEntities = new();
+
+    private VisualElement            _header;
+    private FilterView               _filterView;
+    private HorizontalTwoPanelLayout _content;
+    private TabsMenu<WorldTabData>   _worldTabsMenu;
+    private EntitiesList         _entitiesList;
+    private ScrollView               _entitiesContainer;
+
+    private Filter.Filter _filter;
+
+
+
+    [MenuItem("LeoECS Lite/Debug Window NEW")]
+    public static void OpenEcsDebugWindow() {
+      GetWindow<EcsDebugWindow>(nameof(EcsDebugWindow))
+       .Show();
+    }
+
+
+    private void OnInspectorUpdate() {
+      if (!Application.isPlaying)
+        return;
+
+      _entitiesList.Refresh();
+    }
+
+
+    protected override void CreateElements() {
+      _filter = new Filter.Filter();
+
+      _header     = new VisualElement();
+      _filterView = new FilterView(_filter);
+
+      _content           = new HorizontalTwoPanelLayout();
+      _worldTabsMenu     = new TabsMenu<WorldTabData>(ChangeWorld);
+      _entitiesList  = new EntitiesList(_filter);
+      _entitiesContainer = new ScrollView();
+    }
+
+    protected override void AddElements() {
+      rootVisualElement
+       .AddChild(
+          _header
+           .AddChild(_worldTabsMenu)
+           .AddChild(_filterView)
+        )
+       .AddChild(_content);
+
+      _content
+       .Left
+       .AddChild(_entitiesList);
+
+      _content
+       .Right
+       .AddChild(_entitiesContainer);
+    }
+
+    protected override void InitElements() {
+      rootVisualElement.styleSheets.Add(Resources.Load<StyleSheet>(STYLES_PATH));
+
+      _content.AddToClassList(SPLIT_VIEW_CL);
+
+      if (!Application.isPlaying)
+        return;
+
+      ActiveDebugSystems.Foreach(
+        sys => {
+          _worldTabsMenu.AddTab(
+            new WorldTabData(
+              sys.World,
+              sys.WorldName
+            )
+          );
+        }
+      );
+    }
+
+
+    public override void OnEntityCreated(int e) {
+      _entitiesList.Add(e);
+    }
+
+    public override void OnEntityDestroyed(int e) {
+      _entitiesList.Remove(e);
+
+      if (_activeEntities.ContainsKey(e))
+        RemoveActiveEntity(e);
+    }
+
+    public override void OnWorldDestroyed(EcsWorld world) {
+      _worldTabsMenu.RemoveTab(
+        _worldTabsMenu
+         .GetWhere(data => data.World == world)
+         .First()
+      );
+    }
+
+
+
+    protected override void InitInspector() {
+      _filter.Init(ActiveDebugSystem);
+      _entitiesList.Setup(ActiveDebugSystem);
+
+      _entitiesList.OnSelectEntity   += AddActiveEntity;
+      _entitiesList.OnUnselectEntity += RemoveActiveEntity;
+    }
+
+    protected override void ResetInspector() {
+      _entitiesList.Reset();
+      ClearActiveEntities();
       
-      private SplitView  _content;
-      private ScrollView _entitiesContainer;
-      private ListView   _entitiesList;
-      private bool       _isEntitiesListDirty;
+      _filter.Reset();
+      _filterView.Reset();
 
-      private SortTagsContainerView _sortTagsContainer;
-      private StringsDropdown       _worldsEnum;
-      
-      public EcsWorldDebugSystem ActiveSystem { get; private set; }
+      _entitiesList.OnSelectEntity   -= AddActiveEntity;
+      _entitiesList.OnUnselectEntity -= RemoveActiveEntity;
+    }
+
+    private void ClearActiveEntities() {
+      if (_activeEntities == null)
+        return;
+
+      foreach (VisualElement view in _activeEntities.Values)
+        _entitiesContainer.Remove(view);
+
+      _activeEntities.Clear();
+    }
 
 
+    private VisualElement CreateEntityInspector(int e) {
+      EntityView entityView = ActiveDebugSystem.View.GetEntityView(e);
+      return new InspectorElement(entityView);
+    }
 
-      private void CreateGUI(){
-         CreateElements();
-         AddElements();
+    private void AddActiveEntity(int e) {
+      VisualElement inspector = CreateEntityInspector(e);
 
-         if (!Application.isPlaying) return;
-         if (EcsWorldDebugSystem.ActiveSystems.Count <= 0) return;
+      _entitiesContainer.Add(inspector);
+      _activeEntities.Add(e, inspector);
+    }
 
-         InitElements();
+    private void RemoveActiveEntity(int e) {
+      try {
+        _entitiesContainer.Remove(_activeEntities[e]);
+        _activeEntities.Remove(e);
       }
-      
-      
-      private void CreateElements(){
-         _sortTagsContainer = new SortTagsContainerView(this);
-         _worldsEnum        = new StringsDropdown();
-
-         _content           = new SplitView();
-         _entitiesList      = new ListView();
-         _entitiesContainer = new ScrollView();
+      catch (Exception exception) {
+        UnityEngine.Debug.Log($"Error on: {e}   ->   {exception}");
       }
-      
-      private void AddElements(){
-         rootVisualElement
-           .AddChild(_sortTagsContainer)
-           .AddChild(_content);
-         
-         _content
-           .left
-           .AddChild(_worldsEnum)
-           .AddChild(_entitiesList);
-         _content
-           .right
-           .AddChild(_entitiesContainer);
-      }
-      
-      private void InitElements(){
-         InitWorldsEnum();
-         InitEntitiesList();
-      }
-      
-      
-      private void InitWorldsEnum(){
-         foreach (var systemKey in EcsWorldDebugSystem.ActiveSystems.Keys)
-            _worldsEnum.Add(systemKey);
-
-         _worldsEnum.index    =  0;
-         _worldsEnum.OnChoose += ChangeWorld;
-
-         ChangeWorld(_worldsEnum.value, null);
-      }
-      
-      private void InitEntitiesList() {
-         _entitiesList.itemsSource = ActiveSystem.Sort.SortedAliveEntities;
-         
-         _entitiesList.bindItem = BindItem;
-         _entitiesList.makeItem = MakeItem;
-#if UNITY_2022
-         _entitiesList.selectionChanged -= SelectionChange;
-         _entitiesList.selectionChanged += SelectionChange;
-#else
-         _entitiesList.onSelectionChange -= SelectionChange;
-         _entitiesList.onSelectionChange += SelectionChange;
-#endif
-         
-         _entitiesList.showFoldoutHeader       = true;
-         _entitiesList.showBoundCollectionSize = true;
-         _entitiesList.ClearSelection();
-         _entitiesList.Rebuild();
-
-
-
-         void BindItem(VisualElement element, int e){
-            if (!ActiveSystem.View.TryGetEntityView(ActiveSystem.Sort.SortedAliveEntities[e], out var entityView)) return;
-
-            ((Label) element).text = entityView.name;
-         }
-
-         VisualElement MakeItem() {
-            return new Label{ style ={ unityTextAlign = TextAnchor.MiddleLeft } };
-         }
-
-         void SelectionChange(IEnumerable<object> objects) {
-            var entities = objects as object[] ?? objects.ToArray();
-
-            foreach (var entityView in _activeEntitiesViews.Values)
-               entityView.Dispose();
-            _activeEntitiesViews.Clear();
-            
-
-            foreach (int entity in entities){
-               var entityView = CreateEntityView(entity);
-
-               _activeEntitiesViews[entity] = entityView;
-               _entitiesContainer.Add(entityView);
-            }
-
-            if (entities.Length == 1)
-               _activeEntitiesViews[(int) entities[0]].IsExpanded = true;
-         }
-      }
-      
-      
-      private void ChangeWorld(string newValue, string oldValue){
-         if (EcsWorldDebugSystem.ActiveSystems.TryGetValue(newValue, out var debugSystem))
-            SetActiveWorldDebugSystem(debugSystem);
-         else throw new Exception($"Can't find System relative to `{newValue}` world!");
-      }
-      
-
-      
-      
-      private void UpdateView(){
-         foreach (var view in _activeEntitiesViews.Values){
-            if (view.IsExpanded){
-               view.MonoView.UpdateComponentsValues();
-               view.MarkDirtyRepaint();
-            }
-            view.Label = view.MonoView.name;
-         }
-      }
-
-      private void OnInspectorUpdate(){
-         if (!_isEntitiesListDirty) return;
-
-         _entitiesList.RefreshItems();
-         _isEntitiesListDirty = false;
-      }
-      
-
-
-      private void SetActiveWorldDebugSystem(EcsWorldDebugSystem newActiveDebugSystem){
-         if (ActiveSystem == newActiveDebugSystem) return;
-
-         if (ActiveSystem != null){
-            ActiveSystem.OnUpdate                -= UpdateView;
-            ActiveSystem.Sort.OnSortFilterChange -= SetEntitiesListDirty;
-            ActiveSystem.Entities.OnCreate       -= SetEntitiesListDirty;
-            ActiveSystem.Entities.OnDestroy      -= SetEntitiesListDirty;
-            ActiveSystem.Entities.OnDestroy      -= DestroyEntityView;
-            ActiveSystem.OnDestroy               -= DisposeWorldView;
-            
-            _sortTagsContainer.OnAddSortTag    -= ActiveSystem.Sort.AddSortSortComponent;
-            _sortTagsContainer.OnRemoveSortTag -= ActiveSystem.Sort.RemoveSortSortComponent;
-            ClearActiveEntities();
-         }
-
-         ActiveSystem = newActiveDebugSystem;
-         if (ActiveSystem == null) return;
-
-         ActiveSystem.OnUpdate                += UpdateView;
-         ActiveSystem.Sort.OnSortFilterChange += SetEntitiesListDirty;
-         ActiveSystem.Entities.OnCreate       += SetEntitiesListDirty;
-         ActiveSystem.Entities.OnDestroy      += SetEntitiesListDirty;
-         ActiveSystem.Entities.OnDestroy      += DestroyEntityView;
-         ActiveSystem.OnDestroy               += DisposeWorldView;
-         
-         _sortTagsContainer.OnAddSortTag    += ActiveSystem.Sort.AddSortSortComponent;
-         _sortTagsContainer.OnRemoveSortTag += ActiveSystem.Sort.RemoveSortSortComponent;
-
-         InitEntitiesList();
-      }
-      
-      private void DisposeWorldView(EcsWorldDebugSystem debugSystem){
-         var debugName = debugSystem.GetDebugName();
-         
-         if (_worldsEnum.value == debugName)
-            ClearActiveEntities();
-         
-         _worldsEnum.Remove(debugName);
-      }
-      
-
-      
-      private Elements.Entity.UIEntityView CreateEntityView(int entity) {
-         return !ActiveSystem.View.TryGetEntityView(entity, out var view) 
-                   ? null 
-                   : new Elements.Entity.UIEntityView().Init(view);
-      }
-      
-      private void SetEntitiesListDirty(int e) => SetEntitiesListDirty();
-      private void SetEntitiesListDirty()      => _isEntitiesListDirty = true;
-
-      private void DestroyEntityView(int entity) {
-         if (_activeEntitiesViews.TryGetValue(entity, out var view)) 
-            view.Dispose();
-      }
-
-
-
-      private void Clear(){
-         ClearActiveEntities();
-         _worldsEnum?.Clear();
-         _entitiesContainer?.Clear();
-         ClearEntitiesList();
-      }
-      
-      
-      private void ClearActiveEntities(){
-         if (_activeEntitiesViews == null) return;
-         
-         foreach (var entityView in _activeEntitiesViews.Values) 
-            entityView.Dispose();
-         
-         _activeEntitiesViews.Clear();
-      }
-
-      private void ClearEntitiesList() {
-         if (_entitiesList == null) return;
-
-         _entitiesList.Clear();
-         _entitiesList.itemsSource = Enumerable.Empty<Elements.Entity.UIEntityView>().ToList();
-         _entitiesList.RefreshItems();
-      }
-
-      
-
-      #region OnPlayModeStateChanged
-
-      private void OnEnable(){
-         EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
-         EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
-      }
-      private void OnDisable(){
-         EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
-      }
-
-      private void OnPlayModeStateChanged(PlayModeStateChange state){
-         switch (state){
-            case PlayModeStateChange.ExitingEditMode: break;
-            case PlayModeStateChange.EnteredPlayMode: break;
-            case PlayModeStateChange.EnteredEditMode:
-            case PlayModeStateChange.ExitingPlayMode:
-               Clear();
-               break;
-            default:
-               throw new ArgumentOutOfRangeException(nameof(state), state, null);
-         }
-      }
-
-      #endregion
-   }
+    }
+  }
 }

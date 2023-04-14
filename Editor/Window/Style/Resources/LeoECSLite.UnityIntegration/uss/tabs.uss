@@ -1,0 +1,26 @@
+﻿.tabs {
+    height: auto;
+    border-width: 0;
+    background-color: var(--unity-colors-default-background);
+}
+
+.tab {
+    margin: 0;
+    padding: var(--METRICS_0125) var(--METRICS_1250);
+
+    color: var(--unity-colors-tab-text);
+    
+    border-radius: var(--METRICS_0125) var(--METRICS_0125) 0 0;
+    
+    border-width: 0;
+    background-color: transparent;
+}
+
+.tab:hover {
+    background-color: var(--unity-colors-tab-background-hover);
+}
+
+.tab_active,
+.tab_active:hover {
+    background-color: var(--unity-colors-tab-background-checked);
+}

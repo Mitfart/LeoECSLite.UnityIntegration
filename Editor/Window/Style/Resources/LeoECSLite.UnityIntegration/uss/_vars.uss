@@ -1,0 +1,12 @@
+﻿:root {
+    --METRICS_2000: 32px;
+    --METRICS_1750: 28px;
+    --METRICS_1500: 24px;
+    --METRICS_1250: 20px;
+    --METRICS_1000: 16px;
+    --METRICS_0750: 12px;
+    --METRICS_0500: 8px;
+    --METRICS_0250: 4px;
+    --METRICS_0125: 2px;
+    --METRICS_MIN: 1px;
+}

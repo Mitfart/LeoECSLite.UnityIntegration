@@ -1,0 +1,73 @@
+﻿.filter {
+    margin: var(--METRICS_0500);
+    padding: var(--METRICS_0125);
+
+    border-radius: var(--METRICS_0500);
+
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+
+    background-color: var(--unity-colors-box-background);
+}
+
+
+.filter__btn {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    margin: var(--METRICS_0125);
+    padding: var(--METRICS_0125);
+
+    border-radius: var(--METRICS_0250);
+    border-width: var(--METRICS_0125);
+
+    color: var(--unity-colors-button-text);
+    background-color: var(--unity-colors-button-background);
+    border-color: var(--unity-colors-button-border);
+}
+
+.filter__btn:hover {
+    background-color: var(--unity-colors-button-background-hover);
+    border-color: var(--unity-colors-button-border_accent);
+}
+
+
+.filter__btn_add-tag,
+.filter__btn_clear {
+    padding: var(--METRICS_MIN) var(--METRICS_0125);
+}
+
+.filter__btn_add-tag {
+}
+
+.filter__btn_clear {
+    position: absolute;
+    top: var(--METRICS_0250);
+    right: var(--METRICS_0250);
+}
+
+.filter__btn_disabled {
+    display: none;
+}
+
+
+.tag {
+}
+
+.tag__label,
+.tag__extra {
+    margin: 0 var(--METRICS_0250);
+}
+
+.tag__separator {
+    height: 100%;
+    width: var(--METRICS_MIN);
+
+    background-color: var(--unity-colors-button-border);
+}
+
+
+

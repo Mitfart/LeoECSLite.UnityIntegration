@@ -1,0 +1,8 @@
+﻿.split-view {
+    border-color: var(--unity-colors-default-border);
+    border-top-width: 1px;
+}
+
+.split-view #unity-dragline-anchor {
+    background-color: var(--unity-colors-default-border);
+}

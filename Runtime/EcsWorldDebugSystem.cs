@@ -1,114 +1,88 @@
 #if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
+using LeoECSLite.UnityIntegration.Extentions.EcsWorld;
+using LeoECSLite.UnityIntegration.Name;
 using Leopotam.EcsLite;
-using Mitfart.LeoECSLite.UnityIntegration.EntityView;
-using Mitfart.LeoECSLite.UnityIntegration.Extentions;
 
-namespace Mitfart.LeoECSLite.UnityIntegration{
-    public class EcsWorldDebugSystem : IEcsPreInitSystem, IEcsRunSystem, IEcsWorldEventListener {
-        public static readonly Dictionary<string, EcsWorldDebugSystem> ActiveSystems = new();
+namespace LeoECSLite.UnityIntegration {
+  public sealed class EcsWorldDebugSystem : IEcsPreInitSystem, IEcsRunSystem, IEcsWorldEventListener {
+    public string   WorldName { get; }
+    public EcsWorld World     { get; private set; }
 
-        private static int[]      ENTITIES_CACHE   = new int[32];
-        private static object[]   COMPONENTS_CACHE = new object[32];
-        private static IEcsPool[] POOLS_CACHE      = new IEcsPool[32];
-      
-        public event Action<int> OnWorldResize;
+    public NameSettings            NameSettings { get; }
+    public EcsWorldDebugSystemView View         { get; private set; }
 
-        public event Action<EcsWorldDebugSystem> OnInit;
-        public event Action OnUpdate;
-        public event Action<EcsWorldDebugSystem> OnDestroy;
+    public HashSet<int> DirtyEntities { get; }
 
 
-        public EWDSView     View     { get; private set; }
-        public EWDSEntities Entities { get; private set; }
-        public EWDSSort     Sort     { get; private set; }
 
-        public string             WorldName    { get; }
-        public EcsWorld           World        { get; private set; }
-        public NamedWorld         NamedWorld   { get; private set; }
-        public EntityNameSettings NameSettings { get; }
+    public EcsWorldDebugSystem(string worldName = null, NameSettings nameSettings = null) {
+      WorldName    = worldName;
+      NameSettings = nameSettings ?? new NameSettings();
 
-      
-      
-        public EcsWorldDebugSystem(string worldName = null, EntityNameSettings nameSettings = null){
-            WorldName    = worldName;
-            NameSettings = nameSettings ?? new EntityNameSettings();
-        }
-
-      
-
-        public void PreInit(IEcsSystems systems) {
-            string worldDebugName = this.GetDebugName();
-            
-            InitWorld();
-         
-            View     = this.CreateView();
-            Entities = new EWDSEntities(this);
-            Sort     = new EWDSSort(this);
-         
-            InitEntities();
-
-            ActiveSystems.Add(worldDebugName, this);
-            OnInit?.Invoke(this);
-
-            
-            void InitWorld() {
-                World = systems.GetWorld(WorldName) ?? throw new Exception($"Cant find required world! ({WorldName})");
-                World.AddEventListener(this);
-                NamedWorld = new NamedWorld(World, worldDebugName);
-            }
-
-            void InitEntities() => ForeachEntity(OnEntityCreated);
-        }
-      
-        public void Run(IEcsSystems systems) {
-            Entities.UpdateDirtyEntities();
-            Sort.UpdateSortedEntities();
-            OnUpdate?.Invoke();
-        }
-      
-      
-
-        public int ForeachEntity(Action<int> action) {
-            int count = World.GetAllEntities(ref ENTITIES_CACHE);
-            for (var i = 0; i < count; i++) action.Invoke(ENTITIES_CACHE[i]);
-            return count;
-        }
-      
-        public int ForeachComponent(int entity, Action<object> action) {
-            int count = World.GetComponents(entity, ref COMPONENTS_CACHE);
-            for (var i = 0; i < count; i++) action.Invoke(COMPONENTS_CACHE[i]);
-            return count;
-        }
-      
-        public int ForeachPool(Action<IEcsPool> action) {
-            int count = World.GetAllPools(ref POOLS_CACHE);
-            for (var i = 0; i < count; i++) action.Invoke(POOLS_CACHE[i]);
-            return count;
-        }
-      
-      
-      
-        public void OnEntityCreated(int   entity) => Entities.OnEntityCreated(entity);
-        public void OnEntityChanged(int   entity) => Entities.OnEntityChanged(entity);
-        public void OnEntityDestroyed(int entity) => Entities.OnEntityDestroyed(entity);
-      
-        public void OnFilterCreated(EcsFilter filter) { }
-
-        public void OnWorldResized(int newSize) {
-            View.SetWorldSize(newSize);
-            OnWorldResize?.Invoke(newSize);
-        }
-      
-        public void OnWorldDestroyed(EcsWorld world) {
-            OnDestroy?.Invoke(this);
-
-            View.Destroy();
-            World.RemoveEventListener(this);
-            ActiveSystems.Remove(this.GetDebugName());
-        }
+      DirtyEntities = new HashSet<int>();
     }
+
+    public void PreInit(IEcsSystems systems) {
+      InitWorld(systems);
+      InitView();
+      InitEntities();
+
+      World.AddEventListener(this);
+      ActiveDebugSystems.Register(this);
+    }
+
+    public void Run(IEcsSystems systems) {
+      View.RefreshEntities();
+      DirtyEntities.Clear();
+    }
+
+
+
+    public void OnEntityCreated(int e) {
+      View.GetEntityView(e)
+          .Activate();
+      DirtyEntities.Add(e);
+    }
+
+    public void OnEntityChanged(int e) {
+      DirtyEntities.Add(e);
+    }
+
+    public void OnEntityDestroyed(int e) {
+      View.GetEntityView(e)
+          .Deactivate();
+    }
+
+
+    public void OnWorldResized(int newSize) {
+      View.Resize(newSize);
+    }
+
+    public void OnWorldDestroyed(EcsWorld world) {
+      View.Destroy();
+      World.RemoveEventListener(this);
+      ActiveDebugSystems.Unregister(this);
+    }
+
+
+    public void OnFilterCreated(EcsFilter filter) { }
+
+
+
+    private void InitWorld(IEcsSystems systems) {
+      World = systems.GetWorld(WorldName) ?? throw new Exception($"Cant find required world! ({WorldName})");
+    }
+
+    private void InitView() {
+      View = new EcsWorldDebugSystemView(this);
+    }
+
+    private void InitEntities() {
+      World.ForeachEntity(OnEntityCreated);
+    }
+  }
 }
 
 #endif
