@@ -10,14 +10,14 @@ using static LeoECSLite.UnityIntegration.Editor.Extentions.Style.StyleConsts;
 namespace LeoECSLite.UnityIntegration.Editor.Component {
   [CustomEditor(typeof(ComponentData<>), true)]
   public class ComponentEditor : UnityEditor.Editor {
-    private const string COMPONENT_PROPERTY_NAME = nameof(ComponentData<Vector2>.component);
+    private const string        COMPONENT_PROPERTY_NAME = nameof(ComponentData<Vector2>.component);
+    private       VisualElement _fields;
+
+    private VisualElement _root;
 
     private ComponentData _target;
-    
-    private VisualElement _root;
-    private Label _typeLabel;
-    private VisualElement _fields;
-    
+    private Label         _typeLabel;
+
 
 
     public override VisualElement CreateInspectorGUI() {

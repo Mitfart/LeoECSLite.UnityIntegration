@@ -21,7 +21,11 @@ namespace LeoECSLite.UnityIntegration.Extentions.EcsWorld {
     }
 
 
-    public static void ForeachComponentType(this Leopotam.EcsLite.EcsWorld world, int entity, Action<System.Type> action) {
+    public static void ForeachComponentType(
+      this Leopotam.EcsLite.EcsWorld world,
+      int                            entity,
+      Action<System.Type>            action
+    ) {
       System.Type[] types = StaticCache.Types;
       int           count = world.GetComponentTypes(entity, ref types);
 

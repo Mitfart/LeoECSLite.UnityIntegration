@@ -1,18 +1,18 @@
 # Интеграция в редактор Unity для LeoECS Lite
-Интеграция в редактор Unity с мониторингом состояния мира
-(не подразусевает [конвертацию / создание через инспектор](https://github.com/Mitfart/LeoECSLite.UniLeo), лишь просмотр!)
+Интеграция в редактор Unity с мониторингом состояния мира \
+( не подразумевает [конвертацию / создание через инспектор](https://github.com/Mitfart/LeoECSLite.UniLeo) )
 
 > Проверено на Unity ***2021.3 LTS*** (зависит от Unity) 
 
 
 # Содержание
 * [Установка](#Установка)
-  * [В виде unity модуля](#В-виде-unity-модуля)
+  * [Через Package manager](#Через-Package-manager)
   * [В виде исходников](#В-виде-исходников)
 * [Интеграция](#Интеграция)
   * [В коде](#В-коде)
   * [В редакторе](#В-редакторе)
-* [Почему?](#Почему?)
+* [Преимущества и недостатки](#Преимущества-и-недостатки)
 * [Обратная связь](#Обратная-связь)
 * [Good practices](#Good-practices)
 * [ЧаВо](#ЧаВо)
@@ -21,7 +21,7 @@
 
 # Установка
 
-> **ВАЖНО!** Зависит от: \
+> ***ВАЖНО!*** Зависит от: \
 > [LeoECS Lite](https://github.com/Leopotam/ecslite) \
 > [GenericUnityObjects](https://github.com/SolidAlloy/GenericUnityObjects) (в будещем планируется убрать зависимость)
 - `фреймворки должены быть установлены до этого расширения.`
@@ -42,10 +42,6 @@ https://github.com/Mitfart/LeoECSLite.UnityIntegration
 
 ### В виде исходников
 Код так же может быть склонирован или получен в виде архива со страницы релизов
-
-
-
-<br/>
 
 
 
@@ -104,7 +100,7 @@ public struct Comp {
 Открыть которое можно **в верхнем меню**:
 > **LeoEcs Lite > Debug Window**
 
-` СКОРО ПОЯВЯТСЯ ИЗОБРАЖЕНИЯ! `
+` СКОРО ПОЯВЯТСЯ БОЛЕЕ ПОДРОБНЫЕ ИНСТРУКЦИИ! `
 
 
 
@@ -132,18 +128,19 @@ public struct Comp {
 
 
 # Обратная связь
+#### Discord [Группа по LeoEcsLite](https://discord.gg/5GZVde6)
+#### Telegram [Группа по Ecs](https://t.me/ecschat)
 ```
 @Mitfart
 ```
-> #### Discord [Группа по LeoEcsLite](https://discord.gg/5GZVde6)
-> #### Telegram [Группа по Ecs](https://t.me/ecschat)
 
 
 
 # Good practices
 + Использование [специального окна](#В редакторе)
-+ Сворачивание списка Entity в инспекторе
-+ Использлвание **ЛИБО** специального окна **ЛИБО** инспектора \
++ Отключение запекания компонентов в имя энтити
++ Сворачивание списка Entity в иерархии
++ Использлвание **ЛИБО** специального окна **ЛИБО** иерархии \
   `(При использование обоих тратится вдвое больше ресурсов)`
 
 
@@ -211,9 +208,9 @@ void OnDestroy () {
 
 Написав свой `Editor / PropertyDrawer` для компонента:
 
-- В стандартном эдиторе: ```@/Editor/Component/ComponentEditor.cs``` \
-используется [UIToolkit](https://docs.unity3d.com/Manual/UIE-HowTo-CreateCustomInspector)
-- использование стандартного GUILayout, возможно, но не рекомендуется \
+В стандартном эдиторе: ```@/Editor/Component/ComponentEditor.cs``` \
+используется [UIToolkit](https://docs.unity3d.com/Manual/UIE-HowTo-CreateCustomInspector) \
+`использование стандартного GUILayout, возможно, но не рекомендуется`
 
 ```c#
 #if UNITY_EDITOR

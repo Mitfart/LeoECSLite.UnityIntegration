@@ -1,0 +1,16 @@
+{
+    "name": "Mitfart.LeoECSLite.UnityIntegration",
+    "rootNamespace": "Mitfart",
+    "references": [
+        "Leopotam.EcsLite"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

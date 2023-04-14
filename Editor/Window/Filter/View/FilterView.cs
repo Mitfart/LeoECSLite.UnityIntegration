@@ -14,9 +14,9 @@ namespace LeoECSLite.UnityIntegration.Editor.Window.Filter.View {
     public const string FILTER_BTN_CLEAR_CL    = "filter__btn_clear";
     public const string FILTER_BTN_DISABLED_CL = "filter__btn_disabled";
 
-    private readonly Dictionary<Type, FilterTagView> _tagViews;
-
     private readonly Filter _filter;
+
+    private readonly Dictionary<Type, FilterTagView> _tagViews;
 
     private Button _addTagBtn;
     private Button _clearBtn;
@@ -37,7 +37,7 @@ namespace LeoECSLite.UnityIntegration.Editor.Window.Filter.View {
 
     public void Reset() {
       ClearFilter();
-      
+
       _filter.OnAddTag    -= OnAddFilterTag;
       _filter.OnRemoveTag -= OnRemoveFilterTag;
     }
@@ -94,9 +94,9 @@ namespace LeoECSLite.UnityIntegration.Editor.Window.Filter.View {
 
 
     private void OpenComponentsMenu() {
-      if (!Application.isPlaying) 
+      if (!Application.isPlaying)
         return;
-      
+
       ComponentsSearchWindow.OpenFor(
         _filter.DebugSystem,
         _filter.AddTag

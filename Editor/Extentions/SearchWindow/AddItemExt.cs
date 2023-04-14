@@ -14,8 +14,7 @@ namespace LeoECSLite.UnityIntegration.Editor.Extentions.SearchWindow {
       object                            data
     ) {
       items.Add(
-        new SearchTreeEntry(
-          new GUIContent(title, IndentationIcon)) {
+        new SearchTreeEntry(new GUIContent(title, IndentationIcon)) {
           level    = indentLevel,
           userData = data
         }

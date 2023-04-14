@@ -3,7 +3,7 @@
     overflow: hidden;
 
     margin: var(--METRICS_0750);
-    
+
     border-radius: var(--METRICS_0500);
 
     background-color: var(--unity-colors-box-background);
@@ -18,9 +18,6 @@
 .entities-list #unity-content-viewport {
     align-items: flex-start;
 }
-
-
-
 
 
 .entity__label {

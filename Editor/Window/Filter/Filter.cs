@@ -1,20 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace LeoECSLite.UnityIntegration.Editor.Window.Filter {
   public class Filter {
     public EcsWorldDebugSystem         DebugSystem { get; private set; }
     public Dictionary<Type, FilterTag> Tags        { get; }
 
-    public event Action<Type> OnAddTag;
-    public event Action<Type> OnRemoveTag;
-
 
 
     public Filter() {
       Tags = new Dictionary<Type, FilterTag>(4);
     }
+
+    public event Action<Type> OnAddTag;
+    public event Action<Type> OnRemoveTag;
 
     public void Init(EcsWorldDebugSystem debugSystem) {
       DebugSystem = debugSystem;
@@ -39,7 +40,7 @@ namespace LeoECSLite.UnityIntegration.Editor.Window.Filter {
 
     public bool AddTag(Type component) {
       if (Tags.TryGetValue(component, out FilterTag tag)) {
-        UnityEngine.Debug.Log($"Tag of type: [ {component.Name} ] is already added with method: [ {tag.Method} ]!");
+        Debug.Log($"Tag of type: [ {component.Name} ] is already added with method: [ {tag.Method} ]!");
         return false;
       }
 
@@ -60,7 +61,7 @@ namespace LeoECSLite.UnityIntegration.Editor.Window.Filter {
 
     public void RemoveTag(Type component, bool removeFromCollection = true) {
       if (!Tags.ContainsKey(component)) {
-        UnityEngine.Debug.Log($"Tag of type: [ {component.Name} ] not found!");
+        Debug.Log($"Tag of type: [ {component.Name} ] not found!");
         return;
       }
 

@@ -60,7 +60,7 @@ namespace LeoECSLite.UnityIntegration {
       for (var e = 0; e < _entities.Length; e++) {
         if (_entities[e] == null)
           continue;
-        
+
         if (NameSettings.BakeComponents && _debugSystem.DirtyEntities.Contains(e))
           UpdateEntityName(GetEntityView(e));
       }
@@ -90,7 +90,7 @@ namespace LeoECSLite.UnityIntegration {
     private bool EntityOutOfRange(int e) {
       return e < 0 || e >= EntitiesCount;
     }
-    
+
 
 
     private EntityView CreateEntityView(int e) {

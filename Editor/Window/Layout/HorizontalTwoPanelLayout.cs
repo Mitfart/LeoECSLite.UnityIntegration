@@ -8,7 +8,11 @@ namespace LeoECSLite.UnityIntegration.Editor.Window.Layout {
 
 
 
-    public HorizontalTwoPanelLayout(float startSize = 250f) : base(0, startSize, TwoPaneSplitViewOrientation.Horizontal) {
+    public HorizontalTwoPanelLayout(float startSize = 250f) : base(
+      0,
+      startSize,
+      TwoPaneSplitViewOrientation.Horizontal
+    ) {
       CreateElements();
       AddElements();
 

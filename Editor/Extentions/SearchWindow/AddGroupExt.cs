@@ -26,11 +26,11 @@ namespace LeoECSLite.UnityIntegration.Editor.Extentions.SearchWindow {
         return items;
 
       groups.Add(currentGroup);
-      
+
       return AddGroupRaw(items, groupName, indentLevel);
     }
-    
-    
+
+
     public static ICollection<SearchTreeEntry> AddGroupRaw(
       this ICollection<SearchTreeEntry> items,
       string                            groupName,

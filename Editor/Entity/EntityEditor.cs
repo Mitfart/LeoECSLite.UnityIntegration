@@ -51,7 +51,7 @@ namespace LeoECSLite.UnityIntegration.Editor.Entity {
       _TargetEntityView = entityView;
       Refresh();
     }
-    
+
     private void OnDisable() {
       EditorApplication.update -= Refresh;
       _TargetEntityView        =  null;

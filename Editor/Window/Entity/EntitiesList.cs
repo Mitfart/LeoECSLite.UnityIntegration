@@ -12,18 +12,18 @@ namespace LeoECSLite.UnityIntegration.Editor.Window.Entity {
     public const string MAIN_CONTENT_CL  = "entities-list__content";
     public const string LIST_SELECTED_CL = "unity-collection-view__item--selected";
 
-    private readonly ObjectPool<VisualElement> _viewsPool;
-
     private readonly HashSet<int>  _allEntities;
     private readonly List<int>     _entities;
     private readonly Filter.Filter _filter;
 
-    private int _selectedEntity;
+    private readonly ObjectPool<VisualElement> _viewsPool;
     // private bool _selectedEntityDead;
 
     private EcsWorldDebugSystem _debugSystem;
 
     private ListView _listView;
+
+    private int _selectedEntity;
 
     public Action<int> OnSelectEntity;
     public Action<int> OnUnselectEntity;

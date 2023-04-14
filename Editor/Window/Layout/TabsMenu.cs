@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using SolidUtilities;
 using UnityEditor.UIElements;
 
 namespace LeoECSLite.UnityIntegration.Editor.Window.Layout {
   public class TabsMenu<TData> : Toolbar where TData : class {
     private const string MAIN_CL = "tabs";
 
-    private readonly Dictionary<TData, Tab<TData>> _tabs;
-
     private readonly Action<TData> _onChangeTab;
+
+    private readonly Dictionary<TData, Tab<TData>> _tabs;
 
     public TData ActiveTabData  { get; private set; }
     public int   ActiveTabIndex { get; private set; }
@@ -72,7 +71,7 @@ namespace LeoECSLite.UnityIntegration.Editor.Window.Layout {
 
       ActiveTabIndex = _tabs
                       .Keys
-                      .ToArray()
+                      .ToList()
                       .IndexOf(ActiveTabData);
 
       _tabs[ActiveTabData]
@@ -80,7 +79,7 @@ namespace LeoECSLite.UnityIntegration.Editor.Window.Layout {
 
       _onChangeTab?.Invoke(data);
     }
-    
+
 
     public IEnumerable<TData> GetWhere(Func<TData, bool> where) {
       return _tabs

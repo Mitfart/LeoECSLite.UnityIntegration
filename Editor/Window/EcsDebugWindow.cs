@@ -19,15 +19,15 @@ namespace LeoECSLite.UnityIntegration.Editor.Window {
     private const string SPLIT_VIEW_CL = "split-view";
 
     private readonly Dictionary<int, VisualElement> _activeEntities = new();
-
-    private VisualElement            _header;
-    private FilterView               _filterView;
-    private HorizontalTwoPanelLayout _content;
-    private TabsMenu<WorldTabData>   _worldTabsMenu;
-    private EntitiesList         _entitiesList;
-    private ScrollView               _entitiesContainer;
+    private          HorizontalTwoPanelLayout       _content;
+    private          ScrollView                     _entitiesContainer;
+    private          EntitiesList                   _entitiesList;
 
     private Filter.Filter _filter;
+    private FilterView    _filterView;
+
+    private VisualElement          _header;
+    private TabsMenu<WorldTabData> _worldTabsMenu;
 
 
 
@@ -54,7 +54,7 @@ namespace LeoECSLite.UnityIntegration.Editor.Window {
 
       _content           = new HorizontalTwoPanelLayout();
       _worldTabsMenu     = new TabsMenu<WorldTabData>(ChangeWorld);
-      _entitiesList  = new EntitiesList(_filter);
+      _entitiesList      = new EntitiesList(_filter);
       _entitiesContainer = new ScrollView();
     }
 
@@ -129,7 +129,7 @@ namespace LeoECSLite.UnityIntegration.Editor.Window {
     protected override void ResetInspector() {
       _entitiesList.Reset();
       ClearActiveEntities();
-      
+
       _filter.Reset();
       _filterView.Reset();
 
@@ -166,7 +166,7 @@ namespace LeoECSLite.UnityIntegration.Editor.Window {
         _activeEntities.Remove(e);
       }
       catch (Exception exception) {
-        UnityEngine.Debug.Log($"Error on: {e}   ->   {exception}");
+        Debug.Log($"Error on: {e}   ->   {exception}");
       }
     }
   }

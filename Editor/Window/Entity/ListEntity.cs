@@ -3,7 +3,7 @@ using UnityEngine.UIElements;
 
 namespace LeoECSLite.UnityIntegration.Editor.Window.Entity {
   public sealed class ListEntity : VisualElement {
-    private const string MAIN_CL = "entity_row";
+    private const string MAIN_CL            = "entity_row";
     public const  string MAIN_LABEL_CL      = "entity__label";
     public const  string MAIN_TAG_CL        = "entity__tag";
     public const  string MAIN_INDEX_CL      = "entity__index";
@@ -19,7 +19,7 @@ namespace LeoECSLite.UnityIntegration.Editor.Window.Entity {
       InitElements();
     }
 
-    
+
 
     public void Setup(int e, EcsWorldDebugSystem system) {
       _label.SetText(
@@ -30,10 +30,15 @@ namespace LeoECSLite.UnityIntegration.Editor.Window.Entity {
       );
     }
 
-    
-    
-    public void Activate()   => style.display = DisplayStyle.Flex;
-    public void Deactivate() => style.display = DisplayStyle.None;
+
+
+    public void Activate() {
+      style.display = DisplayStyle.Flex;
+    }
+
+    public void Deactivate() {
+      style.display = DisplayStyle.None;
+    }
 
 
 

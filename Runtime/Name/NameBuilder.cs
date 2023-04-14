@@ -38,7 +38,7 @@ namespace LeoECSLite.UnityIntegration.Name {
 
       if (count <= 0)
         return this;
-      
+
       _builder.Append(START_DESCRIPTION);
 
       for (var i = 0; i < count; i++)

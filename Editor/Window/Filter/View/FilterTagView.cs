@@ -11,11 +11,11 @@ namespace LeoECSLite.UnityIntegration.Editor.Window.Filter.View {
 
     private const string INCLUDE = "In";
     private const string EXCLUDE = "Ex";
+    private       Label  _filterLabel;
 
 
     private Label         _filterMethod;
     private VisualElement _separator;
-    private Label         _filterLabel;
 
     public Type         Type   { get; }
     public FilterMethod Method { get; }
