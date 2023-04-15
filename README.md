@@ -7,7 +7,7 @@
 
 # Содержание
 * [Установка](#Установка)
-  * [Через Package manager](#Через-Package-manager)
+  * [Используя Git](#Используя-Git)
   * [В виде исходников](#В-виде-исходников)
 * [Интеграция](#Интеграция)
   * [Подключение системы](#Подключение-системы)
@@ -27,7 +27,8 @@
 > [GenericUnityObjects](https://github.com/SolidAlloy/GenericUnityObjects) (в будещем планируется убрать зависимость)
 - `фреймворки должены быть установлены до этого расширения.`
 
-### Через Package manager:
+### Используя Git:
+##### Через Package manager:
 - Откройте Package manager
 - Нажмите плюс в левом верхнем углу
 - "Add from git url" и вставте:
@@ -36,7 +37,7 @@
 https://github.com/Mitfart/LeoECSLite.UnityIntegration.git
 ```
 
-### или через добавление в *@/Packages/manifest.json*:
+##### или через добавление в *@/Packages/manifest.json*:
 ```
 "com.mitfart.leoecslite.unity-integration": "https://github.com/Mitfart/LeoECSLite.UnityIntegration.git",
 ```
