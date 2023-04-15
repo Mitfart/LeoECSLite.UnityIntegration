@@ -5,16 +5,34 @@ using UnityEngine;
 
 namespace LeoECSLite.UnityIntegration.Editor.Component {
   public abstract class ComponentData : ScriptableObject {
-    public abstract EcsWorld World  { get; protected set; }
-    public abstract int      Entity { get; protected set; }
-    public abstract IEcsPool Pool   { get; }
+    public EcsWorld World  { get; private set; }
+    public int      Entity { get; private set; }
 
-    public abstract Type   Type     { get; }
-    public abstract object RawValue { get; }
+    public abstract IEcsPool Pool     { get; }
+    public abstract Type     Type     { get; }
+
+    public object RawValue => Pool.GetRaw(Entity);
 
 
-    public abstract ComponentData Init(int entity, EcsWorld world);
-    public abstract ComponentData RefreshValue();
+    
+    public ComponentData Init(int entity, EcsWorld world) {
+      if (entity == Entity && world == World)
+        return this;
+
+      Entity = entity;
+      World  = world;
+      OnInit();
+      return this;
+    }
+
+    public ComponentData Refresh() {
+      OnRefresh();
+      return this;
+    }
+    
+    
+    protected abstract void OnInit();
+    protected abstract void OnRefresh();
   }
 }
 #endif

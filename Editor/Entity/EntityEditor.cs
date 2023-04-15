@@ -77,7 +77,7 @@ namespace LeoECSLite.UnityIntegration.Editor.Entity {
       else
         DrawDeadInspector();
     }
-    
+
     private static void DrawAliveInspector() {
       _Title.SetText(
         ActiveDebugSystems.TryGet(_TargetEntityView.World, out EcsWorldDebugSystem system)
@@ -107,8 +107,9 @@ namespace LeoECSLite.UnityIntegration.Editor.Entity {
         ComponentCache cache         = GetComponentCache(component);
         ComponentData  componentData = cache.Data;
 
-        componentData.Init(e, world)
-                     .RefreshValue();
+        componentData
+         .Init(e, world)
+         .Refresh();
       }
     }
 
