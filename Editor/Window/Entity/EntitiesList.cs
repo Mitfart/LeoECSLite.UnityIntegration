@@ -120,9 +120,8 @@ namespace LeoECSLite.UnityIntegration.Editor.Window.Entity {
       int[] enumerable = indices as int[] ?? indices.ToArray();
 
 
-      int firstIndex = enumerable.FirstOrDefault();
-      int curSelectedEntity = firstIndex != default
-        ? _entities[firstIndex]
+      int curSelectedEntity = enumerable.Length >= 1
+        ? _entities[enumerable.First()]
         : default;
 
 
