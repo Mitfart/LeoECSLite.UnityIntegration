@@ -4,7 +4,7 @@
   "displayName": "LeoECS Lite Debug",
   "description": "Integration of LeoECS-Lite into the Unity Editor, provides monitoring of the world",
   "unity": "2021.3",
-  "version": "2023.4.14",
+  "version": "2023.4.15",
   "keywords": [
     "leoecslite",
     "leoecs",
