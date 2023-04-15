@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using GenericUnityObjects;
 using LeoECSLite.UnityIntegration.Editor.Component;
 using LeoECSLite.UnityIntegration.Editor.Extentions.Style.Border;
+using LeoECSLite.UnityIntegration.Editor.Extentions.Style.FlexDirection;
+using LeoECSLite.UnityIntegration.Editor.Extentions.Style.FlexGrow;
 using LeoECSLite.UnityIntegration.Editor.Extentions.Style.Overflow;
 using LeoECSLite.UnityIntegration.Editor.Extentions.Style.Spacing;
 using LeoECSLite.UnityIntegration.Editor.Extentions.Style.Text;
@@ -50,23 +52,23 @@ namespace LeoECSLite.UnityIntegration.Editor.Entity {
         return;
 
       _TargetEntityView = entityView;
-      RefreshInspector();
-      EditorApplication.update += RefreshInspector;
+      DrawInspector();
+      EditorApplication.update += DrawInspector;
     }
 
     private void OnDisable() {
-      EditorApplication.update -= RefreshInspector;
+      EditorApplication.update -= DrawInspector;
       _TargetEntityView        =  null;
     }
 
     public override VisualElement CreateInspectorGUI() {
-      RefreshInspector();
+      DrawInspector();
       return _Root;
     }
 
 
 
-    private static void RefreshInspector() {
+    private static void DrawInspector() {
       if (_TargetEntityView == null)
         return;
 
@@ -75,8 +77,7 @@ namespace LeoECSLite.UnityIntegration.Editor.Entity {
       else
         DrawDeadInspector();
     }
-
-
+    
     private static void DrawAliveInspector() {
       _Title.SetText(
         ActiveDebugSystems.TryGet(_TargetEntityView.World, out EcsWorldDebugSystem system)
@@ -101,9 +102,9 @@ namespace LeoECSLite.UnityIntegration.Editor.Entity {
       int    count = world.GetComponentTypes(e, ref types);
 
       for (var i = 0; i < count; i++) {
-        Type componentType = types[i];
+        Type component = types[i];
 
-        ComponentCache cache         = GetComponentCache(componentType);
+        ComponentCache cache         = GetComponentCache(component);
         ComponentData  componentData = cache.Data;
 
         componentData.Init(e, world)
@@ -129,15 +130,15 @@ namespace LeoECSLite.UnityIntegration.Editor.Entity {
 
 
 
-    private static ComponentCache GetComponentCache(Type componentType) {
-      return _ComponentsCache.TryGetValue(componentType, out ComponentCache cache)
+    private static ComponentCache GetComponentCache(Type component) {
+      return _ComponentsCache.TryGetValue(component, out ComponentCache cache)
         ? cache
-        : CreateCache(componentType);
+        : CreateComponentCache(component);
     }
 
-    private static ComponentCache CreateCache(Type componentType) {
-      ComponentData componentData = CreateData(componentType);
-      VisualElement view          = CreateView(componentData);
+    private static ComponentCache CreateComponentCache(Type component) {
+      ComponentData componentData = CreateComponentData(component);
+      VisualElement view          = CreateComponentView(componentData);
 
       var cache = new ComponentCache {
         Data = componentData,
@@ -145,18 +146,18 @@ namespace LeoECSLite.UnityIntegration.Editor.Entity {
       };
 
       _ComponentsList.Add(view);
-      _ComponentsCache.Add(componentType, cache);
+      _ComponentsCache.Add(component, cache);
 
       return cache;
     }
 
-    private static ComponentData CreateData(Type componentType) {
-      Type type = typeof(ComponentData<>).MakeGenericType(componentType);
+    private static ComponentData CreateComponentData(Type component) {
+      Type type = typeof(ComponentData<>).MakeGenericType(component);
       var  data = (ComponentData) GenericScriptableObject.CreateInstance(type);
       return data;
     }
 
-    private static VisualElement CreateView(ComponentData componentData) {
+    private static VisualElement CreateComponentView(ComponentData componentData) {
       var viewRoot  = new VisualElement();
       var container = new Box();
       var inspector = new InspectorElement(componentData);
@@ -167,7 +168,11 @@ namespace LeoECSLite.UnityIntegration.Editor.Entity {
        .Padding(0, REM_05)
        .BorderRadius(REM_05);
 
-      viewRoot.AddChild(container.AddChild(inspector));
+      viewRoot
+       .AddChild(
+          container
+           .AddChild(inspector)
+        );
 
       return viewRoot;
     }
@@ -177,8 +182,8 @@ namespace LeoECSLite.UnityIntegration.Editor.Entity {
     private static VisualElement CreateInspector() {
       var root = new VisualElement();
 
-      _Header         ??= CreateHeader();
-      _ComponentsList ??= new VisualElement();
+      _Header         = CreateHeader();
+      _ComponentsList = new VisualElement();
 
 
       root
@@ -192,39 +197,10 @@ namespace LeoECSLite.UnityIntegration.Editor.Entity {
 
       _Title            = new Label();
       _ButtonsContainer = new VisualElement();
-      _AddComponentBtn = new Button(
-        () => {
-          ComponentsSearchWindow.OpenFor(
-            World,
-            comp => {
-              World
-               .GetPoolByType(comp)
-               .AddRaw(
-                  Entity,
-                  Activator.CreateInstance(comp)
-                );
-              return true;
-            }
-          );
-        }
-      ) { text = "Add" };
 
-      _DelComponentBtn = new Button(
-        () => {
-          ComponentsSearchWindow.OpenFor(
-            World,
-            Entity,
-            comp => {
-              World
-               .GetPoolByType(comp)
-               .Del(Entity);
-              return true;
-            }
-          );
-        }
-      ) { text = "Del" };
-
-      _KillBtn = new Button(() => { World.DelEntity(Entity); }) { text = "Kill" };
+      _AddComponentBtn = new Button(ChooseAndAdd) { text = "Add" };
+      _DelComponentBtn = new Button(ChooseAndDel) { text = "Del" };
+      _KillBtn         = new Button(Kill) { text         = "Kill" };
 
       header
        .AddChild(_Title)
@@ -240,26 +216,72 @@ namespace LeoECSLite.UnityIntegration.Editor.Entity {
        .style
        .Margin(0, REM_025)
        .Padding(REM_05)
+       .FlexRow()
        .BorderRadius(REM_05)
        .FontStyle(FontStyle.Bold)
        .FontSize(REM_125)
        .OverflowHidden();
 
-      header.style.flexDirection = FlexDirection.Row;
+      _Title
+       .style
+       .FlexGrow();
 
-      _ButtonsContainer.style.flexDirection = FlexDirection.Row;
+      _ButtonsContainer
+       .style
+       .FlexRow();
+
       _AddComponentBtn.style.width
         = _DelComponentBtn.style.width
           = _KillBtn.style.width
             = 48;
-      _AddComponentBtn.style.height
-        = _DelComponentBtn.style.height
-          = _KillBtn.style.height
-            = new StyleLength(new Length(100, LengthUnit.Percent));
-      _Title.style.flexGrow = 1;
-
 
       return header;
+    }
+
+
+
+    private static void ChooseAndAdd() {
+      ComponentsSearchWindow.OpenFor(
+        World,
+        AddComponent
+      );
+    }
+
+    private static void ChooseAndDel() {
+      ComponentsSearchWindow.OpenFor(
+        World,
+        Entity,
+        DelComponent
+      );
+    }
+
+
+
+    private static bool AddComponent(Type comp) {
+      IEcsPool pool = World.GetPoolByType(comp);
+
+      if (pool.Has(Entity))
+        return false;
+
+      pool.AddRaw(
+        Entity,
+        Activator.CreateInstance(comp)
+      );
+      return true;
+    }
+
+    private static bool DelComponent(Type comp) {
+      IEcsPool pool = World.GetPoolByType(comp);
+
+      if (!pool.Has(Entity))
+        return false;
+
+      pool.Del(Entity);
+      return true;
+    }
+
+    private static void Kill() {
+      World.DelEntity(Entity);
     }
   }
 }
