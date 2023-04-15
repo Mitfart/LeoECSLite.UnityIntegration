@@ -98,7 +98,7 @@ namespace LeoECSLite.UnityIntegration.Editor.Window.Filter.View {
         return;
 
       ComponentsSearchWindow.OpenFor(
-        _filter.DebugSystem,
+        _filter.DebugSystem.World,
         _filter.AddTag
       );
     }

@@ -8,6 +8,14 @@ namespace LeoECSLite.UnityIntegration.Editor.Window {
     public EcsWorldDebugSystem ActiveDebugSystem { get; private set; }
 
 
+
+    private void CreateGUI() {
+      CreateElements();
+      AddElements();
+      InitElements();
+    }
+
+
     public virtual void OnEntityCreated(int   e)      { }
     public virtual void OnEntityChanged(int   entity) { }
     public virtual void OnEntityDestroyed(int entity) { }
@@ -16,14 +24,6 @@ namespace LeoECSLite.UnityIntegration.Editor.Window {
     public virtual void OnWorldDestroyed(EcsWorld world)   { }
 
     public virtual void OnFilterCreated(EcsFilter filter) { }
-
-
-
-    private void CreateGUI() {
-      CreateElements();
-      AddElements();
-      InitElements();
-    }
 
 
     protected abstract void CreateElements();

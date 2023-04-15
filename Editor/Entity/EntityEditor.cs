@@ -7,9 +7,11 @@ using LeoECSLite.UnityIntegration.Editor.Extentions.Style.Overflow;
 using LeoECSLite.UnityIntegration.Editor.Extentions.Style.Spacing;
 using LeoECSLite.UnityIntegration.Editor.Extentions.Style.Text;
 using LeoECSLite.UnityIntegration.Editor.Extentions.UIElement;
+using LeoECSLite.UnityIntegration.Editor.Search;
 using LeoECSLite.UnityIntegration.Entity;
 using LeoECSLite.UnityIntegration.Extentions.EcsWorld;
 using Leopotam.EcsLite;
+using ModestTree;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -22,8 +24,12 @@ namespace LeoECSLite.UnityIntegration.Editor.Entity {
     private static Dictionary<Type, ComponentCache> _ComponentsCache;
 
     private static VisualElement _Root;
-    private static VisualElement _TitleContainer;
+    private static VisualElement _Header;
     private static Label         _Title;
+    private static VisualElement _ButtonsContainer;
+    private static Button        _AddComponentBtn;
+    private static Button        _DelComponentBtn;
+    private static Button        _KillBtn;
     private static VisualElement _ComponentsList;
 
     private static EntityView _TargetEntityView;
@@ -37,50 +43,55 @@ namespace LeoECSLite.UnityIntegration.Editor.Entity {
     private void OnEnable() {
       _ComponentsCache ??= new Dictionary<Type, ComponentCache>();
 
-      _ComponentsList ??= new VisualElement();
-      _Title          ??= new Label();
-      _TitleContainer ??= CreateTitleContainer();
-      _Root           ??= CreateRoot();
+      _Root ??= CreateInspector();
 
-
-      EditorApplication.update += Refresh;
 
       if (target is not EntityView entityView)
         return;
 
       _TargetEntityView = entityView;
-      Refresh();
+      RefreshInspector();
+      EditorApplication.update += RefreshInspector;
     }
 
     private void OnDisable() {
-      EditorApplication.update -= Refresh;
+      EditorApplication.update -= RefreshInspector;
       _TargetEntityView        =  null;
     }
 
     public override VisualElement CreateInspectorGUI() {
-      Refresh();
+      RefreshInspector();
       return _Root;
     }
 
 
 
-    private static void Refresh() {
+    private static void RefreshInspector() {
       if (_TargetEntityView == null)
         return;
 
-      if (!EntityAlive) {
-        _Title.SetText($"{_TargetEntityView.name} | DEAD");
-        HideAllComponents();
-      }
-      else {
-        _Title.SetText(
-          ActiveDebugSystems.TryGet(_TargetEntityView.World, out EcsWorldDebugSystem system)
-            ? _TargetEntityView.Entity.ToString(system.NameSettings.Format)
-            : _TargetEntityView.Entity.ToString()
-        );
-        HideUnusedComponents(Entity);
-        ShowFreshComponents(Entity, World);
-      }
+      if (EntityAlive)
+        DrawAliveInspector();
+      else
+        DrawDeadInspector();
+    }
+
+
+    private static void DrawAliveInspector() {
+      _Title.SetText(
+        ActiveDebugSystems.TryGet(_TargetEntityView.World, out EcsWorldDebugSystem system)
+          ? _TargetEntityView.Entity.ToString(system.NameSettings.Format)
+          : _TargetEntityView.Entity.ToString()
+      );
+
+      HideUnusedComponents(Entity);
+      ShowFreshComponents(Entity, World);
+    }
+
+    private static void DrawDeadInspector() {
+      _Title.SetText($"{_TargetEntityView.name} | DEAD");
+
+      HideAllComponents();
     }
 
 
@@ -163,17 +174,69 @@ namespace LeoECSLite.UnityIntegration.Editor.Entity {
 
 
 
-    private static VisualElement CreateRoot() {
+    private static VisualElement CreateInspector() {
       var root = new VisualElement();
+
+      _Header         ??= CreateHeader();
+      _ComponentsList ??= new VisualElement();
+
+
       root
-       .AddChild(_TitleContainer.AddChild(_Title))
+       .AddChild(_Header)
        .AddChild(_ComponentsList);
       return root;
     }
 
-    private static VisualElement CreateTitleContainer() {
-      var titleContainer = new Box();
-      titleContainer
+    private static VisualElement CreateHeader() {
+      var header = new Box();
+
+      _Title            = new Label();
+      _ButtonsContainer = new VisualElement();
+      _AddComponentBtn = new Button(
+        () => {
+          ComponentsSearchWindow.OpenFor(
+            World,
+            comp => {
+              World
+               .GetPoolByType(comp)
+               .AddRaw(
+                  Entity,
+                  Activator.CreateInstance(comp)
+                );
+              return true;
+            }
+          );
+        }
+      ) { text = "Add" };
+
+      _DelComponentBtn = new Button(
+        () => {
+          ComponentsSearchWindow.OpenFor(
+            World,
+            Entity,
+            comp => {
+              World
+               .GetPoolByType(comp)
+               .Del(Entity);
+              return true;
+            }
+          );
+        }
+      ) { text = "Del" };
+
+      _KillBtn = new Button(() => { World.DelEntity(Entity); }) { text = "Kill" };
+
+      header
+       .AddChild(_Title)
+       .AddChild(
+          _ButtonsContainer
+           .AddChild(_AddComponentBtn)
+           .AddChild(_DelComponentBtn)
+           .AddChild(_KillBtn)
+        );
+
+
+      header
        .style
        .Margin(0, REM_025)
        .Padding(REM_05)
@@ -181,7 +244,22 @@ namespace LeoECSLite.UnityIntegration.Editor.Entity {
        .FontStyle(FontStyle.Bold)
        .FontSize(REM_125)
        .OverflowHidden();
-      return titleContainer;
+
+      header.style.flexDirection = FlexDirection.Row;
+
+      _ButtonsContainer.style.flexDirection = FlexDirection.Row;
+      _AddComponentBtn.style.width
+        = _DelComponentBtn.style.width
+          = _KillBtn.style.width
+            = 48;
+      _AddComponentBtn.style.height
+        = _DelComponentBtn.style.height
+          = _KillBtn.style.height
+            = new StyleLength(new Length(100, LengthUnit.Percent));
+      _Title.style.flexGrow = 1;
+
+
+      return header;
     }
   }
 }

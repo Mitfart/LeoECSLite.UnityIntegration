@@ -30,19 +30,19 @@ namespace LeoECSLite.UnityIntegration.Editor.Window {
     private TabsMenu<WorldTabData> _worldTabsMenu;
 
 
-
-    [MenuItem("LeoECS Lite/Debug Window NEW")]
-    public static void OpenEcsDebugWindow() {
-      GetWindow<EcsDebugWindow>(nameof(EcsDebugWindow))
-       .Show();
-    }
-
-
     private void OnInspectorUpdate() {
       if (!Application.isPlaying)
         return;
 
       _entitiesList.Refresh();
+    }
+
+
+
+    [MenuItem("LeoECS Lite/Debug Window NEW")]
+    public static void OpenEcsDebugWindow() {
+      GetWindow<EcsDebugWindow>(nameof(EcsDebugWindow))
+       .Show();
     }
 
 

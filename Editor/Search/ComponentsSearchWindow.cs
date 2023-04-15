@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using LeoECSLite.UnityIntegration.Editor.Extentions.SearchWindow;
 using LeoECSLite.UnityIntegration.Extentions.EcsWorld;
+using Leopotam.EcsLite;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
@@ -12,8 +13,10 @@ namespace LeoECSLite.UnityIntegration.Editor.Search {
 
     private static ComponentsSearchWindow _Window;
 
-    private EcsWorldDebugSystem _debugSystem;
-    private Func<Type, bool>    _select;
+    private EcsWorld              _world;
+    private int                   _entity;
+    private Func<Type, bool>      _select;
+    private ComponentsSearchScope _searchScope;
 
 
 
@@ -24,24 +27,44 @@ namespace LeoECSLite.UnityIntegration.Editor.Search {
 
       items.AddTitle(TITLE);
 
-      _debugSystem.World.ForeachPool(
-        pool => {
-          Type component = pool.GetComponentType();
-          items
-           .AddGroupsByNamespace(
-              groups,
-              component,
-              out int indentLevel
-            )
-           .AddItem(
-              component.Name,
-              indentLevel,
-              component
+      switch (_searchScope) {
+        case ComponentsSearchScope.World:
+          _world.ForeachPool(pool => { AddComponent(pool.GetComponentType()); });
+          break;
+        case ComponentsSearchScope.Entity:
+          object[] components = StaticCache.Components;
+          int      count      = _world.GetComponents(_entity, ref components);
+
+          for (var i = 0; i < count; i++) {
+            AddComponent(
+              components[i]
+               .GetType()
             );
-        }
-      );
+          }
+
+          break;
+        case ComponentsSearchScope.unset:
+          throw new Exception("Search Scope not set! (internal error)");
+        default:
+          throw new ArgumentOutOfRangeException();
+      }
 
       return items.ToList();
+
+
+      void AddComponent(Type componentType) {
+        items
+         .AddGroupsByNamespace(
+            groups,
+            componentType,
+            out int indentLevel
+          )
+         .AddItem(
+            componentType.Name,
+            indentLevel,
+            componentType
+          );
+      }
     }
 
 
@@ -52,11 +75,35 @@ namespace LeoECSLite.UnityIntegration.Editor.Search {
 
 
 
-    public static void OpenFor(EcsWorldDebugSystem debugSystem, Func<Type, bool> onChoose) {
-      _Window ??= CreateInstance<ComponentsSearchWindow>();
-      _Window.Init(debugSystem, onChoose);
+    public static void OpenFor(EcsWorld world, Func<Type, bool> onChoose) {
+      _Window ??= CreateWindow();
+      _Window.Init(
+        world,
+        onChoose
+      );
+      OpenInMousePosition();
+    }
 
-      var context = new SearchWindowContext(GUIUtility.GUIToScreenPoint(Event.current.mousePosition));
+    public static void OpenFor(EcsWorld world, int entity, Func<Type, bool> onChoose) {
+      _Window ??= CreateWindow();
+      _Window.Init(
+        world,
+        entity,
+        onChoose
+      );
+      OpenInMousePosition();
+    }
+
+
+
+    private static ComponentsSearchWindow CreateWindow() {
+      return CreateInstance<ComponentsSearchWindow>();
+    }
+
+    private static void OpenInMousePosition() {
+      Vector2 mousePos  = Event.current.mousePosition;
+      Vector2 openPoint = GUIUtility.GUIToScreenPoint(mousePos);
+      var     context   = new SearchWindowContext(openPoint);
 
       SearchWindow.Open(
         context,
@@ -64,9 +111,22 @@ namespace LeoECSLite.UnityIntegration.Editor.Search {
       );
     }
 
-    private void Init(EcsWorldDebugSystem debugSystem, Func<Type, bool> select) {
-      _debugSystem = debugSystem;
+
+
+    private void Init(EcsWorld world, Func<Type, bool> select) {
+      Init(
+        world,
+        -1,
+        select
+      );
+      _searchScope = ComponentsSearchScope.World;
+    }
+
+    private void Init(EcsWorld world, int entity, Func<Type, bool> select) {
+      _world       = world;
       _select      = select;
+      _entity      = entity;
+      _searchScope = ComponentsSearchScope.Entity;
     }
   }
 }
