@@ -13,7 +13,6 @@ using LeoECSLite.UnityIntegration.Editor.Search;
 using LeoECSLite.UnityIntegration.Entity;
 using LeoECSLite.UnityIntegration.Extentions.EcsWorld;
 using Leopotam.EcsLite;
-using ModestTree;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;

@@ -8,8 +8,12 @@ namespace LeoECSLite.UnityIntegration.Editor.Component {
 
     private EcsPool<T> _typedPool;
 
-    public override IEcsPool Pool  => _typedPool;
-    public override Type     Type  => typeof(T);
+    public override IEcsPool Pool => _typedPool;
+    public override Type     Type => typeof(T);
+
+    private void OnValidate() {
+      Pool.SetRaw(Entity, component);
+    }
 
 
 
@@ -19,10 +23,6 @@ namespace LeoECSLite.UnityIntegration.Editor.Component {
 
     protected override void OnRefresh() {
       component = _typedPool.Get(Entity);
-    }
-
-    private void OnValidate() {
-      Pool.SetRaw(Entity, component);
     }
   }
 }

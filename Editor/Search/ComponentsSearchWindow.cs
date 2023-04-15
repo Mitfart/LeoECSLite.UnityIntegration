@@ -12,11 +12,11 @@ namespace LeoECSLite.UnityIntegration.Editor.Search {
     private const string TITLE = "Components";
 
     private static ComponentsSearchWindow _Window;
+    private        int                    _entity;
+    private        ComponentsSearchScope  _searchScope;
+    private        Func<Type, bool>       _select;
 
-    private EcsWorld              _world;
-    private int                   _entity;
-    private Func<Type, bool>      _select;
-    private ComponentsSearchScope _searchScope;
+    private EcsWorld _world;
 
 
 
@@ -35,12 +35,11 @@ namespace LeoECSLite.UnityIntegration.Editor.Search {
           object[] components = StaticCache.Components;
           int      count      = _world.GetComponents(_entity, ref components);
 
-          for (var i = 0; i < count; i++) {
+          for (var i = 0; i < count; i++)
             AddComponent(
               components[i]
                .GetType()
             );
-          }
 
           break;
         case ComponentsSearchScope.unset:

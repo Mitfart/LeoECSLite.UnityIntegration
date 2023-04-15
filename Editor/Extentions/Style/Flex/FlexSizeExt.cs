@@ -8,7 +8,7 @@ namespace LeoECSLite.UnityIntegration.Editor.Extentions.Style.FlexGrow {
         : 0;
       return style;
     }
-    
+
     public static IStyle FlexShrink(this IStyle style, bool grow = true) {
       style.flexShrink = grow
         ? 1
