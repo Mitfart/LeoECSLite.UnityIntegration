@@ -98,32 +98,32 @@ public struct Comp {
 # Просмотр
 Для просмотра можно использовать два способа:
 - Классический / Просмотр напрямую \
-![plot](./_Readme_Data_/Hierarchy.png)
+![plot](./_Readme/Hierarchy.png)
 
 - Используя специальное окно:
 > Открыть которое можно **в верхнем меню** \
 > **LeoEcs Lite -> Debug Window**
 
-![plot](./_Readme_Data_/Window_Open.png)
-![plot](./_Readme_Data_/Window.png)
+![plot](./_Readme/Window_Open.png)
+![plot](./_Readme/Window.png)
 
 ### Entity
-![plot](./_Readme_Data_/Entity.png)
+![plot](./_Readme/Entity.png)
 
 ##### Кнопка "Add" - ``добавить компонет``
-![plot](./_Readme_Data_/Entity_Add.png)
+![plot](./_Readme/Entity_Add.png)
 
 ##### Кнопка "Del" - ``удалить компонет`` 
-![plot](./_Readme_Data_/Entity_Del.png)
+![plot](./_Readme/Entity_Del.png)
 
 ##### Кнопка "Kill" - ``удалить / убить энтити``
-![plot](./_Readme_Data_/Entity_Kill.png)
+![plot](./_Readme/Entity_Kill.png)
 
 ##### В спец. окне
-![plot](./_Readme_Data_/Window_Entity.png)
+![plot](./_Readme/Window_Entity.png)
 
 ### Фильтрация
-![plot](./_Readme_Data_/Window_Filter.png)
+![plot](./_Readme/Window_Filter.png)
 
 
 # Возможности
@@ -132,7 +132,7 @@ public struct Comp {
 + Возможность Удаления `Entity`
 + Возможность расширения логики `View-компонентов` используя [кастомный Editor](https://discord.gg/5GZVde6)
 + Задание **Тега** для `Entity` (при помощи компонента `DebugTag`) ``времено недоступно``
-+ Возможность [фильтрации сущностей]($Фильтрация) `(в спец окне)`
++ Возможность [фильтрации сущностей](#Фильтрация) `(в спец окне)`
   + `по компонентам / пулам`
   + `по тэгам` ``времено недоступно``
 
