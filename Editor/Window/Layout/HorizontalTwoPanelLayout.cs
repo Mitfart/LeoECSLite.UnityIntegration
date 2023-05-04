@@ -26,10 +26,9 @@ namespace LeoECSLite.UnityIntegration.Editor.Window.Layout {
       Right = new VisualElement { name = "right" };
     }
 
-    private void AddElements() {
-      this
-       .AddChild(Left)
-       .AddChild(Right);
-    }
+    private void AddElements()
+      => this
+        .AddChild(Left)
+        .AddChild(Right);
   }
 }

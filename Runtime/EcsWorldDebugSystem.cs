@@ -46,19 +46,11 @@ namespace LeoECSLite.UnityIntegration {
       DirtyEntities.Add(e);
     }
 
-    public void OnEntityChanged(int e) {
-      DirtyEntities.Add(e);
-    }
-
-    public void OnEntityDestroyed(int e) {
-      View.GetEntityView(e)
-          .Deactivate();
-    }
+    public void OnEntityChanged(int   e) => DirtyEntities.Add(e);
+    public void OnEntityDestroyed(int e) => View.GetEntityView(e).Deactivate();
 
 
-    public void OnWorldResized(int newSize) {
-      View.Resize(newSize);
-    }
+    public void OnWorldResized(int newSize) => View.Resize(newSize);
 
     public void OnWorldDestroyed(EcsWorld world) {
       View.Destroy();
@@ -71,17 +63,9 @@ namespace LeoECSLite.UnityIntegration {
 
 
 
-    private void InitWorld(IEcsSystems systems) {
-      World = systems.GetWorld(WorldName) ?? throw new Exception($"Cant find required world! ({WorldName})");
-    }
-
-    private void InitView() {
-      View = new EcsWorldDebugSystemView(this);
-    }
-
-    private void InitEntities() {
-      World.ForeachEntity(OnEntityCreated);
-    }
+    private void InitWorld(IEcsSystems systems) => World = systems.GetWorld(WorldName) ?? throw new Exception($"Cant find required world! ({WorldName})");
+    private void InitView()                     => View = new EcsWorldDebugSystemView(this);
+    private void InitEntities()                 => World.ForeachEntity(OnEntityCreated);
   }
 }
 

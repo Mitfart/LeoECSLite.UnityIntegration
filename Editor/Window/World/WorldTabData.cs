@@ -12,10 +12,9 @@ namespace LeoECSLite.UnityIntegration.Editor.Window.World {
       Name  = name;
     }
 
-    public override string ToString() {
-      return string.IsNullOrWhiteSpace(Name)
+    public override string ToString()
+      => string.IsNullOrWhiteSpace(Name)
         ? DEFAULT_WORLD_NAME
         : Name;
-    }
   }
 }

@@ -22,23 +22,21 @@ namespace LeoECSLite.UnityIntegration.Editor.Extentions.Style.Spacing {
       this IStyle style,
       StyleLength hor,
       StyleLength ver
-    ) {
-      return style
+    )
+      => style
        .Padding(
           ver,
           ver,
           hor,
           hor
         );
-    }
 
 
-    public static IStyle Padding(this IStyle style, StyleLength length) {
-      return style
+    public static IStyle Padding(this IStyle style, StyleLength length)
+      => style
        .Padding(
           length,
           length
         );
-    }
   }
 }

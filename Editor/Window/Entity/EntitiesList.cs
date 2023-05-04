@@ -57,9 +57,7 @@ namespace LeoECSLite.UnityIntegration.Editor.Window.Entity {
 
 
 
-    public void Add(int e) {
-      _allEntities.Add(e);
-    }
+    public void Add(int e) => _allEntities.Add(e);
 
     public void Remove(int e) {
       if (_selectedEntity == e)
@@ -82,13 +80,9 @@ namespace LeoECSLite.UnityIntegration.Editor.Window.Entity {
 
 
 
-    private void CreateElements() {
-      _listView = new ListView();
-    }
+    private void CreateElements() => _listView = new ListView();
 
-    private void AddElements() {
-      this.AddChild(_listView);
-    }
+    private void AddElements() => this.AddChild(_listView);
 
     private void InitElements() {
       AddToClassList(MAIN_CL);
@@ -110,9 +104,7 @@ namespace LeoECSLite.UnityIntegration.Editor.Window.Entity {
 
 
 
-    private void AddAllEntities(EcsWorldDebugSystem debugSystem) {
-      debugSystem.World.ForeachEntity(Add);
-    }
+    private void AddAllEntities(EcsWorldDebugSystem debugSystem) => debugSystem.World.ForeachEntity(Add);
 
 
 
@@ -137,9 +129,7 @@ namespace LeoECSLite.UnityIntegration.Editor.Window.Entity {
 
 
 
-    private VisualElement MakeEntity() {
-      return _viewsPool.Get();
-    }
+    private VisualElement MakeEntity() => _viewsPool.Get();
 
     private void BindEntity(VisualElement element, int i) {
       var listEntity = (ListEntity) element;
@@ -147,8 +137,6 @@ namespace LeoECSLite.UnityIntegration.Editor.Window.Entity {
       listEntity.Setup(e, _debugSystem);
     }
 
-    private void UnbindEntity(VisualElement element, int i) {
-      _viewsPool.Return(element);
-    }
+    private void UnbindEntity(VisualElement element, int i) => _viewsPool.Return(element);
   }
 }

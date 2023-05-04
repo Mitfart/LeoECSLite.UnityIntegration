@@ -43,9 +43,7 @@ namespace LeoECSLite.UnityIntegration {
       Object.Destroy(_root.gameObject);
     }
 
-    private void OnEditorUpdate() {
-      RefreshEntities();
-    }
+    private void OnEditorUpdate() => RefreshEntities();
 
 
 
@@ -68,9 +66,7 @@ namespace LeoECSLite.UnityIntegration {
 
 
 
-    public void Resize(int newSize) {
-      Array.Resize(ref _entities, newSize);
-    }
+    public void Resize(int newSize) => Array.Resize(ref _entities, newSize);
 
 
 
@@ -87,9 +83,7 @@ namespace LeoECSLite.UnityIntegration {
       entityView.name = _nameBuilder.End();
     }
 
-    private bool EntityOutOfRange(int e) {
-      return e < 0 || e >= EntitiesCount;
-    }
+    private bool EntityOutOfRange(int e) => e < 0 || e >= EntitiesCount;
 
 
 
@@ -107,10 +101,7 @@ namespace LeoECSLite.UnityIntegration {
     }
 
     private static Transform CreateRootObject(string name, Transform parent = null) {
-      var obj = new GameObject {
-        name      = name,
-        hideFlags = HideFlags.NotEditable
-      };
+      var obj = new GameObject { name = name, hideFlags = HideFlags.NotEditable };
 
       obj.transform.SetParent(parent);
 

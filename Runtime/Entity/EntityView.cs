@@ -16,13 +16,9 @@ namespace LeoECSLite.UnityIntegration.Entity {
     }
 
 
-    public void Activate() {
-      gameObject.SetActive(true);
-    }
+    public void Activate() => gameObject.SetActive(true);
 
-    public void Deactivate() {
-      gameObject.SetActive(false);
-    }
+    public void Deactivate() => gameObject.SetActive(false);
   }
 }
 #endif

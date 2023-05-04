@@ -20,9 +20,7 @@ namespace LeoECSLite.UnityIntegration.Editor.Window.Layout {
       clicked += SetAsActiveTab;
     }
 
-    public void Destroy() {
-      clicked -= SetAsActiveTab;
-    }
+    public void Destroy() => clicked -= SetAsActiveTab;
 
 
 
@@ -35,8 +33,6 @@ namespace LeoECSLite.UnityIntegration.Editor.Window.Layout {
 
 
 
-    private void SetAsActiveTab() {
-      _tabsMenu.SetActiveTab(_data);
-    }
+    private void SetAsActiveTab() => _tabsMenu.SetActiveTab(_data);
   }
 }

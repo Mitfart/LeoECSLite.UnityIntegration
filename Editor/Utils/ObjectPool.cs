@@ -15,14 +15,11 @@ namespace LeoECSLite.UnityIntegration.Editor.Utils {
 
 
 
-    public T Get() {
-      return _objects.TryTake(out T item)
+    public T Get()
+      => _objects.TryTake(out T item)
         ? item
         : _objectGenerator();
-    }
 
-    public void Return(T item) {
-      _objects.Add(item);
-    }
+    public void Return(T item) => _objects.Add(item);
   }
 }

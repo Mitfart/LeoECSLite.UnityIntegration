@@ -4,8 +4,8 @@ using UnityEngine;
 
 namespace LeoECSLite.UnityIntegration.Editor.Extentions.SearchWindow {
   public static class AddTitleExt {
-    public static void AddTitle(this ICollection<SearchTreeEntry> items, string text) {
-      items.Add(
+    public static void AddTitle(this ICollection<SearchTreeEntry> items, string text)
+      => items.Add(
         new SearchTreeGroupEntry(
           new GUIContent(
             text,
@@ -13,6 +13,5 @@ namespace LeoECSLite.UnityIntegration.Editor.Extentions.SearchWindow {
           )
         )
       );
-    }
   }
 }

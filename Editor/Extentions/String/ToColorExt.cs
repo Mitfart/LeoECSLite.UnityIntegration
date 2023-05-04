@@ -11,7 +11,7 @@ namespace LeoECSLite.UnityIntegration.Editor.Extentions.String {
       var b     = 0f;
       var queue = 0;
 
-      for (var i = 0; i < bytes.Length; i++, queue++)
+      for (var i = 0; i < bytes.Length; i++, queue++) {
         switch (queue) {
           case 0:
             b += bytes[i];
@@ -24,6 +24,7 @@ namespace LeoECSLite.UnityIntegration.Editor.Extentions.String {
             queue =  0;
             break;
         }
+      }
 
       return new Color(
         r.Normalized(),

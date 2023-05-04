@@ -35,12 +35,10 @@ namespace LeoECSLite.UnityIntegration.Editor.Component {
       _fields    = new VisualElement();
     }
 
-    private void AddElements() {
-      _root
-       .AddChild(_typeLabel)
-       .AddChild(_fields)
-        ;
-    }
+    private void AddElements()
+      => _root
+        .AddChild(_typeLabel)
+        .AddChild(_fields);
 
     private void InitElements() {
       _target = ComponentView();
@@ -51,13 +49,12 @@ namespace LeoECSLite.UnityIntegration.Editor.Component {
 
 
 
-    private void InitLabel() {
-      _typeLabel
-       .SetText(_target.Type.GetCleanName())
-       .style
-       .Margin(0, 0, -REM_05, 0)
-       .FontStyle(FontStyle.Bold);
-    }
+    private void InitLabel()
+      => _typeLabel
+        .SetText(_target.Type.GetCleanName())
+        .style
+        .Margin(0, 0, -REM_05, 0)
+        .FontStyle(FontStyle.Bold);
 
     private void InitFields() {
       SerializedProperty data = Component();
@@ -68,12 +65,8 @@ namespace LeoECSLite.UnityIntegration.Editor.Component {
 
 
 
-    private ComponentData ComponentView() {
-      return (ComponentData) serializedObject.targetObject;
-    }
+    private ComponentData ComponentView() => (ComponentData) serializedObject.targetObject;
 
-    private SerializedProperty Component() {
-      return serializedObject.FindProperty(COMPONENT_PROPERTY_NAME);
-    }
+    private SerializedProperty Component() => serializedObject.FindProperty(COMPONENT_PROPERTY_NAME);
   }
 }

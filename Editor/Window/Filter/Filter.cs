@@ -8,14 +8,14 @@ namespace LeoECSLite.UnityIntegration.Editor.Window.Filter {
     public EcsWorldDebugSystem         DebugSystem { get; private set; }
     public Dictionary<Type, FilterTag> Tags        { get; }
 
+    public event Action<Type> OnAddTag;
+    public event Action<Type> OnRemoveTag;
+
 
 
     public Filter() {
       Tags = new Dictionary<Type, FilterTag>(4);
     }
-
-    public event Action<Type> OnAddTag;
-    public event Action<Type> OnRemoveTag;
 
     public void Init(EcsWorldDebugSystem debugSystem) {
       DebugSystem = debugSystem;
@@ -73,21 +73,18 @@ namespace LeoECSLite.UnityIntegration.Editor.Window.Filter {
 
 
 
-    public bool IsEmpty() {
-      return Tags.Count <= 0;
-    }
+    public bool IsEmpty() => Tags.Count <= 0;
 
-    public bool Has(int e) {
-      return Tags
-            .Values
-            .Select(
-               tag => tag.Method switch {
-                 FilterMethod.Include => tag.Pool.Has(e),
-                 FilterMethod.Exclude => !tag.Pool.Has(e),
-                 _                    => throw new ArgumentOutOfRangeException()
-               }
-             )
-            .All(compatible => compatible);
-    }
+    public bool Has(int e)
+      => Tags
+        .Values
+        .Select(
+           tag => tag.Method switch {
+             FilterMethod.Include => tag.Pool.Has(e),
+             FilterMethod.Exclude => !tag.Pool.Has(e),
+             _                    => throw new ArgumentOutOfRangeException()
+           }
+         )
+        .All(compatible => compatible);
   }
 }

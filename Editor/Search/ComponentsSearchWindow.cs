@@ -35,11 +35,12 @@ namespace LeoECSLite.UnityIntegration.Editor.Search {
           object[] components = StaticCache.Components;
           int      count      = _world.GetComponents(_entity, ref components);
 
-          for (var i = 0; i < count; i++)
+          for (var i = 0; i < count; i++) {
             AddComponent(
               components[i]
                .GetType()
             );
+          }
 
           break;
         case ComponentsSearchScope.unset:
@@ -95,9 +96,7 @@ namespace LeoECSLite.UnityIntegration.Editor.Search {
 
 
 
-    private static ComponentsSearchWindow CreateWindow() {
-      return CreateInstance<ComponentsSearchWindow>();
-    }
+    private static ComponentsSearchWindow CreateWindow() => CreateInstance<ComponentsSearchWindow>();
 
     private static void OpenInMousePosition() {
       Vector2 mousePos  = Event.current.mousePosition;

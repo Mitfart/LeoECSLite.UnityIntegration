@@ -25,12 +25,13 @@ namespace LeoECSLite.UnityIntegration.Editor.Extentions.SearchWindow {
       indentLevel = splitName.Length;
 
       if (indentLevel > 1)
-        for (var i = 1; i < indentLevel; i++)
+        for (var i = 1; i < indentLevel; i++) {
           items.AddGroup(
             groups,
             splitName[i],
             i
           );
+        }
       else
         items.TryAddGlobalNamespaceGroup(groups);
 
@@ -52,14 +53,13 @@ namespace LeoECSLite.UnityIntegration.Editor.Extentions.SearchWindow {
 
 
 
-    private static void AddGlobalNamespaceGroup(IList<SearchTreeEntry> items) {
-      items.Insert(
+    private static void AddGlobalNamespaceGroup(IList<SearchTreeEntry> items)
+      => items.Insert(
         1,
         new SearchTreeGroupEntry(
           new GUIContent(GLOBAL_NAMESPACE_GROUP),
           1
         )
       );
-    }
   }
 }

@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using GenericUnityObjects;
 using LeoECSLite.UnityIntegration.Editor.Component;
 using LeoECSLite.UnityIntegration.Editor.Extentions.Style.Border;
-using LeoECSLite.UnityIntegration.Editor.Extentions.Style.FlexDirection;
-using LeoECSLite.UnityIntegration.Editor.Extentions.Style.FlexGrow;
+using LeoECSLite.UnityIntegration.Editor.Extentions.Style.Flex;
 using LeoECSLite.UnityIntegration.Editor.Extentions.Style.Overflow;
 using LeoECSLite.UnityIntegration.Editor.Extentions.Style.Spacing;
 using LeoECSLite.UnityIntegration.Editor.Extentions.Style.Text;
@@ -113,10 +112,11 @@ namespace LeoECSLite.UnityIntegration.Editor.Entity {
     }
 
     private static void HideUnusedComponents(int e) {
-      foreach (ComponentCache cache in _ComponentsCache.Values)
+      foreach (ComponentCache cache in _ComponentsCache.Values) {
         cache.View.style.display = IsUsed(cache.Data)
           ? DisplayStyle.Flex
           : DisplayStyle.None;
+      }
 
       bool IsUsed(ComponentData data) {
         return data.Entity == e && data.Pool.Has(data.Entity);
@@ -130,20 +130,16 @@ namespace LeoECSLite.UnityIntegration.Editor.Entity {
 
 
 
-    private static ComponentCache GetComponentCache(Type component) {
-      return _ComponentsCache.TryGetValue(component, out ComponentCache cache)
+    private static ComponentCache GetComponentCache(Type component)
+      => _ComponentsCache.TryGetValue(component, out ComponentCache cache)
         ? cache
         : CreateComponentCache(component);
-    }
 
     private static ComponentCache CreateComponentCache(Type component) {
       ComponentData componentData = CreateComponentData(component);
       VisualElement view          = CreateComponentView(componentData);
 
-      var cache = new ComponentCache {
-        Data = componentData,
-        View = view
-      };
+      var cache = new ComponentCache { Data = componentData, View = view };
 
       _ComponentsList.Add(view);
       _ComponentsCache.Add(component, cache);
@@ -240,20 +236,18 @@ namespace LeoECSLite.UnityIntegration.Editor.Entity {
 
 
 
-    private static void ChooseAndAdd() {
-      ComponentsSearchWindow.OpenFor(
+    private static void ChooseAndAdd()
+      => ComponentsSearchWindow.OpenFor(
         World,
         AddComponent
       );
-    }
 
-    private static void ChooseAndDel() {
-      ComponentsSearchWindow.OpenFor(
+    private static void ChooseAndDel()
+      => ComponentsSearchWindow.OpenFor(
         World,
         Entity,
         DelComponent
       );
-    }
 
 
 
@@ -280,8 +274,6 @@ namespace LeoECSLite.UnityIntegration.Editor.Entity {
       return true;
     }
 
-    private static void Kill() {
-      World.DelEntity(Entity);
-    }
+    private static void Kill() => World.DelEntity(Entity);
   }
 }

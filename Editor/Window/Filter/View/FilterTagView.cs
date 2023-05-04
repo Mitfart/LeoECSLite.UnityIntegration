@@ -38,12 +38,11 @@ namespace LeoECSLite.UnityIntegration.Editor.Window.Filter.View {
       _separator    = new VisualElement();
     }
 
-    private void AddElements() {
-      this
-       .AddChild(_filterMethod)
-       .AddChild(_separator)
-       .AddChild(_filterLabel);
-    }
+    private void AddElements()
+      => this
+        .AddChild(_filterMethod)
+        .AddChild(_separator)
+        .AddChild(_filterLabel);
 
     private void InitElements() {
       SetLabel();
@@ -57,16 +56,13 @@ namespace LeoECSLite.UnityIntegration.Editor.Window.Filter.View {
 
 
 
-    private void SetMethod() {
-      _filterMethod.text = Method switch {
+    private void SetMethod()
+      => _filterMethod.text = Method switch {
         FilterMethod.Include => INCLUDE,
         FilterMethod.Exclude => EXCLUDE,
         var _                => throw new ArgumentOutOfRangeException()
       };
-    }
 
-    private void SetLabel() {
-      _filterLabel.text = Type.Name;
-    }
+    private void SetLabel() => _filterLabel.text = Type.Name;
   }
 }

@@ -81,11 +81,10 @@ namespace LeoECSLite.UnityIntegration.Editor.Window.Layout {
     }
 
 
-    public IEnumerable<TData> GetWhere(Func<TData, bool> where) {
-      return _tabs
-            .Keys
-            .Where(where.Invoke);
-    }
+    public IEnumerable<TData> GetWhere(Func<TData, bool> where)
+      => _tabs
+        .Keys
+        .Where(where.Invoke);
 
 
     private Tab<TData> AddTabFor(TData data) {

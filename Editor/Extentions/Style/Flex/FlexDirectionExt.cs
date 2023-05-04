@@ -1,6 +1,6 @@
 ﻿using UnityEngine.UIElements;
 
-namespace LeoECSLite.UnityIntegration.Editor.Extentions.Style.FlexDirection {
+namespace LeoECSLite.UnityIntegration.Editor.Extentions.Style.Flex {
   public static class FlexDirectionExt {
     public static IStyle FlexRow(this IStyle style, bool reverse = false) {
       style.flexDirection = !reverse

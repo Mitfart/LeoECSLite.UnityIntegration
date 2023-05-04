@@ -27,13 +27,9 @@ namespace LeoECSLite.UnityIntegration.Editor.Window.Entity {
     }
 
 
-    private void CreateElements() {
-      _label = new Label();
-    }
+    private void CreateElements() => _label = new Label();
 
-    private void AddElements() {
-      Add(_label);
-    }
+    private void AddElements() => Add(_label);
 
     private void InitElements() {
       _label.text = _compactName

@@ -47,9 +47,7 @@ namespace LeoECSLite.UnityIntegration.Editor.Window {
     }
 
 
-    private static bool TryGetSystem(WorldTabData newWorldTabData, out EcsWorldDebugSystem debugSystem) {
-      return ActiveDebugSystems.TryGet(newWorldTabData.Name, out debugSystem);
-    }
+    private static bool TryGetSystem(WorldTabData newWorldTabData, out EcsWorldDebugSystem debugSystem) => ActiveDebugSystems.TryGet(newWorldTabData.Name, out debugSystem);
 
     private void SetActiveWorldDebugSystem(EcsWorldDebugSystem newActiveDebugSystem) {
       if (ActiveDebugSystem == newActiveDebugSystem)
@@ -86,9 +84,7 @@ namespace LeoECSLite.UnityIntegration.Editor.Window {
       EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
     }
 
-    private void OnDisable() {
-      EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
-    }
+    private void OnDisable() => EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
 
     private void OnPlayModeStateChanged(PlayModeStateChange state) {
       switch (state) {

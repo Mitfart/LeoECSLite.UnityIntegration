@@ -41,20 +41,19 @@ namespace LeoECSLite.UnityIntegration.Name {
 
       _builder.Append(START_DESCRIPTION);
 
-      for (var i = 0; i < count; i++)
+      for (var i = 0; i < count; i++) {
         _builder.Append(
                    types[i]
                     .GetCleanName()
                  )
                 .Append(COMPONENTS_SEPARATOR);
+      }
 
       return this;
     }
 
 
-    public string End() {
-      return _builder.ToString();
-    }
+    public string End() => _builder.ToString();
   }
 }
 

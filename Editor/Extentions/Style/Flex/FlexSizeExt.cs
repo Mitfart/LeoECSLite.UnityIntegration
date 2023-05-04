@@ -1,6 +1,6 @@
 ﻿using UnityEngine.UIElements;
 
-namespace LeoECSLite.UnityIntegration.Editor.Extentions.Style.FlexGrow {
+namespace LeoECSLite.UnityIntegration.Editor.Extentions.Style.Flex {
   public static class FlexSizeExt {
     public static IStyle FlexGrow(this IStyle style, bool grow = true) {
       style.flexGrow = grow

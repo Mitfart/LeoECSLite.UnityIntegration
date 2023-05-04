@@ -22,8 +22,6 @@ namespace LeoECSLite.UnityIntegration.Editor.Extentions.UIElement {
       while (curProp.NextVisible(false));
     }
 
-    private static bool ChildOf(this SerializedProperty curProp, SerializedProperty rootProperty) {
-      return curProp.propertyPath.Contains(rootProperty.propertyPath);
-    }
+    private static bool ChildOf(this SerializedProperty curProp, SerializedProperty rootProperty) => curProp.propertyPath.Contains(rootProperty.propertyPath);
   }
 }

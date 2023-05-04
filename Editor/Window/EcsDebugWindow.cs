@@ -40,10 +40,9 @@ namespace LeoECSLite.UnityIntegration.Editor.Window {
 
 
     [MenuItem("LeoECS Lite/Debug Window NEW")]
-    public static void OpenEcsDebugWindow() {
-      GetWindow<EcsDebugWindow>(nameof(EcsDebugWindow))
+    public static void OpenEcsDebugWindow()
+      => GetWindow<EcsDebugWindow>(nameof(EcsDebugWindow))
        .Show();
-    }
 
 
     protected override void CreateElements() {
@@ -97,9 +96,7 @@ namespace LeoECSLite.UnityIntegration.Editor.Window {
     }
 
 
-    public override void OnEntityCreated(int e) {
-      _entitiesList.Add(e);
-    }
+    public override void OnEntityCreated(int e) => _entitiesList.Add(e);
 
     public override void OnEntityDestroyed(int e) {
       _entitiesList.Remove(e);
@@ -108,13 +105,12 @@ namespace LeoECSLite.UnityIntegration.Editor.Window {
         RemoveActiveEntity(e);
     }
 
-    public override void OnWorldDestroyed(EcsWorld world) {
-      _worldTabsMenu.RemoveTab(
+    public override void OnWorldDestroyed(EcsWorld world)
+      => _worldTabsMenu.RemoveTab(
         _worldTabsMenu
          .GetWhere(data => data.World == world)
          .First()
       );
-    }
 
 
 

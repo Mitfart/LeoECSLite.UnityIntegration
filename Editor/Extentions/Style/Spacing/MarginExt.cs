@@ -21,22 +21,20 @@ namespace LeoECSLite.UnityIntegration.Editor.Extentions.Style.Spacing {
       this IStyle style,
       StyleLength hor,
       StyleLength ver
-    ) {
-      return style
+    )
+      => style
        .Margin(
           ver,
           ver,
           hor,
           hor
         );
-    }
 
-    public static IStyle Margin(this IStyle style, StyleLength length) {
-      return style
+    public static IStyle Margin(this IStyle style, StyleLength length)
+      => style
        .Margin(
           length,
           length
         );
-    }
   }
 }

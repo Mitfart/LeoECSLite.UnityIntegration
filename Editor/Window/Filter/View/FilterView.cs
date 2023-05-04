@@ -49,12 +49,10 @@ namespace LeoECSLite.UnityIntegration.Editor.Window.Filter.View {
       _clearBtn  = new Button(ClearFilter) { text        = Icons.TextClose };
     }
 
-    private void AddElements() {
-      this
-       .AddChild(_addTagBtn)
-       .AddChild(_clearBtn)
-        ;
-    }
+    private void AddElements()
+      => this
+        .AddChild(_addTagBtn)
+        .AddChild(_clearBtn);
 
     private void InitElements() {
       AddToClassList(FILTER_CL);
@@ -83,13 +81,9 @@ namespace LeoECSLite.UnityIntegration.Editor.Window.Filter.View {
 
 
 
-    private void ShowClearButton() {
-      _clearBtn.RemoveFromClassList(FILTER_BTN_DISABLED_CL);
-    }
+    private void ShowClearButton() => _clearBtn.RemoveFromClassList(FILTER_BTN_DISABLED_CL);
 
-    private void HideClearButton() {
-      _clearBtn.AddToClassList(FILTER_BTN_DISABLED_CL);
-    }
+    private void HideClearButton() => _clearBtn.AddToClassList(FILTER_BTN_DISABLED_CL);
 
 
 
