@@ -1,7 +1,7 @@
 #if UNITY_EDITOR
 using System;
 using LeoECSLite.UnityIntegration.Entity;
-using LeoECSLite.UnityIntegration.Extentions.DebugSystem;
+using LeoECSLite.UnityIntegration.Extentions;
 using LeoECSLite.UnityIntegration.Name;
 using Leopotam.EcsLite;
 using UnityEditor;

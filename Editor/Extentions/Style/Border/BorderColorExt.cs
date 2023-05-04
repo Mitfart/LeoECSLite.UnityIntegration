@@ -1,6 +1,6 @@
 ﻿using UnityEngine.UIElements;
 
-namespace LeoECSLite.UnityIntegration.Editor.Extentions.Style.Border {
+namespace LeoECSLite.UnityIntegration.Editor.Extentions.Border {
   public static class BorderColorExt {
     public static IStyle BorderColor(
       this IStyle style,

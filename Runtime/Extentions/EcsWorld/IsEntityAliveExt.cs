@@ -1,5 +1,7 @@
-﻿namespace LeoECSLite.UnityIntegration.Extentions.EcsWorld {
+﻿using Leopotam.EcsLite;
+
+namespace LeoECSLite.UnityIntegration.Extentions {
   public static class IsEntityAliveExt {
-    public static bool IsEntityAlive(this Leopotam.EcsLite.EcsWorld world, int entity) => world.GetEntityGen(entity) > 0;
+    public static bool IsEntityAlive(this EcsWorld world, int entity) => world.GetEntityGen(entity) > 0;
   }
 }

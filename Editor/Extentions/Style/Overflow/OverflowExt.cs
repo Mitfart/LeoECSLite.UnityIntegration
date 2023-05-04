@@ -1,6 +1,6 @@
 ﻿using UnityEngine.UIElements;
 
-namespace LeoECSLite.UnityIntegration.Editor.Extentions.Style.Overflow {
+namespace LeoECSLite.UnityIntegration.Editor.Extentions.Overflow {
   public static class OverflowExt {
     public static IStyle OverflowHidden(this IStyle style) {
       style.overflow = UnityEngine.UIElements.Overflow.Hidden;

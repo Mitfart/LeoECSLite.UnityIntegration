@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using LeoECSLite.UnityIntegration.Extentions.DebugSystem;
-using LeoECSLite.UnityIntegration.Extentions.String;
+using LeoECSLite.UnityIntegration.Extentions;
 using Leopotam.EcsLite;
 
 namespace LeoECSLite.UnityIntegration {

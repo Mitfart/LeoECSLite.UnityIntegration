@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
-namespace LeoECSLite.UnityIntegration.Editor.Extentions.SearchWindow {
+namespace LeoECSLite.UnityIntegration.Editor.Extentions {
   public static class AddGroupsByNamespaceExt {
     private const string TYPE_SEPARATOR         = "."; // ! Important !
     private const string GLOBAL_NAMESPACE_GROUP = "_";

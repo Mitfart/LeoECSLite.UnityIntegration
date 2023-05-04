@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using LeoECSLite.UnityIntegration.Editor.Extentions.SearchWindow;
-using LeoECSLite.UnityIntegration.Extentions.EcsWorld;
+using LeoECSLite.UnityIntegration.Editor.Extentions;
+using LeoECSLite.UnityIntegration.Extentions;
 using Leopotam.EcsLite;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;

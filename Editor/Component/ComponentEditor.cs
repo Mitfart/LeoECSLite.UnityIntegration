@@ -1,11 +1,11 @@
-﻿using LeoECSLite.UnityIntegration.Editor.Extentions.Style.Spacing;
-using LeoECSLite.UnityIntegration.Editor.Extentions.Style.Text;
-using LeoECSLite.UnityIntegration.Editor.Extentions.UIElement;
-using LeoECSLite.UnityIntegration.Extentions.Type;
+﻿using LeoECSLite.UnityIntegration.Editor.Extentions;
+using LeoECSLite.UnityIntegration.Editor.Extentions.Spacing;
+using LeoECSLite.UnityIntegration.Editor.Extentions.Text;
+using LeoECSLite.UnityIntegration.Extentions;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
-using static LeoECSLite.UnityIntegration.Editor.Extentions.Style.StyleConsts;
+using static LeoECSLite.UnityIntegration.Editor.Extentions.StyleConsts;
 
 namespace LeoECSLite.UnityIntegration.Editor.Component {
   [CustomEditor(typeof(ComponentData<>), true)]

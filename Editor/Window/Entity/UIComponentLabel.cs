@@ -1,5 +1,5 @@
 ﻿using System;
-using LeoECSLite.UnityIntegration.Editor.Extentions.String;
+using LeoECSLite.UnityIntegration.Editor.Extentions;
 using UnityEngine;
 using UnityEngine.UIElements;
 

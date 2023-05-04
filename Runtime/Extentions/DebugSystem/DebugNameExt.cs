@@ -1,7 +1,5 @@
 #if UNITY_EDITOR
-using LeoECSLite.UnityIntegration.Extentions.String;
-
-namespace LeoECSLite.UnityIntegration.Extentions.DebugSystem {
+namespace LeoECSLite.UnityIntegration.Extentions {
   public static class DebugNameExt {
     public static string DebugName(this EcsWorldDebugSystem debugSystem) => debugSystem.WorldName.ToWorldDebugName();
   }

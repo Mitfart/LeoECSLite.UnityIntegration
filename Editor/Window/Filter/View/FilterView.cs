@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using LeoECSLite.UnityIntegration.Editor.Extentions.UIElement;
+using LeoECSLite.UnityIntegration.Editor.Extentions;
 using LeoECSLite.UnityIntegration.Editor.Search;
 using LeoECSLite.UnityIntegration.Editor.Window.Style;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace LeoECSLite.UnityIntegration.Editor.Window.Filter.View {
+namespace LeoECSLite.UnityIntegration.Editor.Window.Filter {
   public class FilterView : VisualElement {
     public const string FILTER_CL              = "filter";
     public const string FILTER_BTN_CL          = "filter__btn";

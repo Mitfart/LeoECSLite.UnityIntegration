@@ -1,4 +1,4 @@
-﻿namespace LeoECSLite.UnityIntegration.Editor.Extentions.Style {
+﻿namespace LeoECSLite.UnityIntegration.Editor.Extentions {
   public static class StyleConsts {
     // |- Rem - css unit of measurement. Regarding the font size.
     public const int   REM      = 12; // UNITY DEFAULT FONT SIZE 

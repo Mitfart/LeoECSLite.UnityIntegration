@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using LeoECSLite.UnityIntegration.Editor.Extentions.UIElement;
+using LeoECSLite.UnityIntegration.Editor.Extentions;
 using LeoECSLite.UnityIntegration.Editor.Utils;
-using LeoECSLite.UnityIntegration.Extentions.EcsWorld;
+using LeoECSLite.UnityIntegration.Extentions;
 using UnityEngine.UIElements;
 
 namespace LeoECSLite.UnityIntegration.Editor.Window.Entity {

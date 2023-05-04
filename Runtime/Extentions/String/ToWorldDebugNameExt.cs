@@ -1,4 +1,4 @@
-﻿namespace LeoECSLite.UnityIntegration.Extentions.String {
+﻿namespace LeoECSLite.UnityIntegration.Extentions {
   public static class ToWorldDebugNameExt {
     public static string ToWorldDebugName(this string name)
       => !string.IsNullOrWhiteSpace(name)

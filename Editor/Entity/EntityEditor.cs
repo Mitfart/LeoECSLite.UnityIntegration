@@ -2,21 +2,21 @@
 using System.Collections.Generic;
 using GenericUnityObjects;
 using LeoECSLite.UnityIntegration.Editor.Component;
-using LeoECSLite.UnityIntegration.Editor.Extentions.Style.Border;
-using LeoECSLite.UnityIntegration.Editor.Extentions.Style.Flex;
-using LeoECSLite.UnityIntegration.Editor.Extentions.Style.Overflow;
-using LeoECSLite.UnityIntegration.Editor.Extentions.Style.Spacing;
-using LeoECSLite.UnityIntegration.Editor.Extentions.Style.Text;
-using LeoECSLite.UnityIntegration.Editor.Extentions.UIElement;
+using LeoECSLite.UnityIntegration.Editor.Extentions;
+using LeoECSLite.UnityIntegration.Editor.Extentions.Border;
+using LeoECSLite.UnityIntegration.Editor.Extentions.Flex;
+using LeoECSLite.UnityIntegration.Editor.Extentions.Overflow;
+using LeoECSLite.UnityIntegration.Editor.Extentions.Spacing;
+using LeoECSLite.UnityIntegration.Editor.Extentions.Text;
 using LeoECSLite.UnityIntegration.Editor.Search;
 using LeoECSLite.UnityIntegration.Entity;
-using LeoECSLite.UnityIntegration.Extentions.EcsWorld;
+using LeoECSLite.UnityIntegration.Extentions;
 using Leopotam.EcsLite;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
-using static LeoECSLite.UnityIntegration.Editor.Extentions.Style.StyleConsts;
+using static LeoECSLite.UnityIntegration.Editor.Extentions.StyleConsts;
 
 namespace LeoECSLite.UnityIntegration.Editor.Entity {
   [CustomEditor(typeof(EntityView))]

@@ -1,9 +1,9 @@
 ﻿using UnityEngine.UIElements;
 
-namespace LeoECSLite.UnityIntegration.Editor.Extentions.Style {
+namespace LeoECSLite.UnityIntegration.Editor.Extentions {
   public static class PercentsLengthExt {
     public static StyleLength PercentsLength(this float length)
-      => new StyleLength(
+      => new(
         new Length(
           length,
           LengthUnit.Percent

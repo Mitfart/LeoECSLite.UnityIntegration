@@ -1,6 +1,6 @@
 ﻿using UnityEngine.UIElements;
 
-namespace LeoECSLite.UnityIntegration.Editor.Extentions.Style.Spacing {
+namespace LeoECSLite.UnityIntegration.Editor.Extentions.Spacing {
   public static class MarginExt {
     public static IStyle Margin(
       this IStyle style,

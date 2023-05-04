@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace LeoECSLite.UnityIntegration.Editor.Extentions.String {
+namespace LeoECSLite.UnityIntegration.Editor.Extentions {
   public static class CompactExt {
     public static string Compact(this string str) {
       const int CHARS_TO_SHOW = 3;

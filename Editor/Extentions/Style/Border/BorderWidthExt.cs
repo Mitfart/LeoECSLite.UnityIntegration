@@ -1,6 +1,6 @@
 ﻿using UnityEngine.UIElements;
 
-namespace LeoECSLite.UnityIntegration.Editor.Extentions.Style.Border {
+namespace LeoECSLite.UnityIntegration.Editor.Extentions.Border {
   public static class BorderWidthExt {
     public static IStyle BorderWidth(
       this IStyle style,

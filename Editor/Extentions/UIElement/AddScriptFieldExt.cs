@@ -3,7 +3,7 @@ using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
 
-namespace LeoECSLite.UnityIntegration.Editor.Extentions.UIElement {
+namespace LeoECSLite.UnityIntegration.Editor.Extentions {
   public static class AddScriptFieldExt {
     private const string UNITY_SCRIPT = "m_Script";
 

@@ -2,7 +2,7 @@
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
 
-namespace LeoECSLite.UnityIntegration.Editor.Extentions.UIElement {
+namespace LeoECSLite.UnityIntegration.Editor.Extentions {
   public static class AddChildPropertiesExt {
     public static void AddChildProperties(this VisualElement root, SerializedProperty property) {
       SerializedProperty rootProperty = property.Copy();
