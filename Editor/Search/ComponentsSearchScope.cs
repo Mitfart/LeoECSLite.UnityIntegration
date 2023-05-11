@@ -1,7 +1,7 @@
 ﻿namespace LeoECSLite.UnityIntegration.Editor.Search {
   public enum ComponentsSearchScope {
-    unset,
-    World,
-    Entity
+    Unset  = 0,
+    World  = 1,
+    Entity = 2
   }
 }

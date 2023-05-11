@@ -1,28 +1,30 @@
-﻿using LeoECSLite.UnityIntegration.Editor.Extentions;
-using LeoECSLite.UnityIntegration.Editor.Extentions.Spacing;
-using LeoECSLite.UnityIntegration.Editor.Extentions.Text;
-using LeoECSLite.UnityIntegration.Extentions;
+﻿using LeoECSLite.UnityIntegration.Editor.Extensions;
+using LeoECSLite.UnityIntegration.Editor.Extensions.Spacing;
+using LeoECSLite.UnityIntegration.Editor.Extensions.Text;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
-using static LeoECSLite.UnityIntegration.Editor.Extentions.StyleConsts;
+using static LeoECSLite.UnityIntegration.Editor.Extensions.StyleConsts;
 
 namespace LeoECSLite.UnityIntegration.Editor.Component {
-  [CustomEditor(typeof(ComponentData<>), true)]
-  public class ComponentEditor : UnityEditor.Editor {
-    private const string        COMPONENT_PROPERTY_NAME = nameof(ComponentData<Vector2>.component);
-    private       VisualElement _fields;
+  [CustomPropertyDrawer(typeof(ComponentView), true)]
+  public class ComponentEditor : PropertyDrawer {
+    private const string COMPONENT_FIELD = "component";
+
+    private SerializedProperty _property;
 
     private VisualElement _root;
+    private VisualElement _header;
+    private Label         _label;
+    private VisualElement _main;
+    private VisualElement _fields;
 
-    private ComponentData _target;
-    private Label         _typeLabel;
 
 
-
-    public override VisualElement CreateInspectorGUI() {
+    public override VisualElement CreatePropertyGUI(SerializedProperty property) {
+      _property = property;
       CreateElements();
-      AddElements();
+      StructureElements();
       InitElements();
       return _root;
     }
@@ -30,43 +32,31 @@ namespace LeoECSLite.UnityIntegration.Editor.Component {
 
 
     private void CreateElements() {
-      _root      = new VisualElement();
-      _typeLabel = new Label();
-      _fields    = new VisualElement();
+      _root   = new VisualElement();
+      _header = new VisualElement();
+      _label  = new Label();
+      _main   = new VisualElement();
+      _fields = new VisualElement();
     }
 
-    private void AddElements()
-      => _root
-        .AddChild(_typeLabel)
-        .AddChild(_fields);
+    private void StructureElements() {
+      _root
+       .AddChild(_header.AddChild(_label))
+       .AddChild(_main.AddChild(_fields.AddChildProperties(ComponentProperty())));
+    }
 
     private void InitElements() {
-      _target = ComponentView();
-
-      InitLabel();
-      InitFields();
+      _label
+       .SetText(ComponentName())
+       .style
+       .Margin(top: 0, bottom: 0, left: -REM_05, right: 0)
+       .FontStyle(FontStyle.Bold);
     }
 
 
 
-    private void InitLabel()
-      => _typeLabel
-        .SetText(_target.Type.GetCleanName())
-        .style
-        .Margin(0, 0, -REM_05, 0)
-        .FontStyle(FontStyle.Bold);
-
-    private void InitFields() {
-      SerializedProperty data = Component();
-
-      if (data != null)
-        _fields.AddChildProperties(data);
-    }
-
-
-
-    private ComponentData ComponentView() => (ComponentData) serializedObject.targetObject;
-
-    private SerializedProperty Component() => serializedObject.FindProperty(COMPONENT_PROPERTY_NAME);
+    private string             ComponentName()     => Target().ComponentType.Name;
+    private ComponentView      Target()            => (ComponentView) _property.managedReferenceValue;
+    private SerializedProperty ComponentProperty() => _property.FindPropertyRelative(COMPONENT_FIELD);
   }
 }

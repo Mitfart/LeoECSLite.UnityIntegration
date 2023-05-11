@@ -1,22 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using GenericUnityObjects;
 using LeoECSLite.UnityIntegration.Editor.Component;
-using LeoECSLite.UnityIntegration.Editor.Extentions;
-using LeoECSLite.UnityIntegration.Editor.Extentions.Border;
-using LeoECSLite.UnityIntegration.Editor.Extentions.Flex;
-using LeoECSLite.UnityIntegration.Editor.Extentions.Overflow;
-using LeoECSLite.UnityIntegration.Editor.Extentions.Spacing;
-using LeoECSLite.UnityIntegration.Editor.Extentions.Text;
+using LeoECSLite.UnityIntegration.Editor.Extensions;
+using LeoECSLite.UnityIntegration.Editor.Extensions.Border;
+using LeoECSLite.UnityIntegration.Editor.Extensions.Flex;
+using LeoECSLite.UnityIntegration.Editor.Extensions.Overflow;
+using LeoECSLite.UnityIntegration.Editor.Extensions.Spacing;
+using LeoECSLite.UnityIntegration.Editor.Extensions.Text;
 using LeoECSLite.UnityIntegration.Editor.Search;
 using LeoECSLite.UnityIntegration.Entity;
-using LeoECSLite.UnityIntegration.Extentions;
+using LeoECSLite.UnityIntegration.Extensions;
 using Leopotam.EcsLite;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
-using static LeoECSLite.UnityIntegration.Editor.Extentions.StyleConsts;
+using static LeoECSLite.UnityIntegration.Editor.Extensions.StyleConsts;
 
 namespace LeoECSLite.UnityIntegration.Editor.Entity {
   [CustomEditor(typeof(EntityView))]
@@ -103,9 +102,9 @@ namespace LeoECSLite.UnityIntegration.Editor.Entity {
         Type component = types[i];
 
         ComponentCache cache         = GetComponentCache(component);
-        ComponentData  componentData = cache.Data;
+        ComponentView  componentView = cache.Data;
 
-        componentData
+        componentView
          .Init(e, world)
          .Refresh();
       }
@@ -118,7 +117,7 @@ namespace LeoECSLite.UnityIntegration.Editor.Entity {
           : DisplayStyle.None;
       }
 
-      bool IsUsed(ComponentData data) {
+      bool IsUsed(ComponentView data) {
         return data.Entity == e && data.Pool.Has(data.Entity);
       }
     }
@@ -136,7 +135,7 @@ namespace LeoECSLite.UnityIntegration.Editor.Entity {
         : CreateComponentCache(component);
 
     private static ComponentCache CreateComponentCache(Type component) {
-      ComponentData componentData = CreateComponentData(component);
+      var           componentData = new ComponentView(component);
       VisualElement view          = CreateComponentView(componentData);
 
       var cache = new ComponentCache { Data = componentData, View = view };
@@ -147,16 +146,10 @@ namespace LeoECSLite.UnityIntegration.Editor.Entity {
       return cache;
     }
 
-    private static ComponentData CreateComponentData(Type component) {
-      Type type = typeof(ComponentData<>).MakeGenericType(component);
-      var  data = (ComponentData) GenericScriptableObject.CreateInstance(type);
-      return data;
-    }
-
-    private static VisualElement CreateComponentView(ComponentData componentData) {
+    private static VisualElement CreateComponentView(ComponentView componentView) {
       var viewRoot  = new VisualElement();
       var container = new Box();
-      var inspector = new InspectorElement(componentData);
+      var inspector = new InspectorElement(componentView);
 
       container
        .style

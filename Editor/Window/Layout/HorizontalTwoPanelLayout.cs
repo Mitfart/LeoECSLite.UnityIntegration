@@ -1,4 +1,4 @@
-﻿using LeoECSLite.UnityIntegration.Editor.Extentions;
+﻿using LeoECSLite.UnityIntegration.Editor.Extensions;
 using UnityEngine.UIElements;
 
 namespace LeoECSLite.UnityIntegration.Editor.Window.Layout {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using LeoECSLite.UnityIntegration.Editor.Extentions;
+using LeoECSLite.UnityIntegration.Editor.Extensions;
 using LeoECSLite.UnityIntegration.Editor.Window.Entity;
 using LeoECSLite.UnityIntegration.Editor.Window.Filter;
 using LeoECSLite.UnityIntegration.Editor.Window.Layout;

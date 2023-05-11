@@ -1,72 +1,38 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using LeoECSLite.UnityIntegration.Editor.Extentions;
-using LeoECSLite.UnityIntegration.Extentions;
-using Leopotam.EcsLite;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEditor.Experimental.GraphView;
+using Leopotam.EcsLite;
+using LeoECSLite.UnityIntegration.Extensions;
+using LeoECSLite.UnityIntegration.Editor.Extensions;
 
 namespace LeoECSLite.UnityIntegration.Editor.Search {
   public class ComponentsSearchWindow : ScriptableObject, ISearchWindowProvider {
     private const string TITLE = "Components";
 
     private static ComponentsSearchWindow _Window;
-    private        int                    _entity;
-    private        ComponentsSearchScope  _searchScope;
-    private        Func<Type, bool>       _select;
 
-    private EcsWorld _world;
+    private int                   _entity;
+    private EcsWorld              _world;
+    private ComponentsSearchScope _searchScope;
+    private Func<Type, bool>      _select;
 
 
 
     public List<SearchTreeEntry> CreateSearchTree(SearchWindowContext context) {
-      var items  = new HashSet<SearchTreeEntry>();
-      var groups = new HashSet<string>();
-
+      var items  = new List<SearchTreeEntry>();
+      var groups = new List<string>();
 
       items.AddTitle(TITLE);
 
-      switch (_searchScope) {
-        case ComponentsSearchScope.World:
-          _world.ForeachPool(pool => { AddComponent(pool.GetComponentType()); });
-          break;
-        case ComponentsSearchScope.Entity:
-          object[] components = StaticCache.Components;
-          int      count      = _world.GetComponents(_entity, ref components);
-
-          for (var i = 0; i < count; i++) {
-            AddComponent(
-              components[i]
-               .GetType()
-            );
-          }
-
-          break;
-        case ComponentsSearchScope.unset:
-          throw new Exception("Search Scope not set! (internal error)");
-        default:
-          throw new ArgumentOutOfRangeException();
-      }
-
-      return items.ToList();
-
-
-      void AddComponent(Type componentType) {
-        items
-         .AddGroupsByNamespace(
-            groups,
-            componentType,
-            out int indentLevel
-          )
-         .AddItem(
-            componentType.Name,
-            indentLevel,
-            componentType
-          );
-      }
+      return _searchScope switch {
+        ComponentsSearchScope.World  => CreateSearchTreeForWorld(_world, items, groups),
+        ComponentsSearchScope.Entity => CreateSearchTreeForEntity(_entity, _world, items, groups),
+        ComponentsSearchScope.Unset  => throw new Exception("Search Scope not set! (internal)"),
+        _                            => throw new ArgumentOutOfRangeException()
+      };
     }
-
 
     public bool OnSelectEntry(SearchTreeEntry searchTreeEntry, SearchWindowContext context) {
       var component = (Type) searchTreeEntry.userData;
@@ -75,48 +41,8 @@ namespace LeoECSLite.UnityIntegration.Editor.Search {
 
 
 
-    public static void OpenFor(EcsWorld world, Func<Type, bool> onChoose) {
-      _Window ??= CreateWindow();
-      _Window.Init(
-        world,
-        onChoose
-      );
-      OpenInMousePosition();
-    }
-
-    public static void OpenFor(EcsWorld world, int entity, Func<Type, bool> onChoose) {
-      _Window ??= CreateWindow();
-      _Window.Init(
-        world,
-        entity,
-        onChoose
-      );
-      OpenInMousePosition();
-    }
-
-
-
-    private static ComponentsSearchWindow CreateWindow() => CreateInstance<ComponentsSearchWindow>();
-
-    private static void OpenInMousePosition() {
-      Vector2 mousePos  = Event.current.mousePosition;
-      Vector2 openPoint = GUIUtility.GUIToScreenPoint(mousePos);
-      var     context   = new SearchWindowContext(openPoint);
-
-      SearchWindow.Open(
-        context,
-        _Window
-      );
-    }
-
-
-
     private void Init(EcsWorld world, Func<Type, bool> select) {
-      Init(
-        world,
-        -1,
-        select
-      );
+      Init(world, entity: -1, select);
       _searchScope = ComponentsSearchScope.World;
     }
 
@@ -125,6 +51,60 @@ namespace LeoECSLite.UnityIntegration.Editor.Search {
       _select      = select;
       _entity      = entity;
       _searchScope = ComponentsSearchScope.Entity;
+    }
+
+
+
+    public static void OpenFor(EcsWorld world, Func<Type, bool> onChoose) {
+      SearchWindow.Open(MousePosition(), Window());
+      Window().Init(world, onChoose);
+    }
+
+    public static void OpenFor(EcsWorld world, int entity, Func<Type, bool> onChoose) {
+      SearchWindow.Open(MousePosition(), Window());
+      Window().Init(world, entity, onChoose);
+    }
+
+
+
+    private static List<SearchTreeEntry> CreateSearchTreeForWorld(EcsWorld world, IList<SearchTreeEntry> items, IList<string> groups) {
+      world.ForeachPool(pool => { AddComponent(pool.GetComponentType(), items, groups); });
+      return items.ToList();
+    }
+
+    private static List<SearchTreeEntry> CreateSearchTreeForEntity(
+      int                    entity,
+      EcsWorld               world,
+      IList<SearchTreeEntry> items,
+      IList<string>          groups
+    ) {
+      Type[] components = StaticCache.Types;
+      int    count      = world.GetComponentTypes(entity, ref components);
+
+      for (var i = 0; i < count; i++)
+        AddComponent(components[i], items, groups);
+
+      return items.ToList();
+    }
+
+    private static void AddComponent(Type component, IList<SearchTreeEntry> items, IList<string> groups) {
+      items
+       .AddNamespaceGroups(groups, component, out int indentLevel)
+       .AddItem(component.Name, indentLevel, component);
+    }
+
+
+
+    private static ComponentsSearchWindow Window() {
+      return _Window ??= CreateInstance<ComponentsSearchWindow>();
+    }
+
+    private static SearchWindowContext MousePosition() {
+      Vector2 mousePos  = Event.current.mousePosition;
+      Vector2 openPoint = GUIUtility.GUIToScreenPoint(mousePos);
+      var     context   = new SearchWindowContext(openPoint);
+
+      return context;
     }
   }
 }

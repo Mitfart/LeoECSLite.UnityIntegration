@@ -1,56 +1,48 @@
 #if UNITY_EDITOR
 using System;
-using System.Collections.Generic;
-using LeoECSLite.UnityIntegration.Extentions;
+using LeoECSLite.UnityIntegration.Extensions;
 using LeoECSLite.UnityIntegration.Name;
 using Leopotam.EcsLite;
 
 namespace LeoECSLite.UnityIntegration {
   public sealed class EcsWorldDebugSystem : IEcsPreInitSystem, IEcsRunSystem, IEcsWorldEventListener {
+    public string   DebugName { get; }
     public string   WorldName { get; }
     public EcsWorld World     { get; private set; }
 
-    public NameSettings            NameSettings { get; }
-    public EcsWorldDebugSystemView View         { get; private set; }
+    public EcsWorldView View { get; }
 
-    public HashSet<int> DirtyEntities { get; }
+    public int WorldSize { get; private set; }
 
 
 
     public EcsWorldDebugSystem(string worldName = null, NameSettings nameSettings = null) {
-      WorldName    = worldName;
-      NameSettings = nameSettings ?? new NameSettings();
+      WorldName = worldName;
+      DebugName = worldName.ToWorldDebugName();
 
-      DirtyEntities = new HashSet<int>();
+      View = new EcsWorldView(this, nameSettings);
     }
 
     public void PreInit(IEcsSystems systems) {
       InitWorld(systems);
-      InitView();
-      InitEntities();
+
+      WorldSize = World.GetEntitiesCount();
 
       World.AddEventListener(this);
       ActiveDebugSystems.Register(this);
-    }
 
-    public void Run(IEcsSystems systems) {
-      View.RefreshEntities();
-      DirtyEntities.Clear();
+      InitEntities();
     }
 
 
 
-    public void OnEntityCreated(int e) {
-      View.GetEntityView(e)
-          .Activate();
-      DirtyEntities.Add(e);
-    }
+    public void Run(IEcsSystems systems) => View.Refresh();
 
-    public void OnEntityChanged(int   e) => DirtyEntities.Add(e);
+    public void OnEntityCreated(int   e) => View.GetEntityView(e).Activate();
+    public void OnEntityChanged(int   e) => View.GetEntityView(e).MarkDirty();
     public void OnEntityDestroyed(int e) => View.GetEntityView(e).Deactivate();
 
-
-    public void OnWorldResized(int newSize) => View.Resize(newSize);
+    public void OnWorldResized(int newSize) => View.Resize(WorldSize = newSize);
 
     public void OnWorldDestroyed(EcsWorld world) {
       View.Destroy();
@@ -58,13 +50,11 @@ namespace LeoECSLite.UnityIntegration {
       ActiveDebugSystems.Unregister(this);
     }
 
-
     public void OnFilterCreated(EcsFilter filter) { }
 
 
 
     private void InitWorld(IEcsSystems systems) => World = systems.GetWorld(WorldName) ?? throw new Exception($"Cant find required world! ({WorldName})");
-    private void InitView()                     => View = new EcsWorldDebugSystemView(this);
     private void InitEntities()                 => World.ForeachEntity(OnEntityCreated);
   }
 }
