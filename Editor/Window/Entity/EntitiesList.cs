@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Git.Extensions.Ecs;
+using Extensions.Runtime.Ecs.World;
 using Git.Extensions.Editor;
 using LeoECSLite.UnityIntegration.Editor.Utils;
 using UnityEngine.UIElements;

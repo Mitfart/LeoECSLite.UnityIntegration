@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Extensions.Editor.Property;
 using Git.Extensions.Editor;
 using Git.Extensions.Editor.Style.Border;
 using Git.Extensions.Editor.Style.Flex;

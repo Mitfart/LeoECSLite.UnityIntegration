@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using LeoECSLite.UnityIntegration.Attributes;
 using LeoECSLite.UnityIntegration.View;
 using Leopotam.EcsLite;
 using Unity.VisualScripting;
@@ -15,6 +14,7 @@ using Git.Extensions.Editor.Style.Border;
 using Git.Extensions.Editor.Style.Spacing;
 using Git.Extensions.Editor.Style.Text;
 using LeoECSLite.UnityIntegration.Editor.Extensions;
+using LeoECSLite.UnityIntegration.PackedEntity;
 using static Git.Extensions.Editor.Style.StyleConsts;
 using Label = UnityEngine.UIElements.Label;
 

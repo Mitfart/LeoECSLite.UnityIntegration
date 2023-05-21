@@ -1,7 +1,6 @@
 #if UNITY_EDITOR
 using System;
-using Git.Extensions;
-using Git.Extensions.Ecs;
+using Extensions.Runtime.Ecs.World;
 using LeoECSLite.UnityIntegration.Name;
 using Leopotam.EcsLite;
 using UnityEngine;

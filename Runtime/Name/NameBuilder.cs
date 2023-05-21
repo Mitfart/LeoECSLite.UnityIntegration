@@ -1,7 +1,7 @@
 #if UNITY_EDITOR
 using System;
 using System.Text;
-using Git.Extensions;
+using Extensions.Runtime.Type;
 
 namespace LeoECSLite.UnityIntegration.Name {
   public sealed class NameBuilder {

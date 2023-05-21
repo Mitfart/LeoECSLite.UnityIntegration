@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Git.Extensions;
+using Extensions.Runtime.String;
 using Leopotam.EcsLite;
 
 namespace LeoECSLite.UnityIntegration {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using UnityEditor;
 
-namespace LeoECSLite.UnityIntegration.Attributes {
+namespace LeoECSLite.UnityIntegration.PackedEntity {
   public static class ComponentsWithPackedEntities {
     private static readonly HashSet<Type> _Components = new();
 

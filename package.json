@@ -1,7 +1,7 @@
 {
   "name": "com.mitfart.leoecslite.unity-integration",
   "author": "Mitfart",
-  "displayName": "LeoECS Lite Debug",
+  "displayName": "LeoECS Lite Unity Integration",
   "description": "Integration of LeoECS-Lite into the Unity Editor, provides monitoring of the world",
   "unity": "2021.3",
   "version": "2023.5.22",
