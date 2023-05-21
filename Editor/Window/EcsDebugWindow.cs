@@ -39,7 +39,7 @@ namespace LeoECSLite.UnityIntegration.Editor.Window {
 
 
 
-    [MenuItem("LeoECS Lite/Debug Window NEW")]
+    [MenuItem("LeoECS Lite/Debug Window")]
     public static void OpenEcsDebugWindow()
       => GetWindow<EcsDebugWindow>(nameof(EcsDebugWindow))
        .Show();
