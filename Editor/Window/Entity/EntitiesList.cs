@@ -1,23 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using LeoECSLite.UnityIntegration.Editor.Extensions;
+using Git.Extensions.Ecs;
+using Git.Extensions.Editor;
 using LeoECSLite.UnityIntegration.Editor.Utils;
-using LeoECSLite.UnityIntegration.Extensions;
 using UnityEngine.UIElements;
 
 namespace LeoECSLite.UnityIntegration.Editor.Window.Entity {
   public sealed class EntitiesList : VisualElement {
     public const string MAIN_CL          = "entities-list";
     public const string MAIN_CONTENT_CL  = "entities-list__content";
-    public const string LIST_SELECTED_CL = "unity-collection-view__item--selected";
 
     private readonly HashSet<int>  _allEntities;
     private readonly List<int>     _entities;
     private readonly Filter.Filter _filter;
 
     private readonly ObjectPool<VisualElement> _viewsPool;
-    // private bool _selectedEntityDead;
 
     private EcsWorldDebugSystem _debugSystem;
 
@@ -129,7 +127,7 @@ namespace LeoECSLite.UnityIntegration.Editor.Window.Entity {
 
 
 
-    private VisualElement MakeEntity() => _viewsPool.Get();
+    private VisualElement MakeEntity() => _viewsPool.Take();
 
     private void BindEntity(VisualElement element, int i) {
       var listEntity = (ListEntity) element;

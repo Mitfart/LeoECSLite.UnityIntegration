@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using LeoECSLite.UnityIntegration.Editor.Extensions;
+using Git.Extensions.Editor;
 using LeoECSLite.UnityIntegration.Editor.Search;
 using LeoECSLite.UnityIntegration.Editor.Window.Style;
 using UnityEngine;

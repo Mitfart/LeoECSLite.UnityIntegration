@@ -1,95 +1,95 @@
 ﻿#if UNITY_EDITOR
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using LeoECSLite.UnityIntegration.Editor.Component;
-using LeoECSLite.UnityIntegration.Extensions;
 using LeoECSLite.UnityIntegration.Name;
 using Leopotam.EcsLite;
 using UnityEngine;
 
-namespace LeoECSLite.UnityIntegration.Entity {
+namespace LeoECSLite.UnityIntegration.View {
   public sealed class EntityView : MonoBehaviour {
-    [SerializeField] private List<ComponentView>             components       = new(16);
-    private                  Dictionary<Type, ComponentView> _componentsViews = new(16);
+    public bool            isDirty;
+    public int             componentsCount;
+    public ComponentView[] components = Array.Empty<ComponentView>();
 
-    public EcsWorld World   { get; private set; }
-    public int      Entity  { get; private set; }
-    public bool     IdDirty { get; private set; }
-    public bool     IsAlive { get; private set; }
+    private NameBuilder _nameBuilder;
+    public  Type[]      ComponentsTypes = Array.Empty<Type>();
+
+    public EcsWorld World      { get; private set; }
+    public int      Entity     { get; private set; }
+    public bool     IsAlive    { get; private set; }
+    public string   BakedIndex { get; private set; }
+
+    private bool BakeComponents => _nameBuilder.Settings.BakeComponents;
 
 
 
-    public EntityView Construct(EcsWorld world, int entity) {
-      World  = world;
-      Entity = entity;
+    public EntityView Construct(EcsWorld world, int entity, NameBuilder nameBuilder) {
+      World        = world;
+      Entity       = entity;
+      _nameBuilder = nameBuilder;
+
+      BakedIndex = _nameBuilder.StartName().AddEntityIndex(Entity).End();
       return this;
     }
 
-
-
-    public void Refresh(NameSettings nameSettings, NameBuilder nameBuilder) {
-      if (!IsAlive || !IdDirty)
+    public void Refresh() {
+      if (!IsAlive)
         return;
 
-      RefreshComponents();
-      RefreshName(nameSettings, nameBuilder);
+      RefreshData();
 
-      IdDirty = false;
+      if (!EnoughViews())
+        ResizeForNewViews();
+
+      RefreshViews();
+      RefreshName();
+
+      isDirty = false;
     }
 
 
-
     public void Activate()   => gameObject.SetActive(IsAlive = true);
-    public void MarkDirty()  => IdDirty = true;
+    public void MarkDirty()  => isDirty = true;
     public void Deactivate() => gameObject.SetActive(IsAlive = false);
 
 
 
-    private void RefreshComponents() {
-      Type[] components      = StaticCache.Types;
-      int    componentsCount = World.GetComponentTypes(Entity, ref components);
-
-      SetComponentsLength(componentsCount);
-
-      for (var i = 0; i < componentsCount; i++)
-        SetComponent(at: i, to: components[i]);
+    private void RefreshData() {
+      componentsCount = World.GetComponentTypes(Entity, ref ComponentsTypes);
     }
 
-    private void RefreshName(NameSettings nameSettings, NameBuilder nameBuilder) {
-      nameBuilder
+    private void RefreshViews() {
+      for (var i = 0; i < componentsCount; i++) {
+        GetView(i)
+         .Init(ComponentsTypes[i])
+         .Refresh();
+      }
+    }
+
+    private void RefreshName() {
+      if (!BakeComponents)
+        return;
+
+      _nameBuilder
        .StartName()
-       .AddEntityIndex(Entity);
+       .Append(BakedIndex)
+       .StartDescription();
 
-      if (nameSettings.BakeComponents)
-        BakeComponents(nameBuilder);
+      foreach (ComponentView component in components) {
+        if (component == null)
+          break;
 
-      name = nameBuilder.End();
+        _nameBuilder.BakeComponent(component.ComponentType);
+      }
+
+      name = _nameBuilder.End();
     }
 
 
 
-    private void BakeComponents(NameBuilder nameBuilder) {
-      nameBuilder.StartDescription();
+    private ComponentView GetView(int i) => components[i] ??= new ComponentView(this);
 
-      foreach (ComponentView componentView in components)
-        nameBuilder.BakeComponent(componentView.ComponentType);
-    }
-
-
-
-    private void SetComponent(int at, Type to) => components[at] = GetView(to);
-
-    private void SetComponentsLength(int count) => components.RemoveRange(count, components.Count - count - 1);
-
-
-
-    private ComponentView GetView(Type component) {
-      if (_componentsViews.TryGetValue(component, out ComponentView compView))
-        return compView;
-
-      return _componentsViews[component] = new ComponentView(component, Entity, World);
-    }
+    private void ResizeForNewViews() => Array.Resize(ref components, componentsCount);
+    private bool EnoughViews()       => componentsCount <= components.Length;
   }
 }
 #endif

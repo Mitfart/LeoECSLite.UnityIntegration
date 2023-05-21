@@ -15,7 +15,7 @@ namespace LeoECSLite.UnityIntegration.Editor.Utils {
 
 
 
-    public T Get()
+    public T Take()
       => _objects.TryTake(out T item)
         ? item
         : _objectGenerator();

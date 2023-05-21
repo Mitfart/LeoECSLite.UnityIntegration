@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
-using UnityEditor.Experimental.GraphView;
+using Git.Extensions.Ecs;
+using Git.Extensions.Editor;
 using Leopotam.EcsLite;
-using LeoECSLite.UnityIntegration.Extensions;
-using LeoECSLite.UnityIntegration.Editor.Extensions;
+using UnityEditor.Experimental.GraphView;
+using UnityEngine;
 
 namespace LeoECSLite.UnityIntegration.Editor.Search {
   public class ComponentsSearchWindow : ScriptableObject, ISearchWindowProvider {
@@ -14,9 +14,9 @@ namespace LeoECSLite.UnityIntegration.Editor.Search {
     private static ComponentsSearchWindow _Window;
 
     private int                   _entity;
-    private EcsWorld              _world;
     private ComponentsSearchScope _searchScope;
     private Func<Type, bool>      _select;
+    private EcsWorld              _world;
 
 
 
@@ -42,7 +42,7 @@ namespace LeoECSLite.UnityIntegration.Editor.Search {
 
 
     private void Init(EcsWorld world, Func<Type, bool> select) {
-      Init(world, entity: -1, select);
+      Init(world, -1, select);
       _searchScope = ComponentsSearchScope.World;
     }
 

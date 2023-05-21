@@ -1,5 +1,5 @@
 ﻿using System;
-using LeoECSLite.UnityIntegration.Editor.Extensions;
+using Git.Extensions.Editor;
 using UnityEngine.UIElements;
 
 namespace LeoECSLite.UnityIntegration.Editor.Window.Filter {

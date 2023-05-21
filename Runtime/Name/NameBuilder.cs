@@ -1,7 +1,7 @@
 #if UNITY_EDITOR
 using System;
 using System.Text;
-using LeoECSLite.UnityIntegration.Extensions;
+using Git.Extensions;
 
 namespace LeoECSLite.UnityIntegration.Name {
   public sealed class NameBuilder {
@@ -9,13 +9,14 @@ namespace LeoECSLite.UnityIntegration.Name {
     private const string START_DESCRIPTION    = " | ";
 
     private readonly StringBuilder _builder;
-    private readonly NameSettings  _settings;
+
+    public NameSettings Settings { get; }
 
 
 
     public NameBuilder(NameSettings settings) {
-      _settings = settings;
-      _builder  = new StringBuilder();
+      Settings = settings;
+      _builder = new StringBuilder();
     }
 
 
@@ -24,9 +25,14 @@ namespace LeoECSLite.UnityIntegration.Name {
       _builder.Clear();
       return this;
     }
-    
+
     public NameBuilder AddEntityIndex(int e) {
-      _builder.Append(e.ToString(_settings.Format));
+      _builder.Append(e.ToString(Settings.Format));
+      return this;
+    }
+
+    public NameBuilder Append(string str) {
+      _builder.Append(str);
       return this;
     }
 

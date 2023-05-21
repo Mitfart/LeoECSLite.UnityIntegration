@@ -1,34 +1,36 @@
 #if UNITY_EDITOR
 using System;
-using LeoECSLite.UnityIntegration.Extensions;
+using Git.Extensions;
+using Git.Extensions.Ecs;
 using LeoECSLite.UnityIntegration.Name;
+using LeoECSLite.UnityIntegration.View;
 using Leopotam.EcsLite;
 
 namespace LeoECSLite.UnityIntegration {
   public sealed class EcsWorldDebugSystem : IEcsPreInitSystem, IEcsRunSystem, IEcsWorldEventListener {
-    public string   DebugName { get; }
-    public string   WorldName { get; }
-    public EcsWorld World     { get; private set; }
-
-    public EcsWorldView View { get; }
+    public string       DebugName    { get; }
+    public string       WorldName    { get; }
+    public EcsWorld     World        { get; private set; }
+    public WorldView    View         { get; private set; }
+    public NameSettings NameSettings { get; }
 
     public int WorldSize { get; private set; }
 
 
 
     public EcsWorldDebugSystem(string worldName = null, NameSettings nameSettings = null) {
-      WorldName = worldName;
-      DebugName = worldName.ToWorldDebugName();
-
-      View = new EcsWorldView(this, nameSettings);
+      WorldName    = worldName;
+      DebugName    = worldName.ToWorldDebugName();
+      NameSettings = nameSettings;
     }
 
     public void PreInit(IEcsSystems systems) {
       InitWorld(systems);
 
-      WorldSize = World.GetEntitiesCount();
-
+      View      = new WorldView(this, NameSettings);
+      WorldSize = World.GetWorldSize();
       World.AddEventListener(this);
+
       ActiveDebugSystems.Register(this);
 
       InitEntities();
