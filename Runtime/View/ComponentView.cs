@@ -33,8 +33,8 @@ namespace LeoECSLite.UnityIntegration.View {
     }
 
 
-    public void Refresh()  => component = Pool.GetRaw(Entity);
-    public void SetValue() => Pool.SetRaw(Entity, component);
+    public void Refresh()              => component = Pool.GetRaw(Entity);
+    public void SetValue()             => Pool.SetRaw(Entity, component);
     public void SetValue(object value) => Pool.SetRaw(Entity, component = value);
   }
 }

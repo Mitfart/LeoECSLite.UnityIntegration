@@ -8,8 +8,8 @@ using UnityEngine.UIElements;
 
 namespace LeoECSLite.UnityIntegration.Editor.Window.Entity {
   public sealed class EntitiesList : VisualElement {
-    public const string MAIN_CL          = "entities-list";
-    public const string MAIN_CONTENT_CL  = "entities-list__content";
+    public const string MAIN_CL         = "entities-list";
+    public const string MAIN_CONTENT_CL = "entities-list__content";
 
     private readonly HashSet<int>  _allEntities;
     private readonly List<int>     _entities;

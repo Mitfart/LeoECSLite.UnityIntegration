@@ -22,19 +22,19 @@ namespace LeoECSLite.UnityIntegration.Editor {
     private const string COMPONENTS_FIELD       = nameof(EntityView.components);
     private const string COMPONENTS_COUNT_FIELD = nameof(EntityView.componentsCount);
 
-    private const string ADD_BTN_TEXT  = "Add";
-    private const string DEL_BTN_TEXT  = "Del";
-    private const string KILL_BTN_TEXT = "Kill";
-
-    private VisualElement _root;
-    private VisualElement _header;
-    private Label         _title;
-    private Button        _addBtn;
-    private Button        _delBtn;
-    private Button        _killBtn;
-    private VisualElement _componentsContainer;
+    private const string        ADD_BTN_TEXT  = "Add";
+    private const string        DEL_BTN_TEXT  = "Del";
+    private const string        KILL_BTN_TEXT = "Kill";
+    private       Button        _addBtn;
+    private       VisualElement _componentsContainer;
 
     private PropertyField[] _componentsDrawers = Array.Empty<PropertyField>();
+    private Button          _delBtn;
+    private VisualElement   _header;
+    private Button          _killBtn;
+
+    private VisualElement _root;
+    private Label         _title;
 
     private EntityView Target          => (EntityView) target;
     private EcsWorld   World           => Target.World;
@@ -79,7 +79,7 @@ namespace LeoECSLite.UnityIntegration.Editor {
       _root
        .style
        .marginLeft = -REM;
-      
+
       _header
        .style
        .Margin(0, REM_025)

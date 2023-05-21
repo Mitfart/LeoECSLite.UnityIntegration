@@ -1,9 +1,9 @@
 ﻿using System;
 using Git.Extensions.Editor.Style.Flex;
-using Leopotam.EcsLite;
-using UnityEngine.UIElements;
 using LeoECSLite.UnityIntegration.View;
+using Leopotam.EcsLite;
 using UnityEditor.UIElements;
+using UnityEngine.UIElements;
 
 namespace LeoECSLite.UnityIntegration.Editor {
   public class EntityField : VisualElement {

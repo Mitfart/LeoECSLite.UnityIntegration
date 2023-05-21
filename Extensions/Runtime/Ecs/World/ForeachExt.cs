@@ -27,7 +27,7 @@ namespace Extensions.Runtime.Ecs.World {
       Action<System.Type> action
     ) {
       System.Type[] types = StaticCache.Types;
-      int    count = world.GetComponentTypes(entity, ref types);
+      int           count = world.GetComponentTypes(entity, ref types);
 
       for (var i = 0; i < count; i++)
         action.Invoke(types[i]);

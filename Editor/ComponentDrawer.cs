@@ -1,37 +1,35 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using LeoECSLite.UnityIntegration.View;
-using Leopotam.EcsLite;
-using Unity.VisualScripting;
-using UnityEditor;
-using UnityEngine;
-using UnityEngine.UIElements;
 using Git.Extensions.Editor;
 using Git.Extensions.Editor.Style.Border;
 using Git.Extensions.Editor.Style.Spacing;
 using Git.Extensions.Editor.Style.Text;
 using LeoECSLite.UnityIntegration.Editor.Extensions;
 using LeoECSLite.UnityIntegration.PackedEntity;
+using LeoECSLite.UnityIntegration.View;
+using Leopotam.EcsLite;
+using Unity.VisualScripting;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.UIElements;
 using static Git.Extensions.Editor.Style.StyleConsts;
-using Label = UnityEngine.UIElements.Label;
 
 namespace LeoECSLite.UnityIntegration.Editor {
   [CustomPropertyDrawer(typeof(ComponentView), true)]
   public class ComponentDrawer : PropertyDrawer {
-    private const string COMPONENT_NAME_FIELD = nameof(ComponentView.componentName);
-    private const string COMPONENT_FIELD      = nameof(ComponentView.component);
-
-    private Box           _root;
-    private VisualElement _header;
-    private Label         _label;
-    private VisualElement _main;
-    private VisualElement _fields;
+    private const string        COMPONENT_NAME_FIELD = nameof(ComponentView.componentName);
+    private const string        COMPONENT_FIELD      = nameof(ComponentView.component);
+    private       VisualElement _fields;
+    private       VisualElement _header;
+    private       Label         _label;
+    private       VisualElement _main;
 
     private SerializedProperty _property;
-    private ComponentView      _target;
+
+    private Box           _root;
+    private ComponentView _target;
 
     private object Component     => _target.component;
     private Type   ComponentType => _target.ComponentType;
@@ -95,16 +93,29 @@ namespace LeoECSLite.UnityIntegration.Editor {
 
         switch (fieldValue) {
           case EcsPackedEntity packed:
-            _main.Add(new EntityField(packed, _target.World, view => {
-              field.SetValueOptimized(Component, view.PackedEntity());
-              _target.SetValue(Component);
-            }, title));
+            _main.Add(
+              new EntityField(
+                packed,
+                _target.World,
+                view => {
+                  field.SetValueOptimized(Component, view.PackedEntity());
+                  _target.SetValue(Component);
+                },
+                title
+              )
+            );
             break;
           case EcsPackedEntityWithWorld packedWithWorld:
-            _main.Add(new EntityField(packedWithWorld, view => {
-              field.SetValueOptimized(Component, view.PackedEntityWithWorld());
-              _target.SetValue(Component);
-            }, title));
+            _main.Add(
+              new EntityField(
+                packedWithWorld,
+                view => {
+                  field.SetValueOptimized(Component, view.PackedEntityWithWorld());
+                  _target.SetValue(Component);
+                },
+                title
+              )
+            );
             break;
           case IList collection:
             var entitiesContainer = new Foldout { text = title };
