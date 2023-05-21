@@ -1,6 +1,6 @@
 ﻿using Leopotam.EcsLite;
 
-namespace LeoECSLite.UnityIntegration.Editor.Window.World {
+namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Window.World {
   public class WorldTabData {
     private const string DEFAULT_WORLD_NAME = "Default";
 

@@ -1,4 +1,4 @@
-﻿namespace LeoECSLite.UnityIntegration.Editor.Search {
+﻿namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Search {
   public enum ComponentsSearchScope {
     Unset  = 0,
     World  = 1,

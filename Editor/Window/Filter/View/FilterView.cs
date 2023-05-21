@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using Git.Extensions.Editor;
-using LeoECSLite.UnityIntegration.Editor.Search;
-using LeoECSLite.UnityIntegration.Editor.Window.Style;
+using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions.UIElement;
+using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Search;
+using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Style;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace LeoECSLite.UnityIntegration.Editor.Window.Filter {
+namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Filter.View {
   public class FilterView : VisualElement {
     public const string FILTER_CL              = "filter";
     public const string FILTER_BTN_CL          = "filter__btn";

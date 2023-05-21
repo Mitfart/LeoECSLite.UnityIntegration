@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Extensions.Runtime.Ecs.World;
-using Git.Extensions.Editor;
-using LeoECSLite.UnityIntegration.Editor.Utils;
+using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions.UIElement;
+using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Utils;
+using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Runtime;
+using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Runtime.Extensions.Ecs.World;
 using UnityEngine.UIElements;
 
-namespace LeoECSLite.UnityIntegration.Editor.Window.Entity {
+namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Entity {
   public sealed class EntitiesList : VisualElement {
     public const string MAIN_CL         = "entities-list";
     public const string MAIN_CONTENT_CL = "entities-list__content";

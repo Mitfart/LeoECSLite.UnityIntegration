@@ -1,12 +1,12 @@
 #if UNITY_EDITOR
 using System;
-using Extensions.Runtime.Ecs.World;
-using LeoECSLite.UnityIntegration.Name;
 using Leopotam.EcsLite;
+using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Runtime.Extensions.Ecs.World;
+using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Runtime.Name;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace LeoECSLite.UnityIntegration.View {
+namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Runtime.View {
   public sealed class WorldView {
     private const string ENTITIES_ROOT_NAME = "Entities";
 

@@ -1,7 +1,7 @@
-﻿using Git.Extensions.Editor;
+﻿using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions.UIElement;
 using UnityEngine.UIElements;
 
-namespace LeoECSLite.UnityIntegration.Editor.Window.Layout {
+namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Layout {
   public sealed class HorizontalTwoPanelLayout : TwoPaneSplitView {
     public VisualElement Left  { get; private set; }
     public VisualElement Right { get; private set; }

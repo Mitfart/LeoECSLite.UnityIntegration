@@ -1,9 +1,10 @@
 ﻿using System;
-using LeoECSLite.UnityIntegration.Editor.Window.World;
 using Leopotam.EcsLite;
+using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Window.World;
+using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Runtime;
 using UnityEditor;
 
-namespace LeoECSLite.UnityIntegration.Editor.Window {
+namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Window {
   public abstract class BaseEcsDebugWindow : EditorWindow, IEcsWorldEventListener {
     public EcsWorldDebugSystem ActiveDebugSystem { get; private set; }
 

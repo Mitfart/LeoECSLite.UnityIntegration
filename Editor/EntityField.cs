@@ -1,11 +1,12 @@
 ﻿using System;
-using Git.Extensions.Editor.Style.Flex;
-using LeoECSLite.UnityIntegration.View;
 using Leopotam.EcsLite;
+using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions.Style.Flex;
+using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Runtime;
+using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Runtime.View;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
 
-namespace LeoECSLite.UnityIntegration.Editor {
+namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor {
   public class EntityField : VisualElement {
     private readonly Action<EntityView> _onSet;
 

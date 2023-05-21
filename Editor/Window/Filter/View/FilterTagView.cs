@@ -1,8 +1,8 @@
 ﻿using System;
-using Git.Extensions.Editor;
+using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions.UIElement;
 using UnityEngine.UIElements;
 
-namespace LeoECSLite.UnityIntegration.Editor.Window.Filter {
+namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Filter.View {
   public class FilterTagView : Button {
     private const string TAG_CL           = "tag";
     private const string TAG_LABEL_CL     = "tag__label";

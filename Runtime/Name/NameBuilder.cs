@@ -1,9 +1,9 @@
 #if UNITY_EDITOR
 using System;
 using System.Text;
-using Extensions.Runtime.Type;
+using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Runtime.Extensions.Type;
 
-namespace LeoECSLite.UnityIntegration.Name {
+namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Runtime.Name {
   public sealed class NameBuilder {
     private const string COMPONENTS_SEPARATOR = ", ";
     private const string START_DESCRIPTION    = " | ";

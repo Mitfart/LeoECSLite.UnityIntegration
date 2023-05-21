@@ -1,7 +1,8 @@
-﻿using Git.Extensions.Editor;
+﻿using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions.UIElement;
+using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Runtime;
 using UnityEngine.UIElements;
 
-namespace LeoECSLite.UnityIntegration.Editor.Window.Entity {
+namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Entity {
   public sealed class ListEntity : VisualElement {
     private const string MAIN_CL            = "entity_row";
     public const  string MAIN_LABEL_CL      = "entity__label";

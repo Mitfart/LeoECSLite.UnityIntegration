@@ -2,21 +2,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-using Git.Extensions.Editor;
-using Git.Extensions.Editor.Style.Border;
-using Git.Extensions.Editor.Style.Spacing;
-using Git.Extensions.Editor.Style.Text;
-using LeoECSLite.UnityIntegration.Editor.Extensions;
-using LeoECSLite.UnityIntegration.PackedEntity;
-using LeoECSLite.UnityIntegration.View;
 using Leopotam.EcsLite;
+using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions;
+using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions.Style.Border;
+using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions.Style.Spacing;
+using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions.Style.Text;
+using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions.UIElement;
+using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Runtime.PackedEntity;
+using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Runtime.View;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
-using static Git.Extensions.Editor.Style.StyleConsts;
+using static Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions.Style.StyleConsts;
 
-namespace LeoECSLite.UnityIntegration.Editor {
+namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor {
   [CustomPropertyDrawer(typeof(ComponentView), true)]
   public class ComponentDrawer : PropertyDrawer {
     private const string        COMPONENT_NAME_FIELD = nameof(ComponentView.componentName);

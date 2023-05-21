@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor.UIElements;
 
-namespace LeoECSLite.UnityIntegration.Editor.Window.Layout {
+namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Layout {
   public class TabsMenu<TData> : Toolbar where TData : class {
     private const string MAIN_CL = "tabs";
 

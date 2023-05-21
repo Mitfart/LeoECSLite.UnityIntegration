@@ -1,12 +1,12 @@
 #if UNITY_EDITOR
 using System;
-using Extensions.Runtime.Ecs.World;
-using Extensions.Runtime.String;
-using LeoECSLite.UnityIntegration.Name;
-using LeoECSLite.UnityIntegration.View;
 using Leopotam.EcsLite;
+using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Runtime.Extensions.Ecs.World;
+using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Runtime.Extensions.String;
+using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Runtime.Name;
+using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Runtime.View;
 
-namespace LeoECSLite.UnityIntegration {
+namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Runtime {
   public sealed class EcsWorldDebugSystem : IEcsPreInitSystem, IEcsRunSystem, IEcsWorldEventListener {
     public string       DebugName    { get; }
     public string       WorldName    { get; }

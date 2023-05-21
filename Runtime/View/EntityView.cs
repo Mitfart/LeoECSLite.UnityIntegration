@@ -1,10 +1,10 @@
 ﻿#if UNITY_EDITOR
 using System;
-using LeoECSLite.UnityIntegration.Name;
 using Leopotam.EcsLite;
+using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Runtime.Name;
 using UnityEngine;
 
-namespace LeoECSLite.UnityIntegration.View {
+namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Runtime.View {
   public sealed class EntityView : MonoBehaviour {
     public int             componentsCount;
     public ComponentView[] components = Array.Empty<ComponentView>();

@@ -1,5 +1,5 @@
 #if UNITY_EDITOR
-namespace LeoECSLite.UnityIntegration.Name {
+namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Runtime.Name {
   public class NameSettings {
     public bool   BakeComponents { get; }
     public string Format         { get; }

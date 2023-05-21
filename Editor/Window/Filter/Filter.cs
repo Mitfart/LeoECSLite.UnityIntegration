@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Runtime;
 using UnityEngine;
 
-namespace LeoECSLite.UnityIntegration.Editor.Window.Filter {
+namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Filter {
   public class Filter {
     public EcsWorldDebugSystem         DebugSystem { get; private set; }
     public Dictionary<Type, FilterTag> Tags        { get; }

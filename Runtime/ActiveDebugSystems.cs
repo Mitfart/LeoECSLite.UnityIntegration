@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using Extensions.Runtime.String;
 using Leopotam.EcsLite;
+using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Runtime.Extensions.String;
 
-namespace LeoECSLite.UnityIntegration {
+namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Runtime {
   public static class ActiveDebugSystems {
     private static readonly Dictionary<string, EcsWorldDebugSystem>   _SystemsByNames;
     private static readonly Dictionary<EcsWorld, EcsWorldDebugSystem> _SystemsByWorlds;
