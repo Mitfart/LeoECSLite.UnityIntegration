@@ -41,7 +41,7 @@ namespace LeoECSLite.UnityIntegration {
     public void Run(IEcsSystems systems) => View.Refresh();
 
     public void OnEntityCreated(int   e) => View.GetEntityView(e).Activate();
-    public void OnEntityChanged(int   e) => View.GetEntityView(e).MarkDirty();
+    public void OnEntityChanged(int   e) { }
     public void OnEntityDestroyed(int e) => View.GetEntityView(e).Deactivate();
 
     public void OnWorldResized(int newSize) => View.Resize(WorldSize = newSize);

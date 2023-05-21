@@ -6,7 +6,6 @@ using UnityEngine;
 
 namespace LeoECSLite.UnityIntegration.View {
   public sealed class EntityView : MonoBehaviour {
-    public bool            isDirty;
     public int             componentsCount;
     public ComponentView[] components = Array.Empty<ComponentView>();
 
@@ -42,13 +41,10 @@ namespace LeoECSLite.UnityIntegration.View {
 
       RefreshViews();
       RefreshName();
-
-      isDirty = false;
     }
 
 
     public void Activate()   => gameObject.SetActive(IsAlive = true);
-    public void MarkDirty()  => isDirty = true;
     public void Deactivate() => gameObject.SetActive(IsAlive = false);
 
 

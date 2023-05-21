@@ -1,5 +1,4 @@
 ﻿using System;
-using Git.Extensions.Ecs;
 using Git.Extensions.Editor.Style.Flex;
 using Leopotam.EcsLite;
 using UnityEngine.UIElements;
@@ -8,66 +7,93 @@ using UnityEditor.UIElements;
 
 namespace LeoECSLite.UnityIntegration.Editor {
   public class EntityField : VisualElement {
-    private const string UNAVAILABLE_ENTITY = "Unavailable entity";
-
-    public readonly Action<EntityView> OnSet;
+    private readonly Action<EntityView> _onSet;
 
 
 
-    public EntityField(EcsPackedEntityWithWorld packedEntity, Action<EntityView> onSet, string title = null) {
-      OnSet = onSet;
-      packedEntity.Unpack(out EcsWorld world, out int e);
-      DrawEditor(e, world, title);
-    }
-
-    public EntityField(EcsPackedEntity packedEntity, EcsWorld world, Action<EntityView> onSet, string title = null) {
-      OnSet = onSet;
-      packedEntity.Unpack(world, out int e);
-      DrawEditor(e, world, title);
-    }
-
-    public EntityField(int e, EcsWorld world, Action<EntityView> onSet, string title = null) {
-      OnSet = onSet;
-      DrawEditor(e, world, title);
-    }
-
-
-
-    private void DrawEditor(int e, EcsWorld world, string title) {
-      Add(
-        ActiveDebugSystems.TryGet(world, out EcsWorldDebugSystem system)
-          ? EntityViewField(e, world, title, system)
-          : new Label(UNAVAILABLE_ENTITY)
-      );
-
-      style.FlexRow();
-    }
-
-
-    private ObjectField EntityViewField(
-      int                 e,
-      EcsWorld            ecsWorld,
-      string              title,
-      EcsWorldDebugSystem system
+    public EntityField(
+      EcsPackedEntityWithWorld packedEntity,
+      Action<EntityView>       onSet,
+      string                   title = null
     ) {
+      _onSet = onSet;
+      style.FlexRow();
+
+      Add(
+        EntityViewField(
+          title,
+          AliveEntity(packedEntity, out int e, out EcsWorldDebugSystem system)
+            ? system.View.GetEntityView(e)
+            : null
+        )
+      );
+    }
+
+    public EntityField(
+      EcsPackedEntity    packedEntity,
+      EcsWorld           world,
+      Action<EntityView> onSet,
+      string             title = null
+    ) {
+      _onSet = onSet;
+      style.FlexRow();
+
+      Add(
+        EntityViewField(
+          title,
+          AliveEntity(packedEntity, world, out int e, out EcsWorldDebugSystem system)
+            ? system.View.GetEntityView(e)
+            : null
+        )
+      );
+    }
+
+
+
+    private ObjectField EntityViewField(string title, EntityView entityView) {
       var field = new ObjectField(title) {
         objectType = typeof(EntityView), //
-        value      = EntityView(e, ecsWorld, system),
-        style      = { flexShrink = 1 }
+        value      = entityView,
+        style      = { flexShrink = 1, flexGrow = 1 }
       };
-
-      field.RegisterValueChangedCallback(changeEvt => {
-        if (changeEvt.newValue is EntityView entityView)
-          OnSet?.Invoke(entityView);
-      });
+      RegisterSetCallback(field);
       return field;
     }
 
+    private void RegisterSetCallback(ObjectField field) {
+      field.RegisterValueChangedCallback(
+        change => {
+          if (change.newValue is EntityView entityView)
+            _onSet?.Invoke(entityView);
+        }
+      );
+    }
 
-    private static EntityView EntityView(int e, EcsWorld world, EcsWorldDebugSystem system) {
-      return world.IsEntityAlive(e)
-        ? system.View.GetEntityView(e)
-        : null;
+
+
+    private static bool AliveEntity(
+      EcsPackedEntityWithWorld packedEntity,
+      out int                  e,
+      out EcsWorldDebugSystem  system
+    ) {
+      e      = -1;
+      system = null;
+      return !packedEntity.EqualsTo(default)
+          && packedEntity.Unpack(out EcsWorld world, out e)
+          && ActiveDebugSystems.TryGet(world, out system);
+    }
+
+    private static bool AliveEntity(
+      EcsPackedEntity         packedEntity,
+      EcsWorld                world,
+      out int                 e,
+      out EcsWorldDebugSystem system
+    ) {
+      e      = -1;
+      system = null;
+      return !packedEntity.EqualsTo(default)
+          && packedEntity.Unpack(world, out e)
+          && ActiveDebugSystems.TryGet(world, out system);
     }
   }
 }

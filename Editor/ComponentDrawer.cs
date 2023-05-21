@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using LeoECSLite.UnityIntegration.Attributes;
 using LeoECSLite.UnityIntegration.View;
@@ -91,52 +93,60 @@ namespace LeoECSLite.UnityIntegration.Editor {
         string title      = field.HumanName();
         object fieldValue = field.GetValueOptimized(Component);
 
-        _main.Add(
-          fieldValue is IEnumerable entities
-            ? PackedEntitiesArrayView(entities, field, title)
-            : PackedEntityView(entity: fieldValue, field, title)
-        );
+        switch (fieldValue) {
+          case EcsPackedEntity packed:
+            _main.Add(new EntityField(packed, _target.World, view => {
+              field.SetValueOptimized(Component, view.PackedEntity());
+              _target.SetValue(Component);
+            }, title));
+            break;
+          case EcsPackedEntityWithWorld packedWithWorld:
+            _main.Add(new EntityField(packedWithWorld, view => {
+              field.SetValueOptimized(Component, view.PackedEntityWithWorld());
+              _target.SetValue(Component);
+            }, title));
+            break;
+          case IList collection:
+            var entitiesContainer = new Foldout { text = title };
+
+            switch (collection) {
+              case IList<EcsPackedEntity> packedEntities:
+                for (var i = 0; i < packedEntities.Count; i++) {
+                  IList<EcsPackedEntity> entities = packedEntities;
+                  int                    index    = i;
+
+                  entitiesContainer.Add(
+                    new EntityField(
+                      packedEntities[i],
+                      _target.World,
+                      view => entities[index] = view.PackedEntity(),
+                      title
+                    )
+                  );
+                }
+
+                break;
+              case IList<EcsPackedEntityWithWorld> packedWithWorldEntities:
+                for (var i = 0; i < packedWithWorldEntities.Count; i++) {
+                  IList<EcsPackedEntityWithWorld> entities = packedWithWorldEntities;
+                  int                             index    = i;
+
+                  entitiesContainer.Add(
+                    new EntityField(
+                      packedWithWorldEntities[i],
+                      view => entities[index] = view.PackedEntityWithWorld(),
+                      title
+                    )
+                  );
+                }
+
+                break;
+            }
+
+            _main.Add(entitiesContainer);
+            break;
+        }
       }
-    }
-
-    private VisualElement PackedEntitiesArrayView(IEnumerable entities, FieldInfo field, string title) {
-      return new Foldout { text = title }
-       .AddAllOf(
-          entities,
-          entity => PackedEntityView(entity, field)
-        );
-    }
-
-    private EntityField PackedEntityView(object entity, FieldInfo field, string title = null) {
-      return entity switch {
-        int raw => new EntityField(
-          raw,
-          _target.World,
-          newView => field.SetValueOptimized(Component, newView.Entity),
-          title
-        ),
-        EcsPackedEntity packed => new EntityField(
-          packed,
-          _target.World,
-          newView => {
-            int             e;
-            EcsPackedEntity pev;
-            
-            pev = (EcsPackedEntity) field.GetValueOptimized(Component);
-            Debug.Log(!pev.EqualsTo(default) ? pev.Unpack(_target.World, out e) ? e : "DEAD" : "ERROR");
-            field.SetValueOptimized(Component, newView.GetPackedEntity());
-            pev = (EcsPackedEntity) field.GetValueOptimized(Component);
-            Debug.Log(!pev.EqualsTo(default) ? pev.Unpack(_target.World, out e) ? e : "DEAD" : "ERROR");
-          },
-          title
-        ),
-        EcsPackedEntityWithWorld packedWithWorld => new EntityField(
-          packedWithWorld,
-          newView => field.SetValueOptimized(Component, newView.GetPackedEntityWithWorld()),
-          title
-        ),
-        _ => null
-      };
     }
 
 

@@ -29,9 +29,8 @@ namespace LeoECSLite.UnityIntegration {
 
 
 
-    public static bool TryGet(string worldName, out EcsWorldDebugSystem system) => _SystemsByNames.TryGetValue(worldName.ToWorldDebugName(), out system);
-
-    public static bool TryGet(EcsWorld world, out EcsWorldDebugSystem system) => _SystemsByWorlds.TryGetValue(world, out system);
+    public static bool TryGet(string   worldName, out EcsWorldDebugSystem system) => _SystemsByNames.TryGetValue(worldName.ToWorldDebugName(), out system);
+    public static bool TryGet(EcsWorld world,     out EcsWorldDebugSystem system) => _SystemsByWorlds.TryGetValue(world, out system);
 
 
 
