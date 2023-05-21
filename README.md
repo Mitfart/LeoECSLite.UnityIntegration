@@ -163,11 +163,23 @@ public struct Comp {
 
 # Вопросы-ответы
 
+### При переименовании / изменении неймспейса типа, компонент "ломается"
+**Решение:** Добавьте аттрибут [MovedFrom](https://github.com/Unity-Technologies/UnityCsReference/blob/master/Runtime/Export/Scripting/APIUpdating/UpdatedFromAttribute.cs)
+```cs
+[MovedFrom(
+   autoUpdateAPI: false, 
+   sourceNamespace: "OldNamespace", // null, if you don't change it
+   sourceAssembly: "OldAssembly",   // null, if you don't change it
+   sourceClassName: "OldName"       // null, if you don't change it
+)]
+public struct Comp { ... }
+```
+
 ### Я хочу создавать сущности в `IEcsPreInitSystem`, ноотладочные системы бросают исключения в этом случае. Как это исправить??
 
 **Причина** -`EcsWorldDebugSystem` тоже является `IEcsPreInitSystem` и происходит конфликт из-за порядка систем. \
-**Решение_1** - вместо `IEcsPreInitSystem` использовать `IEcsInitSystem` \
-**Решение_2** - все отладочные системы следует вынести в отдельный `IEcsSystems` и 
+**Решение 1** - вместо `IEcsPreInitSystem` использовать `IEcsInitSystem` \
+**Решение 2** - все отладочные системы следует вынести в отдельный `IEcsSystems` и 
 вызвать его инициализацию раньше основного кода:
 ```c#
 IEcsSystems _systems;
