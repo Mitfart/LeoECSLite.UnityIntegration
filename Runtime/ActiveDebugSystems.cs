@@ -18,8 +18,8 @@ namespace Mitfart.LeoECSLite.UnityIntegration {
 
 
     public static void Register(EcsWorldDebugSystem system) {
-      _SystemsByNames.Add(system.DebugName, system);
-      _SystemsByWorlds.Add(system.World, system);
+      _SystemsByNames[system.DebugName] = system;
+      _SystemsByWorlds[system.World]    = system;
     }
 
     public static void Unregister(EcsWorldDebugSystem system) {

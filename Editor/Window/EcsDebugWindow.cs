@@ -114,12 +114,21 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window {
     }
 
     protected override void ResetInspector() {
-      _entitiesList.Reset();
       ClearSelectedEntities();
+      ClearEntities();
+      ClearFilter();
+    }
 
-      _filter.Reset();
-      _filterView.Reset();
+    private void ClearFilter() {
+      _filter?.Reset();
+      _filterView?.Reset();
+    }
 
+    private void ClearEntities() {
+      if (_entitiesList == null)
+        return;
+
+      _entitiesList.Reset();
       _entitiesList.OnSelect   -= SelectEntity;
       _entitiesList.OnUnselect -= UnselectEntity;
     }
