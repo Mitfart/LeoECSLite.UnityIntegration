@@ -1,33 +1,49 @@
 ﻿using System.Collections.Generic;
 using UnityEditor;
+using UnityEngine;
 
 namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions {
   public static class GetChildrenExt {
     public static IList<SerializedProperty> GetChildren(this SerializedProperty property, int maxAmount = int.MaxValue) {
       var                properties = new List<SerializedProperty>();
       SerializedProperty prop       = property.Copy();
+      SerializedProperty nextProp   = Next(property);
 
-      if (!HasProperties())
+      if (!HasChildren())
         return properties;
 
       do
-        StoreProperty();
-      while (HasNextProperty());
+        StoreChild();
+      while (HasNextChild());
 
       return properties;
 
 
-      bool HasProperties() {
-        return prop.NextVisible(true);
-      }
-
-      void StoreProperty() {
+      void StoreChild() {
         properties.Add(prop.Copy());
       }
 
-      bool HasNextProperty() {
-        return prop.NextVisible(false) && properties.Count < maxAmount;
+      bool HasChildren() {
+        return prop.NextVisible(true)
+            && !EqualNextProperty();
       }
+
+
+      bool HasNextChild() {
+        return prop.NextVisible(false)
+            && !EqualNextProperty()
+            && properties.Count < maxAmount;
+      }
+
+      bool EqualNextProperty() {
+        return SerializedProperty.EqualContents(prop, nextProp);
+      }
+    }
+
+    private static SerializedProperty Next(SerializedProperty property) {
+      SerializedProperty nextProp = property.Copy();
+      nextProp.NextVisible(false);
+      return nextProp;
     }
   }
 }
