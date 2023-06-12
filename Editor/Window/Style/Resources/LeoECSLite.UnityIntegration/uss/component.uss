@@ -1,7 +1,6 @@
 ﻿.component {
 }
 
-
 .component_label {
     margin: var(--METRICS_0125);
     padding: var(--METRICS_0250) var(--METRICS_0500);

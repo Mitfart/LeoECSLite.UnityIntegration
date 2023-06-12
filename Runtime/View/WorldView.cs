@@ -1,22 +1,21 @@
 #if UNITY_EDITOR
 using System;
 using Leopotam.EcsLite;
-using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Runtime.Extensions.Ecs.World;
-using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Runtime.Name;
+using Mitfart.LeoECSLite.UnityIntegration.Extensions;
+using Mitfart.LeoECSLite.UnityIntegration.Name;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Runtime.View {
+namespace Mitfart.LeoECSLite.UnityIntegration.View {
   public sealed class WorldView {
     private const string ENTITIES_ROOT_NAME = "Entities";
 
     private readonly EcsWorldDebugSystem _debugSystem;
+    private readonly Transform           _root;
     private readonly Transform           _entitiesRoot;
+    private readonly NameBuilder         _nameBuilder;
 
-    private readonly NameBuilder _nameBuilder;
-
-    private readonly Transform    _root;
-    private          EntityView[] _entitiesViews;
+    private EntityView[] _entitiesViews;
 
     private EcsWorld World     => _debugSystem.World;
     private int      WorldSize => _debugSystem.WorldSize;
@@ -35,15 +34,13 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIn
       Object.DontDestroyOnLoad(_root);
     }
 
-    public void Destroy() {
-      Object.Destroy(_root.gameObject);
-    }
 
 
-
-    public void Refresh() => World.ForeachEntity(RefreshView);
-
+    public void Destroy()           => Object.Destroy(_root.gameObject);
+    public void Refresh()           => World.ForeachEntity(RefreshView);
     public void Resize(int newSize) => Array.Resize(ref _entitiesViews, newSize);
+
+
 
     public EntityView GetEntityView(int e) {
       if (EntityOutOfRange(e))

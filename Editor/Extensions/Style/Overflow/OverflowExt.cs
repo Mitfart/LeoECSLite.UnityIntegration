@@ -1,14 +1,14 @@
 ﻿using UnityEngine.UIElements;
 
-namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions.Style.Overflow {
+namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions.Style {
   public static class OverflowExt {
     public static IStyle OverflowHidden(this IStyle style) {
-      style.overflow = UnityEngine.UIElements.Overflow.Hidden;
+      style.overflow = Overflow.Hidden;
       return style;
     }
 
     public static IStyle OverflowVisible(this IStyle style) {
-      style.overflow = UnityEngine.UIElements.Overflow.Visible;
+      style.overflow = Overflow.Visible;
       return style;
     }
   }

@@ -2,7 +2,7 @@
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
-namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions.SearchWindow {
+namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions {
   public static class AddTitleExt {
     public static void AddTitle(
       this ICollection<SearchTreeEntry> items,

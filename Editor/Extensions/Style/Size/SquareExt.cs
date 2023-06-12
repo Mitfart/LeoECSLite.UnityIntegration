@@ -1,6 +1,6 @@
 ﻿using UnityEngine.UIElements;
 
-namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions.Style.Size {
+namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions.Style {
   public static class SquareExt {
     public static IStyle Square(
       this IStyle style,

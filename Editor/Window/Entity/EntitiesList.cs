@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions.UIElement;
-using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Utils;
-using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Runtime;
-using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Runtime.Extensions.Ecs.World;
+using Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions;
+using Mitfart.LeoECSLite.UnityIntegration.Editor.Utils;
+using Mitfart.LeoECSLite.UnityIntegration.Extensions;
 using UnityEngine.UIElements;
 
-namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Entity {
+namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Entity {
   public sealed class EntitiesList : VisualElement {
     public const string MAIN_CL         = "entities-list";
     public const string MAIN_CONTENT_CL = "entities-list__content";
@@ -24,8 +23,8 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIn
 
     private int _selectedEntity;
 
-    public Action<int> OnSelectEntity;
-    public Action<int> OnUnselectEntity;
+    public Action<int> OnSelect;
+    public Action<int> OnUnselect;
 
 
 
@@ -117,10 +116,10 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIn
 
 
       if (_selectedEntity != default)
-        OnUnselectEntity?.Invoke(_selectedEntity);
+        OnUnselect?.Invoke(_selectedEntity);
 
       if (curSelectedEntity != default)
-        OnSelectEntity?.Invoke(curSelectedEntity);
+        OnSelect?.Invoke(curSelectedEntity);
 
 
       _selectedEntity = curSelectedEntity;

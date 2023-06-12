@@ -1,34 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEditor;
 
-namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions.Property {
+namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions {
   public static class GetChildrenExt {
     public static IList<SerializedProperty> GetChildren(this SerializedProperty property, int maxAmount = int.MaxValue) {
-      SerializedProperty rootProperty = property.Copy();
-      SerializedProperty currentProp  = property.Copy();
+      var                properties = new List<SerializedProperty>();
+      SerializedProperty prop       = property.Copy();
 
-      if (!currentProp.NextVisible(true))
-        return Array.Empty<SerializedProperty>();
+      if (!HasProperties())
+        return properties;
 
-      var properties = new List<SerializedProperty>();
-
-      do {
-        currentProp = currentProp.Copy();
-
-        if (!currentProp.ChildOf(rootProperty))
-          break;
-
-        properties.Add(currentProp.Copy());
-      }
-      while (currentProp.NextVisible(false) && properties.Count < maxAmount);
+      do
+        StoreProperty();
+      while (HasNextProperty());
 
       return properties;
+
+
+      bool HasProperties() {
+        return prop.NextVisible(true);
+      }
+
+      void StoreProperty() {
+        properties.Add(prop.Copy());
+      }
+
+      bool HasNextProperty() {
+        return prop.NextVisible(false) && properties.Count < maxAmount;
+      }
     }
-
-
-
-    private static bool ChildOf(this SerializedProperty curProp, SerializedProperty rootProperty) 
-      => curProp.propertyPath.Contains(rootProperty.propertyPath);
   }
 }

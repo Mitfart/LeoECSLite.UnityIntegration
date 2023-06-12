@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Runtime;
 using UnityEngine;
 
-namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Filter {
+namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Filter {
   public class Filter {
     public EcsWorldDebugSystem         DebugSystem { get; private set; }
     public Dictionary<Type, FilterTag> Tags        { get; }
@@ -41,7 +40,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIn
 
     public bool AddTag(Type component) {
       if (Tags.TryGetValue(component, out FilterTag tag)) {
-        Debug.Log($"Tag of type: [ {component.Name} ] is already added with method: [ {tag.Method} ]!");
+        Debug.Log($"Tag: [ {component.Name} ] is already added with method: [ {tag.Method} ]!");
         return false;
       }
 
@@ -60,13 +59,13 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIn
       return true;
     }
 
-    public void RemoveTag(Type component, bool removeFromCollection = true) {
+    public void RemoveTag(Type component, bool removeViewOnly = true) {
       if (!Tags.ContainsKey(component)) {
-        Debug.Log($"Tag of type: [ {component.Name} ] not found!");
+        Debug.Log($"Tag: [ {component.Name} ] not found!");
         return;
       }
 
-      if (removeFromCollection)
+      if (!removeViewOnly)
         Tags.Remove(component);
 
       OnRemoveTag?.Invoke(component);
@@ -83,7 +82,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIn
            tag => tag.Method switch {
              FilterMethod.Include => tag.Pool.Has(e),
              FilterMethod.Exclude => !tag.Pool.Has(e),
-             _                    => throw new ArgumentOutOfRangeException()
+             var _                => throw new ArgumentOutOfRangeException()
            }
          )
         .All(compatible => compatible);

@@ -3,7 +3,7 @@ using System.Text;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
-namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions.SearchWindow {
+namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions {
   public static class AddGroupExt {
     private const string HIERARCHY_SEPARATOR = "/"; // ! Important !
 
@@ -13,7 +13,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIn
 
     public static void AddGroups(
       this IList<SearchTreeEntry> items,
-      IList<string>               groups,
+      IList<string>               existingGroups,
       out    int                  indentLevel,
       params string[]             addGroups
     ) {
@@ -21,7 +21,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIn
 
       for (var i = 0; i < addGroups.Length;) {
         items.AddGroup(
-          groups,
+          existingGroups,
           addGroups[i],
           ++i
         );

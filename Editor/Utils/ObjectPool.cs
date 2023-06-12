@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 
-namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Utils {
+namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Utils {
   public class ObjectPool<T> {
     private readonly Func<T>          _objectGenerator;
     private readonly ConcurrentBag<T> _objects;

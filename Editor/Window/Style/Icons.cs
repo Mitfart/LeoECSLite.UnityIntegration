@@ -1,4 +1,4 @@
-namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Style {
+namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Style {
   public static class Icons {
     /*
     // https://www.programmersought.com/article/45577357558/

@@ -3,31 +3,34 @@ using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
-namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions.SearchWindow {
+namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions {
   public static class AddGroupsByNamespaceExt {
-    private const string TYPE_SEPARATOR = ".";
-
+    private const string TYPE_SEPARATOR         = ".";
     private const string GLOBAL_NAMESPACE_GROUP = "_";
 
 
 
     public static IList<SearchTreeEntry> AddNamespaceGroups(
       this IList<SearchTreeEntry> items,
-      IList<string>               groups,
+      IList<string>               existingGroups,
       Type                        type,
       out int                     indentLevel
     ) {
       if (type.FromGlobalNamespace())
-        items.AddGlobalNamespaceGroup(groups, out indentLevel);
+        items.AddGlobalNamespaceGroup(existingGroups, out indentLevel);
       else
-        items.AddGroups(groups, out indentLevel, NamespaceGroup(type));
+        items.AddGroups(existingGroups, out indentLevel, NamespaceGroups(type));
 
       return items;
     }
 
 
 
-    private static IList<SearchTreeEntry> AddGlobalNamespaceGroup(this IList<SearchTreeEntry> items, IList<string> groups, out int indentLevel) {
+    private static IList<SearchTreeEntry> AddGlobalNamespaceGroup(
+      this IList<SearchTreeEntry> items,
+      IList<string>               groups,
+      out int                     indentLevel
+    ) {
       if (!groups.Contains(GLOBAL_NAMESPACE_GROUP)) {
         items.AddGlobalNamespaceGroupRaw();
         groups.Add(GLOBAL_NAMESPACE_GROUP);
@@ -37,7 +40,9 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIn
       return items;
     }
 
-    private static IList<SearchTreeEntry> AddGlobalNamespaceGroupRaw(this IList<SearchTreeEntry> items) {
+    private static IList<SearchTreeEntry> AddGlobalNamespaceGroupRaw(
+      this IList<SearchTreeEntry> items
+    ) {
       items.Insert(
         1, // under the title
         new SearchTreeGroupEntry(
@@ -51,6 +56,6 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIn
 
 
     private static bool     FromGlobalNamespace(this Type type) => string.IsNullOrWhiteSpace(type.Namespace);
-    private static string[] NamespaceGroup(Type           type) => type.Namespace?.Split(TYPE_SEPARATOR);
+    private static string[] NamespaceGroups(Type          type) => type.Namespace?.Split(TYPE_SEPARATOR);
   }
 }

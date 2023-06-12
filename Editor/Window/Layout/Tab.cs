@@ -1,6 +1,6 @@
 ﻿using UnityEditor.UIElements;
 
-namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Layout {
+namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Layout {
   public sealed class Tab<TData> : ToolbarButton where TData : class {
     private const string MAIN_CL        = "tab";
     private const string MAIN_ACTIVE_CL = "tab_active";

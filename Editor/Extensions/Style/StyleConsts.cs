@@ -1,4 +1,4 @@
-﻿namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions.Style {
+﻿namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions.Style {
   public static class StyleConsts {
     // |- Rem - css unit of measurement. Regarding the font size.
     public const int   REM      = 10; // UNITY DEFAULT FONT SIZE 

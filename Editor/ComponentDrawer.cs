@@ -3,32 +3,31 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using Leopotam.EcsLite;
-using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions;
-using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions.Style.Border;
-using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions.Style.Spacing;
-using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions.Style.Text;
-using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions.UIElement;
-using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Runtime.PackedEntity;
-using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Runtime.View;
+using Mitfart.LeoECSLite.UnityIntegration.Attributes;
+using Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions;
+using Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions.Style;
+using Mitfart.LeoECSLite.UnityIntegration.PackedEntity;
+using Mitfart.LeoECSLite.UnityIntegration.View;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
-using static Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions.Style.StyleConsts;
+using static Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions.Style.StyleConsts;
 
-namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor {
+namespace Mitfart.LeoECSLite.UnityIntegration.Editor {
   [CustomPropertyDrawer(typeof(ComponentView), true)]
   public class ComponentDrawer : PropertyDrawer {
-    private const string        COMPONENT_NAME_FIELD = nameof(ComponentView.componentName);
-    private const string        COMPONENT_FIELD      = nameof(ComponentView.component);
-    private       VisualElement _fields;
-    private       VisualElement _header;
-    private       Label         _label;
-    private       VisualElement _main;
+    private const string COMPONENT_NAME_FIELD = nameof(ComponentView.componentName);
+    private const string COMPONENT_FIELD      = nameof(ComponentView.component);
+
+    private Box           _root;
+    private VisualElement _header;
+    private Label         _label;
+    private VisualElement _main;
+    private VisualElement _fields;
 
     private SerializedProperty _property;
 
-    private Box           _root;
     private ComponentView _target;
 
     private object Component     => _target.component;

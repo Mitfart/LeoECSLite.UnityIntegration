@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Mitfart.LeoECSLite.UnityIntegration.Attributes;
 using UnityEditor;
 
-namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Runtime.PackedEntity {
+namespace Mitfart.LeoECSLite.UnityIntegration.PackedEntity {
   public static class ComponentsWithPackedEntities {
     private static readonly HashSet<Type> _Components = new();
 

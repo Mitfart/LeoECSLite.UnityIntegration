@@ -1,6 +1,6 @@
 ﻿using UnityEngine.UIElements;
 
-namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions.Style.Spacing {
+namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions.Style {
   public static class PaddingExt {
     public static IStyle Padding(
       this IStyle style,

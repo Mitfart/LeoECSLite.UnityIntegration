@@ -1,9 +1,8 @@
-﻿using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions.Property;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
 
-namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions.UIElement {
+namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions {
   public static class AddChildPropertiesExt {
     public static VisualElement AddChildPropertiesOf(this VisualElement root, SerializedProperty property) {
       foreach (SerializedProperty childProperty in property.GetChildren())

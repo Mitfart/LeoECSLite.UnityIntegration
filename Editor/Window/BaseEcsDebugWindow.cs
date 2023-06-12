@@ -1,20 +1,29 @@
 ﻿using System;
 using Leopotam.EcsLite;
-using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Window.World;
-using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Runtime;
+using Mitfart.LeoECSLite.UnityIntegration.Editor.Window.World;
 using UnityEditor;
 
-namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Window {
+namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window {
   public abstract class BaseEcsDebugWindow : EditorWindow, IEcsWorldEventListener {
-    public EcsWorldDebugSystem ActiveDebugSystem { get; private set; }
+    public EcsWorldDebugSystem ActiveSystem { get; private set; }
 
 
+
+    private void OnEnable() {
+      EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+      EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+    }
+
+    private void OnDisable() {
+      EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+    }
 
     private void CreateGUI() {
       CreateElements();
-      AddElements();
+      StructureElements();
       InitElements();
     }
+
 
 
     public virtual void OnEntityCreated(int   e)      { }
@@ -27,8 +36,9 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIn
     public virtual void OnFilterCreated(EcsFilter filter) { }
 
 
+
     protected abstract void CreateElements();
-    protected abstract void AddElements();
+    protected abstract void StructureElements();
     protected abstract void InitElements();
 
 
@@ -36,56 +46,44 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIn
     protected abstract void ResetInspector();
 
 
-    protected void ChangeWorld(WorldTabData newWorldTabData) {
-      if (TryGetSystem(newWorldTabData, out EcsWorldDebugSystem debugSystem)) {
-        SetActiveWorldDebugSystem(debugSystem);
-      }
-      else {
-        return;
 
-        throw new Exception($"Can't find System relative to `{newWorldTabData}` world!");
-      }
+    protected void ChangeWorld(WorldTabData worldTab) {
+      if (ActiveDebugSystems.TryGet(worldTab.Name, out EcsWorldDebugSystem debugSystem))
+        SetActiveWorldDebugSystem(debugSystem);
+      else
+        throw new Exception($"Can't find System relative to `{worldTab}` world!");
     }
 
 
-    private static bool TryGetSystem(WorldTabData newWorldTabData, out EcsWorldDebugSystem debugSystem) => ActiveDebugSystems.TryGet(newWorldTabData.Name, out debugSystem);
-
     private void SetActiveWorldDebugSystem(EcsWorldDebugSystem newActiveDebugSystem) {
-      if (ActiveDebugSystem == newActiveDebugSystem)
+      if (ActiveSystem == newActiveDebugSystem)
         return;
 
       ResetActiveSystem();
 
-      ActiveDebugSystem = newActiveDebugSystem;
+      ActiveSystem = newActiveDebugSystem;
 
       InitActiveSystem();
     }
 
+
     private void InitActiveSystem() {
-      if (ActiveDebugSystem == null)
+      if (ActiveSystem == null)
         return;
 
-      ActiveDebugSystem.World.AddEventListener(this);
+      ActiveSystem.World.AddEventListener(this);
       InitInspector();
     }
 
     private void ResetActiveSystem() {
-      if (ActiveDebugSystem == null)
+      if (ActiveSystem == null)
         return;
 
-      ActiveDebugSystem.World.RemoveEventListener(this);
+      ActiveSystem.World.RemoveEventListener(this);
       ResetInspector();
     }
 
 
-    #region OnPlayModeStateChanged
-
-    private void OnEnable() {
-      EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
-      EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
-    }
-
-    private void OnDisable() => EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
 
     private void OnPlayModeStateChanged(PlayModeStateChange state) {
       switch (state) {
@@ -100,7 +98,5 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIn
           throw new ArgumentOutOfRangeException(nameof(state), state, null);
       }
     }
-
-    #endregion
   }
 }

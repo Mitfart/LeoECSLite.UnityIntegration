@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Runtime.PackedEntity {
+namespace Mitfart.LeoECSLite.UnityIntegration.Attributes {
   [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
   public class PackedEntityAttribute : Attribute { }
 }

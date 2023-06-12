@@ -1,6 +1,6 @@
 ﻿using UnityEngine.UIElements;
 
-namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions.Style.Border {
+namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions.Style {
   public static class BorderRadiusExt {
     public static IStyle BorderRadius(
       this IStyle style,

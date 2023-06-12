@@ -1,12 +1,11 @@
 ﻿using System;
 using Leopotam.EcsLite;
-using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions.Style.Flex;
-using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Runtime;
-using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Runtime.View;
+using Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions.Style;
+using Mitfart.LeoECSLite.UnityIntegration.View;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
 
-namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor {
+namespace Mitfart.LeoECSLite.UnityIntegration.Editor {
   public class EntityField : VisualElement {
     private readonly Action<EntityView> _onSet;
 

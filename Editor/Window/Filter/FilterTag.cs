@@ -1,7 +1,7 @@
 ﻿using System;
 using Leopotam.EcsLite;
 
-namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Filter {
+namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Filter {
   public class FilterTag {
     public FilterMethod Method { get; }
     public Type         Type   { get; }

@@ -1,18 +1,18 @@
 {
-    "name": "LeoECSLite.UnityIntegration",
-    "rootNamespace": "Mitfart.LeoECSLite.UnityIntegration",
-    "references": [
-        "Leopotam.EcsLite",
-        "Unity.VisualScripting.Core",
-        "Unity.VisualScripting.Core.Editor"
-    ],
-    "includePlatforms": [],
-    "excludePlatforms": [],
-    "allowUnsafeCode": false,
-    "overrideReferences": false,
-    "precompiledReferences": [],
-    "autoReferenced": true,
-    "defineConstraints": [],
-    "versionDefines": [],
-    "noEngineReferences": false
+  "name": "LeoECSLite.UnityIntegration",
+  "rootNamespace": "Mitfart.LeoECSLite.UnityIntegration",
+  "references": [
+    "Leopotam.EcsLite",
+    "Unity.VisualScripting.Core",
+    "Unity.VisualScripting.Core.Editor"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
 }

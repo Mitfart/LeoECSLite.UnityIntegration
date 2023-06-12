@@ -1,7 +1,7 @@
 ﻿using System;
 using Leopotam.EcsLite;
 
-namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Runtime.Extensions.Ecs.World {
+namespace Mitfart.LeoECSLite.UnityIntegration.Extensions {
   public static class ForeachExt {
     public static void ForeachEntity(this EcsWorld world, Action<int> action) {
       int[] entities = StaticCache.Entities;
@@ -22,12 +22,12 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIn
 
 
     public static void ForeachComponentType(
-      this EcsWorld       world,
-      int                 entity,
-      Action<System.Type> action
+      this EcsWorld world,
+      int           entity,
+      Action<Type>  action
     ) {
-      System.Type[] types = StaticCache.Types;
-      int           count = world.GetComponentTypes(entity, ref types);
+      Type[] types = StaticCache.Types;
+      int    count = world.GetComponentTypes(entity, ref types);
 
       for (var i = 0; i < count; i++)
         action.Invoke(types[i]);

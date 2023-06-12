@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Leopotam.EcsLite;
-using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions.SearchWindow;
-using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Runtime.Extensions.Ecs.World;
+using Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions;
+using Mitfart.LeoECSLite.UnityIntegration.Extensions;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
-namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Search {
+namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Search {
   public class ComponentsSearchWindow : ScriptableObject, ISearchWindowProvider {
     private const string TITLE = "Components";
 

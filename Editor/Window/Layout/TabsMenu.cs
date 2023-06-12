@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor.UIElements;
 
-namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Layout {
+namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Layout {
   public class TabsMenu<TData> : Toolbar where TData : class {
     private const string MAIN_CL = "tabs";
 
-    private readonly Action<TData> _onChangeTab;
-
     private readonly Dictionary<TData, Tab<TData>> _tabs;
+
+    private readonly Action<TData> _onChangeTab;
 
     public TData ActiveTabData  { get; private set; }
     public int   ActiveTabIndex { get; private set; }
@@ -35,7 +35,9 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIn
       if (_tabs.ContainsKey(data))
         throw new Exception($"Cant add existing Tab for {data}");
 
-      _tabs.Add(data, AddTabFor(data));
+      Tab<TData> tab = CreateTab(data);
+      Add(tab);
+      _tabs.Add(data, tab);
 
       if (ActiveTabData == null)
         SetActiveTab(data);
@@ -50,47 +52,49 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIn
       _tabs.Remove(data);
       tab.Destroy();
 
+      if (RemoveActiveTab() && !RemoveLastTab())
+        SetActiveTab(ClosestTab());
 
-      if (data != ActiveTabData || _tabs.Count <= 0)
-        return;
 
-      int closestIndex = ActiveTabIndex - 1 >= 0
-        ? ActiveTabIndex - 1
-        : ActiveTabIndex + 1;
+      bool RemoveLastTab() {
+        return _tabs.Count <= 0;
+      }
 
-      TData closestTab = _tabs.Keys.ToArray()[closestIndex];
-      SetActiveTab(closestTab);
+      bool RemoveActiveTab() {
+        return data == ActiveTabData;
+      }
+
+      TData ClosestTab() {
+        int closestIndex = ActiveTabIndex - 1 >= 0
+          ? ActiveTabIndex - 1
+          : ActiveTabIndex + 1;
+
+        return _tabs.Keys.ToArray()[closestIndex];
+      }
     }
 
     public void SetActiveTab(TData data) {
       if (ActiveTabData != null)
-        _tabs[ActiveTabData]
-         .SetActive(false);
+        _tabs[ActiveTabData].SetActive(false);
 
       ActiveTabData = data;
 
-      ActiveTabIndex = _tabs
-                      .Keys
-                      .ToList()
-                      .IndexOf(ActiveTabData);
-
       _tabs[ActiveTabData]
        .SetActive(true);
+
+      ActiveTabIndex =
+        _tabs
+         .Keys
+         .ToList()
+         .IndexOf(ActiveTabData);
 
       _onChangeTab?.Invoke(data);
     }
 
 
-    public IEnumerable<TData> GetWhere(Func<TData, bool> where)
-      => _tabs
-        .Keys
-        .Where(where.Invoke);
 
+    public IEnumerable<TData> Where(Func<TData, bool> where) => _tabs.Keys.Where(where.Invoke);
 
-    private Tab<TData> AddTabFor(TData data) {
-      var tab = new Tab<TData>(this, data);
-      Add(tab);
-      return tab;
-    }
+    private Tab<TData> CreateTab(TData data) => new(this, data);
   }
 }

@@ -1,4 +1,4 @@
-﻿namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Runtime.Extensions.String {
+﻿namespace Mitfart.LeoECSLite.UnityIntegration.Extensions {
   public static class ToWorldDebugNameExt {
     public static string ToWorldDebugName(this string name)
       => !string.IsNullOrWhiteSpace(name)

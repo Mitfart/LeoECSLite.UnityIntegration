@@ -1,22 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using Leopotam.EcsLite;
-using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions.Property;
-using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions.Style.Border;
-using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions.Style.Flex;
-using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions.Style.Overflow;
-using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions.Style.Spacing;
-using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions.Style.Text;
-using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions.UIElement;
-using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Search;
-using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Runtime.View;
+using Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions;
+using Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions.Style;
+using Mitfart.LeoECSLite.UnityIntegration.Editor.Search;
+using Mitfart.LeoECSLite.UnityIntegration.View;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
-using static Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions.Style.StyleConsts;
+using static Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions.Style.StyleConsts;
 
-namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor {
+namespace Mitfart.LeoECSLite.UnityIntegration.Editor {
   [CustomEditor(typeof(EntityView))]
   public class EntityEditor : UnityEditor.Editor {
     private const string COMPONENTS_FIELD       = nameof(EntityView.components);
@@ -50,7 +45,6 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIn
       InitElements();
       return _root;
     }
-
 
 
     private void CreateElements() {
@@ -95,15 +89,11 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIn
        .style
        .FlexGrow();
 
-      _addBtn.style.width
-        = _delBtn.style.width
-          = _killBtn.style.width
-            = 48;
+      _addBtn.style.width = _delBtn.style.width = _killBtn.style.width = REM * 5;
 
       RefreshComponents();
       _root.TrackPropertyValue(ComponentsCountProperty(), _ => RefreshComponents());
     }
-
 
 
     private void RefreshComponents() {
@@ -132,7 +122,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIn
         _componentsContainer.AddChild(newField);
         _componentsDrawers[i] = newField;
 
-        return _componentsDrawers[i];
+        return newField;
       }
 
       bool AlreadyBinded(IBindable drawer, SerializedProperty component) {

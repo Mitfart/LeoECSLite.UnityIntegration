@@ -2,26 +2,24 @@
 using System.Collections.Generic;
 using System.Linq;
 using Leopotam.EcsLite;
-using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions.UIElement;
-using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Entity;
-using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Filter.View;
-using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Layout;
-using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Window.World;
-using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Runtime;
-using Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Runtime.View;
+using Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions;
+using Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Entity;
+using Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Filter.View;
+using Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Layout;
+using Mitfart.LeoECSLite.UnityIntegration.Editor.Window.World;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Editor.Window {
+namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window {
   public class EcsDebugWindow : BaseEcsDebugWindow {
     private const string STYLES_PATH   = "LeoECSLite.UnityIntegration/uss/index";
     private const string SPLIT_VIEW_CL = "split-view";
 
-    private readonly Dictionary<int, VisualElement> _activeEntities = new();
+    private readonly Dictionary<int, VisualElement> _selectedEntities = new();
     private          HorizontalTwoPanelLayout       _content;
-    private          ScrollView                     _entitiesContainer;
+    private          ScrollView                     _entitiesInspector;
     private          EntitiesList                   _entitiesList;
 
     private Filter.Filter _filter;
@@ -29,6 +27,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIn
 
     private VisualElement          _header;
     private TabsMenu<WorldTabData> _worldTabsMenu;
+
 
 
     private void OnInspectorUpdate() {
@@ -41,9 +40,10 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIn
 
 
     [MenuItem("LeoECS Lite/Debug Window")]
-    public static void OpenEcsDebugWindow()
-      => GetWindow<EcsDebugWindow>(nameof(EcsDebugWindow))
-       .Show();
+    public static void OpenEcsDebugWindow() {
+      GetWindow<EcsDebugWindow>(nameof(EcsDebugWindow)).Show();
+    }
+
 
 
     protected override void CreateElements() {
@@ -55,10 +55,10 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIn
       _content           = new HorizontalTwoPanelLayout();
       _worldTabsMenu     = new TabsMenu<WorldTabData>(ChangeWorld);
       _entitiesList      = new EntitiesList(_filter);
-      _entitiesContainer = new ScrollView();
+      _entitiesInspector = new ScrollView();
     }
 
-    protected override void AddElements() {
+    protected override void StructureElements() {
       rootVisualElement
        .AddChild(
           _header
@@ -67,13 +67,8 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIn
         )
        .AddChild(_content);
 
-      _content
-       .Left
-       .AddChild(_entitiesList);
-
-      _content
-       .Right
-       .AddChild(_entitiesContainer);
+      _content.Left.AddChild(_entitiesList);
+      _content.Right.AddChild(_entitiesInspector);
     }
 
     protected override void InitElements() {
@@ -84,87 +79,85 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIn
       if (!Application.isPlaying)
         return;
 
-      ActiveDebugSystems.Foreach(
-        sys => {
-          _worldTabsMenu.AddTab(
-            new WorldTabData(
-              sys.World,
-              sys.WorldName
-            )
-          );
-        }
-      );
+      AddWorldTabs();
     }
 
 
-    public override void OnEntityCreated(int e) => _entitiesList.Add(e);
+
+    public override void OnEntityCreated(int e) {
+      _entitiesList.Add(e);
+    }
 
     public override void OnEntityDestroyed(int e) {
       _entitiesList.Remove(e);
 
-      if (_activeEntities.ContainsKey(e))
-        RemoveActiveEntity(e);
+      if (_selectedEntities.ContainsKey(e))
+        UnselectEntity(e);
     }
 
-    public override void OnWorldDestroyed(EcsWorld world)
-      => _worldTabsMenu.RemoveTab(
+    public override void OnWorldDestroyed(EcsWorld world) {
+      _worldTabsMenu.RemoveTab(
         _worldTabsMenu
-         .GetWhere(data => data.World == world)
+         .Where(data => data.World == world)
          .First()
       );
+    }
 
 
 
     protected override void InitInspector() {
-      _filter.Init(ActiveDebugSystem);
-      _entitiesList.Setup(ActiveDebugSystem);
+      _filter.Init(ActiveSystem);
+      _entitiesList.Setup(ActiveSystem);
 
-      _entitiesList.OnSelectEntity   += AddActiveEntity;
-      _entitiesList.OnUnselectEntity += RemoveActiveEntity;
+      _entitiesList.OnSelect   += SelectEntity;
+      _entitiesList.OnUnselect += UnselectEntity;
     }
 
     protected override void ResetInspector() {
       _entitiesList.Reset();
-      ClearActiveEntities();
+      ClearSelectedEntities();
 
       _filter.Reset();
       _filterView.Reset();
 
-      _entitiesList.OnSelectEntity   -= AddActiveEntity;
-      _entitiesList.OnUnselectEntity -= RemoveActiveEntity;
+      _entitiesList.OnSelect   -= SelectEntity;
+      _entitiesList.OnUnselect -= UnselectEntity;
     }
 
-    private void ClearActiveEntities() {
-      if (_activeEntities == null)
+    private void ClearSelectedEntities() {
+      if (_selectedEntities == null)
         return;
 
-      foreach (VisualElement view in _activeEntities.Values)
-        _entitiesContainer.Remove(view);
+      foreach (VisualElement view in _selectedEntities.Values)
+        _entitiesInspector.Remove(view);
 
-      _activeEntities.Clear();
+      _selectedEntities.Clear();
     }
 
 
-    private VisualElement CreateEntityInspector(int e) {
-      EntityView entityView = ActiveDebugSystem.View.GetEntityView(e);
-      return new InspectorElement(entityView);
+    private void SelectEntity(int e) {
+      VisualElement inspector = EntityInspector(e);
+
+      _entitiesInspector.Add(inspector);
+      _selectedEntities.Add(e, inspector);
     }
 
-    private void AddActiveEntity(int e) {
-      VisualElement inspector = CreateEntityInspector(e);
-
-      _entitiesContainer.Add(inspector);
-      _activeEntities.Add(e, inspector);
-    }
-
-    private void RemoveActiveEntity(int e) {
+    private void UnselectEntity(int e) {
       try {
-        _entitiesContainer.Remove(_activeEntities[e]);
-        _activeEntities.Remove(e);
+        _entitiesInspector.Remove(_selectedEntities[e]);
+        _selectedEntities.Remove(e);
       }
       catch (Exception exception) {
-        Debug.Log($"Error on: {e}   ->   {exception}");
+        Debug.Log($"Error: {e} -> {exception}");
       }
     }
+
+
+
+    private void AddWorldTabs() {
+      ActiveDebugSystems.Foreach(sys => _worldTabsMenu.AddTab(new WorldTabData(sys.WorldName, sys.World)));
+    }
+
+    private VisualElement EntityInspector(int e) => new InspectorElement(ActiveSystem.View.GetEntityView(e));
   }
 }

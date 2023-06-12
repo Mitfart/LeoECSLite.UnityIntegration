@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Runtime.Extensions.Type {
+namespace Mitfart.LeoECSLite.UnityIntegration.Extensions {
   public static class GetCleanNameExt {
     private const string GENERIC_SYMBOL = "`";
 
 
-    public static string GetCleanName(this System.Type type) {
+    public static string GetCleanName(this Type type) {
       if (!type.IsGenericType)
         return type.Name;
 

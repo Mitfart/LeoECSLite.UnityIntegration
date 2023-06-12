@@ -3,7 +3,7 @@ using System;
 using Leopotam.EcsLite;
 using UnityEngine;
 
-namespace Mitfart.LeoECSLite.UnityIntegration.Plugins.Mitfart.LeoECSLite.UnityIntegration.Runtime.View {
+namespace Mitfart.LeoECSLite.UnityIntegration.View {
   [Serializable]
   public class ComponentView {
     [HideInInspector]    public string componentName;
