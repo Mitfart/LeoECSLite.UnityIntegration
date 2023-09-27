@@ -78,7 +78,7 @@ void Update() {
 > ```cs
 > var nameSettings = new EntityNameSettings(bakeComponents: true);
 > ...
-> .Add(new LeoECSLite.UnityIntegration.EcsWorldDebugSystem(null, nameSettings))
+> .Add(new Mitfart.LeoECSLite.UnityIntegration.EcsWorldDebugSystem(null, nameSettings))
 > ...
 > ```
 
