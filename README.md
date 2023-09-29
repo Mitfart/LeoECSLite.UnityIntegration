@@ -58,8 +58,8 @@ void Start() {
         .Add (new TestSystem1())
 #if UNITY_EDITOR
         // Регистрируем отладочные системы по контролю за состоянием каждого отдельного мира:
-        // .Add (new LeoECSLite.UnityIntegration.EcsWorldDebugSystem("events"))
-        .Add(new LeoECSLite.UnityIntegration.EcsWorldDebugSystem())
+        // .Add (new Mitfart.LeoECSLite.UnityIntegration.EcsWorldDebugSystem("events"))
+        .Add(new Mitfart.LeoECSLite.UnityIntegration.EcsWorldDebugSystem())
         // Для коректного отображения данных, системы необходимо подключать в конце
 #endif
         .Init();
@@ -78,7 +78,7 @@ void Update() {
 > ```cs
 > var nameSettings = new EntityNameSettings(bakeComponents: true);
 > ...
-> .Add(new LeoECSLite.UnityIntegration.EcsWorldDebugSystem(null, nameSettings))
+> .Add(new Mitfart.LeoECSLite.UnityIntegration.EcsWorldDebugSystem(null, nameSettings))
 > ...
 > ```
 
