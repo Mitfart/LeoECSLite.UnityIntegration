@@ -7,73 +7,73 @@ using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace Mitfart.LeoECSLite.UnityIntegration.View {
-  public sealed class WorldView {
-    private const string ENTITIES_ROOT_NAME = "Entities";
+   public sealed class WorldView {
+      private const string _ENTITIES_ROOT_NAME = "Entities";
 
-    private readonly EcsWorldDebugSystem _debugSystem;
-    private readonly Transform           _root;
-    private readonly Transform           _entitiesRoot;
-    private readonly NameBuilder         _nameBuilder;
+      private readonly EcsWorldDebugSystem _debugSystem;
+      private readonly Transform           _root;
+      private readonly Transform           _entitiesRoot;
+      private readonly NameBuilder         _nameBuilder;
 
-    private EntityView[] _entitiesViews;
+      private EntityView[] _entitiesViews;
 
-    private EcsWorld World     => _debugSystem.World;
-    private int      WorldSize => _debugSystem.WorldSize;
-    private string   DebugName => _debugSystem.DebugName;
-
-
-
-    public WorldView(EcsWorldDebugSystem debugSystem, NameSettings nameSettings = null) {
-      _debugSystem   = debugSystem;
-      _entitiesViews = new EntityView[World.GetWorldSize()];
-      _nameBuilder   = new NameBuilder(nameSettings ?? new NameSettings());
-
-      _root         = CreateRootObject(DebugName);
-      _entitiesRoot = CreateRootObject(ENTITIES_ROOT_NAME, _root);
-
-      Object.DontDestroyOnLoad(_root);
-    }
+      private EcsWorld World     => _debugSystem.World;
+      private int      WorldSize => _debugSystem.WorldSize;
+      private string   DebugName => _debugSystem.DebugName;
 
 
 
-    public void Destroy()           => Object.Destroy(_root.gameObject);
-    public void Refresh()           => World.ForeachEntity(RefreshView);
-    public void Resize(int newSize) => Array.Resize(ref _entitiesViews, newSize);
+      public WorldView(EcsWorldDebugSystem debugSystem, NameSettings nameSettings = null) {
+         _debugSystem   = debugSystem;
+         _entitiesViews = new EntityView[World.GetWorldSize()];
+         _nameBuilder   = new NameBuilder(nameSettings ?? new NameSettings());
+
+         _root         = CreateRootObject(DebugName);
+         _entitiesRoot = CreateRootObject(_ENTITIES_ROOT_NAME, _root);
+
+         Object.DontDestroyOnLoad(_root);
+      }
 
 
 
-    public EntityView GetEntityView(int e) {
-      if (EntityOutOfRange(e))
-        throw new Exception($"Entity out of range! [ e: {e} | max: {WorldSize - 1} ]");
-
-      return _entitiesViews[e] ??= CreateEntityView(e);
-    }
+      public void Destroy()           => Object.Destroy(_root.gameObject);
+      public void Refresh()           => World.ForeachEntity(RefreshView);
+      public void Resize(int newSize) => Array.Resize(ref _entitiesViews, newSize);
 
 
 
-    private EntityView CreateEntityView(int e) {
-      var entityObject = new GameObject();
+      public EntityView GetEntityView(int e) {
+         if (EntityOutOfRange(e))
+            throw new Exception($"Entity out of range! [ e: {e} | max: {WorldSize - 1} ]");
 
-      entityObject.transform.SetParent(_entitiesRoot);
-
-      return entityObject
-            .AddComponent<EntityView>()
-            .Construct(World, e, _nameBuilder);
-    }
+         return _entitiesViews[e] ??= CreateEntityView(e);
+      }
 
 
 
-    private void RefreshView(int      e) => GetEntityView(e).Refresh();
-    private bool EntityOutOfRange(int e) => e < 0 || e >= WorldSize;
+      private EntityView CreateEntityView(int e) {
+         var entityObject = new GameObject();
 
-    private static Transform CreateRootObject(string name, Transform parent = null) {
-      var obj = new GameObject { name = name, hideFlags = HideFlags.NotEditable };
+         entityObject.transform.SetParent(_entitiesRoot);
 
-      obj.transform.SetParent(parent);
+         return entityObject
+               .AddComponent<EntityView>()
+               .Construct(World, e, _nameBuilder);
+      }
 
-      return obj.transform;
-    }
-  }
+
+
+      private void RefreshView(int      e) => GetEntityView(e).Refresh();
+      private bool EntityOutOfRange(int e) => e < 0 || e >= WorldSize;
+
+      private static Transform CreateRootObject(string name, Transform parent = null) {
+         var obj = new GameObject { name = name, hideFlags = HideFlags.NotEditable };
+
+         obj.transform.SetParent(parent);
+
+         return obj.transform;
+      }
+   }
 }
 
 #endif
