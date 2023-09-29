@@ -14,9 +14,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window {
          EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
       }
 
-      private void OnDisable() {
-         EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
-      }
+      private void OnDisable() => EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
 
       private void CreateGUI() {
          CreateElements();
@@ -94,7 +92,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window {
             case PlayModeStateChange.ExitingPlayMode:
                ResetInspector();
                break;
-            default: throw new ArgumentOutOfRangeException(nameof(state), state, null);
+            default: throw new ArgumentOutOfRangeException(nameof(state), state, message: null);
          }
       }
    }
