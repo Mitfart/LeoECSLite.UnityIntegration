@@ -21,7 +21,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Entity {
 
       private ListView _listView;
 
-      private int _selectedEntity;
+      private int _selectedEntity = -1;
 
       public Action<int> OnSelect;
       public Action<int> OnUnselect;
@@ -112,13 +112,13 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Entity {
 
          int curSelectedEntity = enumerable.Length >= 1
             ? _entities[enumerable.First()]
-            : default;
+            : -1;
 
 
-         if (_selectedEntity != default)
+         if (_selectedEntity >= 0)
             OnUnselect?.Invoke(_selectedEntity);
 
-         if (curSelectedEntity != default)
+         if (curSelectedEntity >= 0)
             OnSelect?.Invoke(curSelectedEntity);
 
 
