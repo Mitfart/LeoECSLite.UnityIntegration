@@ -5,8 +5,9 @@ using UnityEngine;
 
 namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Filter {
    public class Filter {
-      public event Action<Type>          OnAddTag;
-      public event Action<Type>          OnRemoveTag;
+      public event Action<Type> OnAddTag;
+      public event Action<Type> OnRemoveTag;
+
       public EcsWorldDebugSystem         DebugSystem { get; private set; }
       public Dictionary<Type, FilterTag> Tags        { get; }
 
@@ -25,9 +26,8 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Filter {
       }
 
       public void Clear() {
-         foreach (Type component in Tags.Keys) {
-            RemoveTag(component, removeViewOnly: false);
-         }
+         foreach (Type component in Tags.Keys)
+            RemoveTag(component, removeViewOnly: true);
 
          Tags.Clear();
       }
@@ -62,7 +62,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Filter {
 
       public void RemoveTag(Type component, bool removeViewOnly = true) {
          if (!Tags.ContainsKey(component)) {
-            Debug.Log($"Tag: [ {component.Name} ] not found!");
+            Debug.Log($"Tag: [ {component.Name} ] not found! (interanl)");
             return;
          }
 
