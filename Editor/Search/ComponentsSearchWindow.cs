@@ -56,13 +56,13 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Search {
 
 
       public static void OpenFor(EcsWorld world, Func<Type, bool> onChoose) {
-         SearchWindow.Open(MousePosition(), Window());
          Window().Init(world, onChoose);
+         SearchWindow.Open(MousePosition(), Window());
       }
 
       public static void OpenFor(EcsWorld world, int entity, Func<Type, bool> onChoose) {
-         SearchWindow.Open(MousePosition(), Window());
          Window().Init(world, entity, onChoose);
+         SearchWindow.Open(MousePosition(), Window());
       }
 
 
