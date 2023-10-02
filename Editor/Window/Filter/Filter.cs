@@ -60,9 +60,9 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Filter {
          return true;
       }
 
-      public void RemoveTag(Type component, bool removeViewOnly = true) {
+      public void RemoveTag(Type component, bool removeViewOnly = false) {
          if (!Tags.ContainsKey(component)) {
-            Debug.Log($"Tag: [ {component.Name} ] not found! (interanl)");
+            Debug.Log($"Tag: [ {component.Name} ] not found! (internal)");
             return;
          }
 

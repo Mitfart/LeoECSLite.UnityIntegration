@@ -107,6 +107,8 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Filter.View {
          var newView = new FilterTagView(componentType, filterMethod);
          int index   = Mathf.Max(_tagViews.Count, b: 0);
 
+         newView.clicked += () => _filter.RemoveTag(componentType);
+         
          newView.AddToClassList(FILTER_BTN_CL);
 
          Insert(index, newView);
