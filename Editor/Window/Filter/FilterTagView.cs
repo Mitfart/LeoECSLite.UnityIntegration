@@ -2,7 +2,7 @@
 using Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions;
 using UnityEngine.UIElements;
 
-namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Filter.View {
+namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Filter {
    public class FilterTagView : Button {
       private const string _TAG_CL           = "tag";
       private const string _TAG_LABEL_CL     = "tag__label";

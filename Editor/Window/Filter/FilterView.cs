@@ -6,7 +6,7 @@ using Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Style;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Filter.View {
+namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Filter {
    public class FilterView : VisualElement {
       public const string FILTER_CL              = "filter";
       public const string FILTER_BTN_CL          = "filter__btn";
