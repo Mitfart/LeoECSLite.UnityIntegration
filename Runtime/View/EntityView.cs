@@ -1,7 +1,6 @@
 ﻿#if UNITY_EDITOR
 using System;
 using Leopotam.EcsLite;
-using Mitfart.LeoECSLite.UnityIntegration.Name;
 using UnityEngine;
 
 namespace Mitfart.LeoECSLite.UnityIntegration.View {

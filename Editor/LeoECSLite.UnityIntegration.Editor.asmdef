@@ -1,0 +1,21 @@
+{
+    "name": "LeoECSLite.UnityIntegration.Editor",
+    "rootNamespace": "Mitfart.LeoECSLite.UnityIntegration",
+    "references": [
+        "Leopotam.EcsLite",
+        "Unity.VisualScripting.Core",
+        "Unity.VisualScripting.Core.Editor",
+        "LeoECSLite.UnityIntegration"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

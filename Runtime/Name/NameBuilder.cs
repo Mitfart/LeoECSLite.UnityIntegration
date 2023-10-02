@@ -3,7 +3,7 @@ using System;
 using System.Text;
 using Mitfart.LeoECSLite.UnityIntegration.Extensions;
 
-namespace Mitfart.LeoECSLite.UnityIntegration.Name {
+namespace Mitfart.LeoECSLite.UnityIntegration {
    public sealed class NameBuilder {
       private const string _COMPONENTS_SEPARATOR = ", ";
       private const string _START_DESCRIPTION    = " | ";

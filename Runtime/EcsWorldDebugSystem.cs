@@ -2,7 +2,6 @@
 using System;
 using Leopotam.EcsLite;
 using Mitfart.LeoECSLite.UnityIntegration.Extensions;
-using Mitfart.LeoECSLite.UnityIntegration.Name;
 using Mitfart.LeoECSLite.UnityIntegration.View;
 
 namespace Mitfart.LeoECSLite.UnityIntegration {

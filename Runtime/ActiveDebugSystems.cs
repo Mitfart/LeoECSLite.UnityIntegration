@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if UNITY_EDITOR
+using System;
 using System.Collections.Generic;
 using Leopotam.EcsLite;
 using Mitfart.LeoECSLite.UnityIntegration.Extensions;
@@ -41,3 +42,4 @@ namespace Mitfart.LeoECSLite.UnityIntegration {
       }
    }
 }
+#endif
