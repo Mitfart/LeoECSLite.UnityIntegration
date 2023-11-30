@@ -4,7 +4,7 @@ using System.Linq;
 using Leopotam.EcsLite;
 using Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions;
 using Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Entity;
-using Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Filter.View;
+using Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Filter;
 using Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Layout;
 using Mitfart.LeoECSLite.UnityIntegration.Editor.Window.World;
 using UnityEditor;

@@ -2,7 +2,7 @@
 using System;
 using Leopotam.EcsLite;
 using Mitfart.LeoECSLite.UnityIntegration.Extensions;
-using Mitfart.LeoECSLite.UnityIntegration.Name;
+using Unity.VisualScripting;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -11,7 +11,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.View {
       private const string _ENTITIES_ROOT_NAME = "Entities";
 
       private readonly EcsWorldDebugSystem _debugSystem;
-      private readonly Transform           _root;
+      private readonly GameObject          _rootGo;
       private readonly Transform           _entitiesRoot;
       private readonly NameBuilder         _nameBuilder;
 
@@ -28,15 +28,15 @@ namespace Mitfart.LeoECSLite.UnityIntegration.View {
          _entitiesViews = new EntityView[World.GetWorldSize()];
          _nameBuilder   = new NameBuilder(nameSettings ?? new NameSettings());
 
-         _root         = CreateRootObject(DebugName);
-         _entitiesRoot = CreateRootObject(_ENTITIES_ROOT_NAME, _root);
+         _rootGo       = CreateRootObject(DebugName);
+         _entitiesRoot = CreateRootObject(_ENTITIES_ROOT_NAME, _rootGo.transform).transform;
 
-         Object.DontDestroyOnLoad(_root);
+         Object.DontDestroyOnLoad(_rootGo);
       }
 
 
 
-      public void Destroy()           => Object.Destroy(_root.gameObject);
+      public void Destroy()           => Object.Destroy(_rootGo);
       public void Refresh()           => World.ForeachEntity(RefreshView);
       public void Resize(int newSize) => Array.Resize(ref _entitiesViews, newSize);
 
@@ -66,12 +66,12 @@ namespace Mitfart.LeoECSLite.UnityIntegration.View {
       private void RefreshView(int      e) => GetEntityView(e).Refresh();
       private bool EntityOutOfRange(int e) => e < 0 || e >= WorldSize;
 
-      private static Transform CreateRootObject(string name, Transform parent = null) {
+      private static GameObject CreateRootObject(string name, Transform parent = null) {
          var obj = new GameObject { name = name, hideFlags = HideFlags.NotEditable };
 
          obj.transform.SetParent(parent);
 
-         return obj.transform;
+         return obj;
       }
    }
 }

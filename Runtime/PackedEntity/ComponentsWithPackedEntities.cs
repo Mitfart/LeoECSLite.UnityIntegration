@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if UNITY_EDITOR
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Mitfart.LeoECSLite.UnityIntegration.Attributes;
@@ -17,3 +18,4 @@ namespace Mitfart.LeoECSLite.UnityIntegration.PackedEntity {
       public static bool Contains(Type component) => _Components.Contains(component);
    }
 }
+#endif
