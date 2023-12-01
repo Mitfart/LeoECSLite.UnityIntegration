@@ -10,10 +10,10 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Layout {
 
 
 
-      public Tab(TabsMenu<TData> tabsMenu, TData data) {
+      public Tab(TabsMenu<TData> tabsMenu, TData data, string title) {
          _tabsMenu = tabsMenu;
          _data     = data;
-         text      = data.ToString();
+         text      = title;
 
          AddToClassList(_MAIN_CL);
 

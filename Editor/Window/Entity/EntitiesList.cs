@@ -92,8 +92,13 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Entity {
          _listView.showBoundCollectionSize    = true;
          _listView.horizontalScrollingEnabled = true;
 
+         #if UNITY_2022_3
+         _listView.selectedIndicesChanged -= SelectIndices;
+         _listView.selectedIndicesChanged += SelectIndices;
+         #else
          _listView.onSelectedIndicesChange -= SelectIndices;
          _listView.onSelectedIndicesChange += SelectIndices;
+         #endif
 
          _listView.makeItem   = MakeEntity;
          _listView.bindItem   = BindEntity;

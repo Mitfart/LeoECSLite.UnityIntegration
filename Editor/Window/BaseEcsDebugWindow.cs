@@ -1,26 +1,48 @@
 ﻿using System;
 using Leopotam.EcsLite;
-using Mitfart.LeoECSLite.UnityIntegration.Editor.Window.World;
 using UnityEditor;
 
 namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window {
    public abstract class BaseEcsDebugWindow : EditorWindow, IEcsWorldEventListener {
       public EcsWorldDebugSystem ActiveSystem { get; private set; }
 
+      protected bool Open;
+
 
 
       private void OnEnable() {
          EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
          EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+
+         ActiveDebugSystems.OnRegister -= OnRegisterSystem;
+         ActiveDebugSystems.OnRegister += OnRegisterSystem;
+
+         ActiveDebugSystems.OnUnregister -= OnUnregisterSystem;
+         ActiveDebugSystems.OnUnregister += OnUnregisterSystem;
       }
 
-      private void OnDisable() => EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+      private void OnDisable() {
+         EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+
+         ActiveDebugSystems.OnRegister -= OnRegisterSystem;
+
+         ActiveDebugSystems.OnUnregister -= OnUnregisterSystem;
+
+         Open = false;
+      }
 
       private void CreateGUI() {
+         Open = true;
+
          CreateElements();
          StructureElements();
          InitElements();
       }
+
+
+
+      protected abstract void OnRegisterSystem(EcsWorldDebugSystem   system);
+      protected abstract void OnUnregisterSystem(EcsWorldDebugSystem system);
 
 
 
@@ -45,11 +67,11 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window {
 
 
 
-      protected void ChangeWorld(WorldTabData worldTab) {
-         if (ActiveDebugSystems.TryGet(worldTab.Name, out EcsWorldDebugSystem debugSystem))
+      protected void ChangeWorld(EcsWorldDebugSystem system) {
+         if (ActiveDebugSystems.TryGet(system.WorldName, out EcsWorldDebugSystem debugSystem))
             SetActiveWorldDebugSystem(debugSystem);
          else
-            throw new Exception($"Can't find System relative to `{worldTab}` world!");
+            throw new Exception($"Can't find System relative to `{system}` world!");
       }
 
 
@@ -92,7 +114,8 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window {
             case PlayModeStateChange.ExitingPlayMode:
                ResetInspector();
                break;
-            default: throw new ArgumentOutOfRangeException(nameof(state), state, message: null);
+            default:
+               throw new ArgumentOutOfRangeException(nameof(state), state, message: null);
          }
       }
    }

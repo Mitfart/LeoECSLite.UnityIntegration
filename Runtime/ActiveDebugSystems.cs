@@ -9,6 +9,9 @@ namespace Mitfart.LeoECSLite.UnityIntegration {
       private static readonly Dictionary<string, EcsWorldDebugSystem>   _SystemsByNames;
       private static readonly Dictionary<EcsWorld, EcsWorldDebugSystem> _SystemsByWorlds;
 
+      public static Action<EcsWorldDebugSystem> OnRegister;
+      public static Action<EcsWorldDebugSystem> OnUnregister;
+
 
 
       static ActiveDebugSystems() {
@@ -21,11 +24,13 @@ namespace Mitfart.LeoECSLite.UnityIntegration {
       public static void Register(EcsWorldDebugSystem system) {
          _SystemsByNames[system.DebugName] = system;
          _SystemsByWorlds[system.World]    = system;
+         OnRegister?.Invoke(system);
       }
 
       public static void Unregister(EcsWorldDebugSystem system) {
          _SystemsByNames.Remove(system.DebugName);
          _SystemsByWorlds.Remove(system.World);
+         OnUnregister?.Invoke(system);
       }
 
 

@@ -7,7 +7,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.View {
    [Serializable]
    public class ComponentView {
       [HideInInspector]    public string componentName;
-      [SerializeReference] public object component;
+      [SerializeReference] public object Component;
 
       public EntityView EntityView    { get; private set; }
       public IEcsPool   Pool          { get; private set; }
@@ -33,9 +33,9 @@ namespace Mitfart.LeoECSLite.UnityIntegration.View {
       }
 
 
-      public void Refresh()              => component = Pool.GetRaw(Entity);
-      public void SetValue()             => Pool.SetRaw(Entity, component);
-      public void SetValue(object value) => Pool.SetRaw(Entity, component = value);
+      public void Refresh()              => Component = Pool.GetRaw(Entity);
+      public void SetValue()             { if(EntityView.IsAlive) Pool.SetRaw(Entity, Component); }
+      public void SetValue(object value) { if(EntityView.IsAlive) Pool.SetRaw(Entity, Component = value); }
    }
 }
 #endif

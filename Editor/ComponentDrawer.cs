@@ -18,7 +18,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor {
    [CustomPropertyDrawer(typeof(ComponentView), useForChildren: true)]
    public class ComponentDrawer : PropertyDrawer {
       private const string _COMPONENT_NAME_FIELD = nameof(ComponentView.componentName);
-      private const string _COMPONENT_FIELD      = nameof(ComponentView.component);
+      private const string _COMPONENT_FIELD      = nameof(ComponentView.Component);
 
       private Box           _root;
       private VisualElement _header;
@@ -30,7 +30,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor {
 
       private ComponentView _target;
 
-      private object Component     => _target.component;
+      private object Component     => _target.Component;
       private Type   ComponentType => _target.ComponentType;
 
 
