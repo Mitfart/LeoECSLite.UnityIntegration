@@ -5,6 +5,7 @@ using Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions;
 using Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions.Style;
 using Mitfart.LeoECSLite.UnityIntegration.Editor.Search;
 using Mitfart.LeoECSLite.UnityIntegration.View;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -20,7 +21,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor {
       private const string _ADD_BTN_TEXT  = "Add";
       private const string _DEL_BTN_TEXT  = "Del";
       private const string _KILL_BTN_TEXT = "Kill";
-      
+
       private VisualElement   _root;
       private VisualElement   _header;
       private Label           _title;
@@ -56,16 +57,17 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor {
          _componentsContainer = new VisualElement();
       }
 
-      private void StructureElements()
-         => _root
-           .AddChild(
-               _header
-                 .AddChild(_title)
-                 .AddChild(_addBtn)
-                 .AddChild(_delBtn)
-                 .AddChild(_killBtn)
-            )
+      private void StructureElements() {
+         _root
+           .AddChild(_header.AddChild(_title))
            .AddChild(_componentsContainer);
+
+         if (Target.IsAlive)
+            _header
+              .AddChild(_addBtn)
+              .AddChild(_delBtn)
+              .AddChild(_killBtn);
+      }
 
       private void InitElements() {
          _root
@@ -104,13 +106,18 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor {
             PropertyField      drawer    = GetField(i);
             SerializedProperty component = GetProperty(i);
 
-            if (!AlreadyBinded(drawer, component))
-               drawer.BindProperty(component);
+            if (AlreadyBinded(drawer, component))
+               continue;
+
+            drawer.BindProperty(component);
+            drawer.RegisterValueChangeCallback(_ => ((ComponentView)component.GetUnderlyingValue()).SetValue());
          }
 
          for (int i = ComponentsCount; i < _componentsDrawers.Length; i++) {
             DisableDrawer(i);
          }
+
+         return;
 
 
          PropertyField GetField(int i) {
@@ -124,25 +131,12 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor {
             return newField;
          }
 
-         bool AlreadyBinded(IBindable drawer, SerializedProperty component) {
-            return component.propertyPath == drawer.bindingPath;
-         }
+         bool AlreadyBinded(IBindable drawer, SerializedProperty component) => component.propertyPath == drawer.bindingPath;
 
-         SerializedProperty GetProperty(int i) {
-            return properties[i + 1]; // "0" - "Size" property => shift by 1
-         }
-
-         void DisableDrawer(int i) {
-            _componentsDrawers[i].style.display = DisplayStyle.None;
-         }
-
-         void ResizeForNewDrawers() {
-            Array.Resize(ref _componentsDrawers, ComponentsCount);
-         }
-
-         bool NotEnoughDrawers() {
-            return ComponentsCount > _componentsDrawers.Length;
-         }
+         SerializedProperty GetProperty(int   i)  => properties[i + 1]; // "0" - "Size" property => shift by 1
+         void               DisableDrawer(int i)  => _componentsDrawers[i].style.display = DisplayStyle.None;
+         void               ResizeForNewDrawers() => Array.Resize(ref _componentsDrawers, ComponentsCount);
+         bool               NotEnoughDrawers()    => ComponentsCount > _componentsDrawers.Length;
       }
 
 

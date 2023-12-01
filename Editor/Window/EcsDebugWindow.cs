@@ -6,7 +6,7 @@ using Mitfart.LeoECSLite.UnityIntegration.Editor.Extensions;
 using Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Entity;
 using Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Filter;
 using Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Layout;
-using Mitfart.LeoECSLite.UnityIntegration.Editor.Window.World;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -18,15 +18,14 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window {
       private const string _SPLIT_VIEW_CL = "split-view";
 
       private readonly Dictionary<int, VisualElement> _selectedEntities = new();
-      private          HorizontalTwoPanelLayout       _content;
-      private          ScrollView                     _entitiesInspector;
-      private          EntitiesList                   _entitiesList;
 
-      private Filter.Filter _filter;
-      private FilterView    _filterView;
-
-      private VisualElement          _header;
-      private TabsMenu<WorldTabData> _worldTabsMenu;
+      private HorizontalTwoPanelLayout      _content;
+      private VisualElement                 _header;
+      private TabsMenu<EcsWorldDebugSystem> _worldTabsMenu;
+      private Filter.Filter                 _filter;
+      private FilterView                    _filterView;
+      private ScrollView                    _entitiesInspector;
+      private EntitiesList                  _entitiesList;
 
 
 
@@ -39,7 +38,24 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window {
 
 
 
-      [MenuItem(itemName: "LeoECS Lite/Debug Window")] public static void OpenEcsDebugWindow() => GetWindow<EcsDebugWindow>(nameof(EcsDebugWindow)).Show();
+      [MenuItem(itemName: "LeoECS Lite/Debug Window")] //
+      public static void OpenEcsDebugWindow() => GetWindow<EcsDebugWindow>(nameof(EcsDebugWindow)).Show();
+
+      protected override void OnRegisterSystem(EcsWorldDebugSystem system) {
+         if (!Open)
+            return;
+
+         _worldTabsMenu.AddTab(system, system.WorldName);
+         GetWindow<EcsDebugWindow>(nameof(EcsDebugWindow)).Repaint();
+      }
+
+      protected override void OnUnregisterSystem(EcsWorldDebugSystem system) {
+         if (!Open)
+            return;
+
+         _worldTabsMenu.RemoveTab(system);
+         GetWindow<EcsDebugWindow>(nameof(EcsDebugWindow)).Repaint();
+      }
 
 
 
@@ -50,7 +66,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window {
          _filterView = new FilterView(_filter);
 
          _content           = new HorizontalTwoPanelLayout();
-         _worldTabsMenu     = new TabsMenu<WorldTabData>(ChangeWorld);
+         _worldTabsMenu     = new TabsMenu<EcsWorldDebugSystem>(ChangeWorld);
          _entitiesList      = new EntitiesList(_filter);
          _entitiesInspector = new ScrollView();
       }
@@ -157,7 +173,7 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window {
 
 
 
-      private void AddWorldTabs() => ActiveDebugSystems.Foreach(sys => _worldTabsMenu.AddTab(new WorldTabData(sys.WorldName, sys.World)));
+      private void AddWorldTabs() => ActiveDebugSystems.Foreach(sys => _worldTabsMenu.AddTab(sys, sys.DebugName));
 
       private VisualElement EntityInspector(int e) => new InspectorElement(ActiveSystem.View.GetEntityView(e));
    }

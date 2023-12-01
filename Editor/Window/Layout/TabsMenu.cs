@@ -31,11 +31,11 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Layout {
 
 
 
-      public void AddTab(TData data) {
+      public void AddTab(TData data, string title) {
          if (_tabs.ContainsKey(data))
-            throw new Exception($"Cant add existing Tab for {data}");
+            return;
 
-         Tab<TData> tab = CreateTab(data);
+         Tab<TData> tab = CreateTab(data, title);
          Add(tab);
          _tabs.Add(data, tab);
 
@@ -95,6 +95,6 @@ namespace Mitfart.LeoECSLite.UnityIntegration.Editor.Window.Layout {
 
       public IEnumerable<TData> Where(Func<TData, bool> where) => _tabs.Keys.Where(where.Invoke);
 
-      private Tab<TData> CreateTab(TData data) => new(this, data);
+      private Tab<TData> CreateTab(TData data, string title) => new(this, data, title);
    }
 }
